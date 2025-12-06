@@ -1,0 +1,46 @@
+name: Auto Deploy to Production
+
+on:
+  push:
+    branches:
+      - genspark_ai_developer
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
+      
+      - name: 🚀 Deploy to Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          script: |
+            cd /home/azamans/n8n-neuralgrid
+            
+            echo "======================================"
+            echo "🔄 최신 코드 가져오기..."
+            echo "======================================"
+            git fetch origin genspark_ai_developer
+            git pull origin genspark_ai_developer
+            
+            echo ""
+            echo "======================================"
+            echo "🔨 빌드 및 배포 시작..."
+            echo "======================================"
+            bash FINAL_BUILD_AND_TEST.sh
+            
+            echo ""
+            echo "======================================"
+            echo "✅ 배포 완료!"
+            echo "======================================"
+            pm2 status
+      
+      - name: 📊 Check Deployment Status
+        if: always()
+        run: echo "Deployment finished. Check server logs for details."
