@@ -1,0 +1,23 @@
+module.exports = {
+  apps: [
+    {
+      name: 'neuralgrid-web',
+      cwd: '/home/azamans/n8n-neuralgrid/apps/web',
+      script: 'pnpm',
+      args: 'start',
+      env: {
+        NODE_ENV: 'production',
+        PORT: '3000',
+        DATABASE_URL: 'postgresql://neuralgrid@localhost:5434/n8n_neuralgrid',
+        NEXTAUTH_URL: 'https://neuralgrid.kr',
+        NEXTAUTH_SECRET: 'your-secret-key-here-change-this',
+      },
+      exec_mode: 'fork',
+      max_memory_restart: '500M',
+      error_file: '/home/azamans/n8n-neuralgrid/apps/web/neuralgrid-web-error.log',
+      out_file: '/home/azamans/n8n-neuralgrid/apps/web/neuralgrid-web-out.log',
+      log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
+      time: true
+    }
+  ]
+};
