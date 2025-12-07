@@ -1,0 +1,104 @@
+2025-12-07T07:03:19: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+2025-12-07T07:03:19:     at setupFsCheck (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-utils/filesystem.js:151:19)
+2025-12-07T07:03:19:     at async initialize (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-server.js:64:23)
+2025-12-07T07:03:19:     at async Server.<anonymous> (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/start-server.js:249:36)
+2025-12-07T07:03:20: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+2025-12-07T07:03:20:     at setupFsCheck (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-utils/filesystem.js:151:19)
+2025-12-07T07:03:20:     at async initialize (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-server.js:64:23)
+2025-12-07T07:03:20:     at async Server.<anonymous> (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/start-server.js:249:36)
+2025-12-07T07:03:20: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+2025-12-07T07:03:20:     at setupFsCheck (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-utils/filesystem.js:151:19)
+2025-12-07T07:03:20:     at async initialize (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-server.js:64:23)
+2025-12-07T07:03:20:     at async Server.<anonymous> (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/start-server.js:249:36)
+2025-12-07T07:03:21: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+2025-12-07T07:03:21:     at setupFsCheck (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-utils/filesystem.js:151:19)
+2025-12-07T07:03:21:     at async initialize (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-server.js:64:23)
+2025-12-07T07:03:21:     at async Server.<anonymous> (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/start-server.js:249:36)
+2025-12-07T07:03:21: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+2025-12-07T07:03:21:     at setupFsCheck (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-utils/filesystem.js:151:19)
+2025-12-07T07:03:21:     at async initialize (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-server.js:64:23)
+2025-12-07T07:03:21:     at async Server.<anonymous> (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/start-server.js:249:36)
+2025-12-07T07:03:22: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+2025-12-07T07:03:22:     at setupFsCheck (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-utils/filesystem.js:151:19)
+2025-12-07T07:03:22:     at async initialize (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-server.js:64:23)
+2025-12-07T07:03:22:     at async Server.<anonymous> (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/start-server.js:249:36)
+2025-12-07T07:03:22: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+2025-12-07T07:03:22:     at setupFsCheck (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-utils/filesystem.js:151:19)
+2025-12-07T07:03:22:     at async initialize (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-server.js:64:23)
+2025-12-07T07:03:22:     at async Server.<anonymous> (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/start-server.js:249:36)
+2025-12-07T07:03:22: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+2025-12-07T07:03:22:     at setupFsCheck (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-utils/filesystem.js:151:19)
+2025-12-07T07:03:22:     at async initialize (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-server.js:64:23)
+2025-12-07T07:03:22:     at async Server.<anonymous> (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/start-server.js:249:36)
+2025-12-07T07:03:23: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+2025-12-07T07:03:23:     at setupFsCheck (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-utils/filesystem.js:151:19)
+2025-12-07T07:03:23:     at async initialize (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-server.js:64:23)
+2025-12-07T07:03:23:     at async Server.<anonymous> (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/start-server.js:249:36)
+2025-12-07T07:03:23: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+2025-12-07T07:03:23:     at setupFsCheck (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-utils/filesystem.js:151:19)
+2025-12-07T07:03:23:     at async initialize (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-server.js:64:23)
+2025-12-07T07:03:23:     at async Server.<anonymous> (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/start-server.js:249:36)
+2025-12-07T07:03:24: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+2025-12-07T07:03:24:     at setupFsCheck (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-utils/filesystem.js:151:19)
+2025-12-07T07:03:24:     at async initialize (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-server.js:64:23)
+2025-12-07T07:03:24:     at async Server.<anonymous> (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/start-server.js:249:36)
+2025-12-07T07:03:24: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+2025-12-07T07:03:24:     at setupFsCheck (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-utils/filesystem.js:151:19)
+2025-12-07T07:03:24:     at async initialize (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-server.js:64:23)
+2025-12-07T07:03:24:     at async Server.<anonymous> (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/start-server.js:249:36)
+2025-12-07T07:03:25: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+2025-12-07T07:03:25:     at setupFsCheck (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-utils/filesystem.js:151:19)
+2025-12-07T07:03:25:     at async initialize (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-server.js:64:23)
+2025-12-07T07:03:25:     at async Server.<anonymous> (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/start-server.js:249:36)
+2025-12-07T07:03:25: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+2025-12-07T07:03:25:     at setupFsCheck (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-utils/filesystem.js:151:19)
+2025-12-07T07:03:25:     at async initialize (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-server.js:64:23)
+2025-12-07T07:03:25:     at async Server.<anonymous> (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/start-server.js:249:36)
+2025-12-07T07:03:26: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+2025-12-07T07:03:26:     at setupFsCheck (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-utils/filesystem.js:151:19)
+2025-12-07T07:03:26:     at async initialize (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-server.js:64:23)
+2025-12-07T07:03:26:     at async Server.<anonymous> (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/start-server.js:249:36)
+2025-12-07T07:03:26: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+2025-12-07T07:03:26:     at setupFsCheck (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-utils/filesystem.js:151:19)
+2025-12-07T07:03:26:     at async initialize (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/router-server.js:64:23)
+2025-12-07T07:03:26:     at async Server.<anonymous> (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/lib/start-server.js:249:36)
+2025-12-07T07:27:53: Signup error: PrismaClientInitializationError: 
+2025-12-07T07:27:53: Invalid `prisma.user.findUnique()` invocation:
+2025-12-07T07:27:53: 
+2025-12-07T07:27:53: 
+2025-12-07T07:27:53: Authentication failed against database server at `localhost`, the provided database credentials for `neuralgrid` are not valid.
+2025-12-07T07:27:53: 
+2025-12-07T07:27:53: Please make sure to provide valid database credentials for the database server at `localhost`.
+2025-12-07T07:27:53:     at $n.handleRequestError (/home/azamans/n8n-neuralgrid/node_modules/@prisma/client/runtime/library.js:121:7615)
+2025-12-07T07:27:53:     at $n.handleAndLogRequestError (/home/azamans/n8n-neuralgrid/node_modules/@prisma/client/runtime/library.js:121:6623)
+2025-12-07T07:27:53:     at $n.request (/home/azamans/n8n-neuralgrid/node_modules/@prisma/client/runtime/library.js:121:6307)
+2025-12-07T07:27:53:     at async l (/home/azamans/n8n-neuralgrid/node_modules/@prisma/client/runtime/library.js:130:9633)
+2025-12-07T07:27:53:     at async ez (/home/azamans/n8n-neuralgrid/apps/web/.next/server/app/api/auth/signup/route.js:1:57297)
+2025-12-07T07:27:53:     at async /home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38411
+2025-12-07T07:27:53:     at async e_.execute (/home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:27880)
+2025-12-07T07:27:53:     at async e_.handle (/home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:39943)
+2025-12-07T07:27:53:     at async doRender (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/base-server.js:1366:42)
+2025-12-07T07:27:53:     at async cacheEntry.responseCache.get.routeKind (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/base-server.js:1588:28) {
+2025-12-07T07:27:53:   clientVersion: '5.22.0',
+2025-12-07T07:27:53:   errorCode: undefined
+2025-12-07T07:27:53: }
+2025-12-07T07:30:08: Signup error: PrismaClientInitializationError: 
+2025-12-07T07:30:08: Invalid `prisma.user.findUnique()` invocation:
+2025-12-07T07:30:08: 
+2025-12-07T07:30:08: 
+2025-12-07T07:30:08: Authentication failed against database server at `localhost`, the provided database credentials for `neuralgrid` are not valid.
+2025-12-07T07:30:08: 
+2025-12-07T07:30:08: Please make sure to provide valid database credentials for the database server at `localhost`.
+2025-12-07T07:30:08:     at $n.handleRequestError (/home/azamans/n8n-neuralgrid/node_modules/@prisma/client/runtime/library.js:121:7615)
+2025-12-07T07:30:08:     at $n.handleAndLogRequestError (/home/azamans/n8n-neuralgrid/node_modules/@prisma/client/runtime/library.js:121:6623)
+2025-12-07T07:30:08:     at $n.request (/home/azamans/n8n-neuralgrid/node_modules/@prisma/client/runtime/library.js:121:6307)
+2025-12-07T07:30:08:     at async l (/home/azamans/n8n-neuralgrid/node_modules/@prisma/client/runtime/library.js:130:9633)
+2025-12-07T07:30:08:     at async ez (/home/azamans/n8n-neuralgrid/apps/web/.next/server/app/api/auth/signup/route.js:1:57297)
+2025-12-07T07:30:08:     at async /home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38411
+2025-12-07T07:30:08:     at async e_.execute (/home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:27880)
+2025-12-07T07:30:08:     at async e_.handle (/home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:39943)
+2025-12-07T07:30:08:     at async doRender (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/base-server.js:1366:42)
+2025-12-07T07:30:08:     at async cacheEntry.responseCache.get.routeKind (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/base-server.js:1588:28) {
+2025-12-07T07:30:08:   clientVersion: '5.22.0',
+2025-12-07T07:30:08:   errorCode: undefined
+2025-12-07T07:30:08: }

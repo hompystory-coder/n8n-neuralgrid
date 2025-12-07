@@ -1,107 +1,72 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@neuralgrid/database'
-import { checkAdminPermission } from '@/lib/api/admin'
+export const dynamic = "force-dynamic"
 
-// GET /api/admin/stats - 전체 통계 조회
+import { NextRequest, NextResponse } from "next/server"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
+import { PrismaClient } from "@prisma/client"
+
+const prisma = new PrismaClient()
+
 export async function GET(req: NextRequest) {
   try {
-    await checkAdminPermission()
-
-    // 병렬로 통계 수집
-    const [
-      totalUsers,
-      activeUsers,
-      totalWorkflows,
-      activeWorkflows,
-      totalExecutions,
-      totalPayments,
-      revenueThisMonth,
-    ] = await Promise.all([
-      // 전체 사용자 수
-      prisma.user.count(),
-      
-      // 활성 사용자 수
-      prisma.user.count({
-        where: { isActive: true },
-      }),
-      
-      // 전체 워크플로우 수
-      prisma.workflow.count(),
-      
-      // 활성 워크플로우 수
-      prisma.workflow.count({
-        where: { isActive: true },
-      }),
-      
-      // 전체 실행 수
-      prisma.workflowExecution.count(),
-      
-      // 전체 결제 수
-      prisma.payment.count({
-        where: { status: 'COMPLETED' },
-      }),
-      
-      // 이번 달 매출
-      prisma.payment.aggregate({
-        where: {
-          status: 'COMPLETED',
-          paidAt: {
-            gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-          },
-        },
-        _sum: {
-          amount: true,
-        },
-      }),
-    ])
-
-    // 플랜별 사용자 분포
-    const usersByPlan = await prisma.subscription.groupBy({
-      by: ['plan'],
-      _count: true,
+    const session = await getServerSession(authOptions)
+    
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: "인증되지 않았습니다" },
+        { status: 401 }
+      )
+    }
+    
+    if ((session.user as any).role !== "ADMIN") {
+      return NextResponse.json(
+        { error: "권한이 없습니다" },
+        { status: 403 }
+      )
+    }
+    
+    const totalUsers = await prisma.user.count()
+    const activeUsers = await prisma.subscription.count({
+      where: { status: "ACTIVE" }
     })
-
-    // 최근 가입 사용자
+    
+    const currentMonth = new Date().toISOString().slice(0, 7)
+    const usageStats = await prisma.usage.aggregate({
+      where: { month: currentMonth },
+      _sum: {
+        workflowsCount: true,
+        executionsCount: true,
+        aiShortsCount: true,
+        storageUsed: true,
+      }
+    })
+    
     const recentUsers = await prisma.user.findMany({
       take: 10,
       orderBy: { createdAt: 'desc' },
       select: {
         id: true,
-        email: true,
         name: true,
-        createdAt: true,
+        email: true,
         role: true,
-      },
+        createdAt: true,
+      }
     })
-
+    
     return NextResponse.json({
-      stats: {
-        users: {
-          total: totalUsers,
-          active: activeUsers,
-        },
-        workflows: {
-          total: totalWorkflows,
-          active: activeWorkflows,
-        },
-        executions: {
-          total: totalExecutions,
-        },
-        payments: {
-          total: totalPayments,
-          revenueThisMonth: revenueThisMonth._sum.amount || 0,
-        },
-        usersByPlan: usersByPlan.map((p) => ({
-          plan: p.plan,
-          count: p._count,
-        })),
-      },
+      totalUsers,
+      activeUsers,
+      totalWorkflows: usageStats._sum.workflowsCount || 0,
+      totalExecutions: usageStats._sum.executionsCount || 0,
+      totalAiShorts: usageStats._sum.aiShortsCount || 0,
+      totalStorage: usageStats._sum.storageUsed || 0,
       recentUsers,
     })
-  } catch (error: any) {
+  } catch (error) {
+    console.error("Admin stats error:", error)
     return NextResponse.json(
-      { error: error.message || '통계 조회 실패' },
-      { status: error.message.includes('권한') ? 403 : 500 }
+      { error: "통계를 불러오는 중 오류가 발생했습니다" },
+      { status: 500 }
     )
   }
 }

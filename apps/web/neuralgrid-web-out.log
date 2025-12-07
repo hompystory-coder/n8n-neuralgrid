@@ -1,0 +1,288 @@
+2025-12-07T05:34:02: 
+2025-12-07T05:34:02: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T05:34:02: > next start -p 3000
+2025-12-07T05:34:02: 
+2025-12-07T05:34:02:   ▲ Next.js 14.2.33
+2025-12-07T05:34:02:   - Local:        http://localhost:3000
+2025-12-07T05:34:02: 
+2025-12-07T05:34:02:  ✓ Starting...
+2025-12-07T05:34:02:  ✓ Ready in 163ms
+2025-12-07T06:08:59: 
+2025-12-07T06:08:59: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T06:08:59: > next start -p 3000
+2025-12-07T06:08:59: 
+2025-12-07T06:08:59:   ▲ Next.js 14.2.33
+2025-12-07T06:08:59:   - Local:        http://localhost:3000
+2025-12-07T06:08:59: 
+2025-12-07T06:08:59:  ✓ Starting...
+2025-12-07T06:08:59:  ✓ Ready in 161ms
+2025-12-07T06:17:37: 
+2025-12-07T06:17:37: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T06:17:37: > next start -p 3000
+2025-12-07T06:17:37: 
+2025-12-07T06:17:37:   ▲ Next.js 14.2.33
+2025-12-07T06:17:37:   - Local:        http://localhost:3000
+2025-12-07T06:17:37: 
+2025-12-07T06:17:37:  ✓ Starting...
+2025-12-07T06:17:37:  ✓ Ready in 167ms
+2025-12-07T06:21:34: 
+2025-12-07T06:21:34: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T06:21:34: > next start -p 3000
+2025-12-07T06:21:34: 
+2025-12-07T06:21:34:   ▲ Next.js 14.2.33
+2025-12-07T06:21:34:   - Local:        http://localhost:3000
+2025-12-07T06:21:34: 
+2025-12-07T06:21:34:  ✓ Starting...
+2025-12-07T06:21:34:  ✓ Ready in 168ms
+2025-12-07T06:26:06: 
+2025-12-07T06:26:06: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T06:26:06: > next start -p 3000
+2025-12-07T06:26:06: 
+2025-12-07T06:26:06:   ▲ Next.js 14.2.33
+2025-12-07T06:26:06:   - Local:        http://localhost:3000
+2025-12-07T06:26:06: 
+2025-12-07T06:26:06:  ✓ Starting...
+2025-12-07T06:26:06:  ✓ Ready in 165ms
+2025-12-07T07:03:19: 
+2025-12-07T07:03:19: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:03:19: > next start -p 3000
+2025-12-07T07:03:19: 
+2025-12-07T07:03:19:   ▲ Next.js 14.2.33
+2025-12-07T07:03:19:   - Local:        http://localhost:3000
+2025-12-07T07:03:19: 
+2025-12-07T07:03:19:  ✓ Starting...
+2025-12-07T07:03:19:  ELIFECYCLE  Command failed with exit code 1.
+2025-12-07T07:03:20: 
+2025-12-07T07:03:20: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:03:20: > next start -p 3000
+2025-12-07T07:03:20: 
+2025-12-07T07:03:20:   ▲ Next.js 14.2.33
+2025-12-07T07:03:20:   - Local:        http://localhost:3000
+2025-12-07T07:03:20: 
+2025-12-07T07:03:20:  ✓ Starting...
+2025-12-07T07:03:20:  ELIFECYCLE  Command failed with exit code 1.
+2025-12-07T07:03:20: 
+2025-12-07T07:03:20: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:03:20: > next start -p 3000
+2025-12-07T07:03:20: 
+2025-12-07T07:03:20:   ▲ Next.js 14.2.33
+2025-12-07T07:03:20:   - Local:        http://localhost:3000
+2025-12-07T07:03:20: 
+2025-12-07T07:03:20:  ✓ Starting...
+2025-12-07T07:03:20:  ELIFECYCLE  Command failed with exit code 1.
+2025-12-07T07:03:20: 
+2025-12-07T07:03:20: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:03:20: > next start -p 3000
+2025-12-07T07:03:20: 
+2025-12-07T07:03:21:   ▲ Next.js 14.2.33
+2025-12-07T07:03:21:   - Local:        http://localhost:3000
+2025-12-07T07:03:21: 
+2025-12-07T07:03:21:  ✓ Starting...
+2025-12-07T07:03:21:  ELIFECYCLE  Command failed with exit code 1.
+2025-12-07T07:03:21: 
+2025-12-07T07:03:21: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:03:21: > next start -p 3000
+2025-12-07T07:03:21: 
+2025-12-07T07:03:21:   ▲ Next.js 14.2.33
+2025-12-07T07:03:21:   - Local:        http://localhost:3000
+2025-12-07T07:03:21: 
+2025-12-07T07:03:21:  ✓ Starting...
+2025-12-07T07:03:21:  ELIFECYCLE  Command failed with exit code 1.
+2025-12-07T07:03:21: 
+2025-12-07T07:03:21: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:03:21: > next start -p 3000
+2025-12-07T07:03:21: 
+2025-12-07T07:03:21:   ▲ Next.js 14.2.33
+2025-12-07T07:03:21:   - Local:        http://localhost:3000
+2025-12-07T07:03:21: 
+2025-12-07T07:03:21:  ✓ Starting...
+2025-12-07T07:03:22:  ELIFECYCLE  Command failed with exit code 1.
+2025-12-07T07:03:22: 
+2025-12-07T07:03:22: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:03:22: > next start -p 3000
+2025-12-07T07:03:22: 
+2025-12-07T07:03:22:   ▲ Next.js 14.2.33
+2025-12-07T07:03:22:   - Local:        http://localhost:3000
+2025-12-07T07:03:22: 
+2025-12-07T07:03:22:  ✓ Starting...
+2025-12-07T07:03:22:  ELIFECYCLE  Command failed with exit code 1.
+2025-12-07T07:03:22: 
+2025-12-07T07:03:22: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:03:22: > next start -p 3000
+2025-12-07T07:03:22: 
+2025-12-07T07:03:22:   ▲ Next.js 14.2.33
+2025-12-07T07:03:22:   - Local:        http://localhost:3000
+2025-12-07T07:03:22: 
+2025-12-07T07:03:22:  ✓ Starting...
+2025-12-07T07:03:22:  ELIFECYCLE  Command failed with exit code 1.
+2025-12-07T07:03:23: 
+2025-12-07T07:03:23: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:03:23: > next start -p 3000
+2025-12-07T07:03:23: 
+2025-12-07T07:03:23:   ▲ Next.js 14.2.33
+2025-12-07T07:03:23:   - Local:        http://localhost:3000
+2025-12-07T07:03:23: 
+2025-12-07T07:03:23:  ✓ Starting...
+2025-12-07T07:03:23:  ELIFECYCLE  Command failed with exit code 1.
+2025-12-07T07:03:23: 
+2025-12-07T07:03:23: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:03:23: > next start -p 3000
+2025-12-07T07:03:23: 
+2025-12-07T07:03:23:   ▲ Next.js 14.2.33
+2025-12-07T07:03:23:   - Local:        http://localhost:3000
+2025-12-07T07:03:23: 
+2025-12-07T07:03:23:  ✓ Starting...
+2025-12-07T07:03:23:  ELIFECYCLE  Command failed with exit code 1.
+2025-12-07T07:03:24: 
+2025-12-07T07:03:24: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:03:24: > next start -p 3000
+2025-12-07T07:03:24: 
+2025-12-07T07:03:24:   ▲ Next.js 14.2.33
+2025-12-07T07:03:24:   - Local:        http://localhost:3000
+2025-12-07T07:03:24: 
+2025-12-07T07:03:24:  ✓ Starting...
+2025-12-07T07:03:24:  ELIFECYCLE  Command failed with exit code 1.
+2025-12-07T07:03:24: 
+2025-12-07T07:03:24: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:03:24: > next start -p 3000
+2025-12-07T07:03:24: 
+2025-12-07T07:03:24:   ▲ Next.js 14.2.33
+2025-12-07T07:03:24:   - Local:        http://localhost:3000
+2025-12-07T07:03:24: 
+2025-12-07T07:03:24:  ✓ Starting...
+2025-12-07T07:03:24:  ELIFECYCLE  Command failed with exit code 1.
+2025-12-07T07:03:24: 
+2025-12-07T07:03:24: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:03:24: > next start -p 3000
+2025-12-07T07:03:24: 
+2025-12-07T07:03:25:   ▲ Next.js 14.2.33
+2025-12-07T07:03:25:   - Local:        http://localhost:3000
+2025-12-07T07:03:25: 
+2025-12-07T07:03:25:  ✓ Starting...
+2025-12-07T07:03:25:  ELIFECYCLE  Command failed with exit code 1.
+2025-12-07T07:03:25: 
+2025-12-07T07:03:25: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:03:25: > next start -p 3000
+2025-12-07T07:03:25: 
+2025-12-07T07:03:25:   ▲ Next.js 14.2.33
+2025-12-07T07:03:25:   - Local:        http://localhost:3000
+2025-12-07T07:03:25: 
+2025-12-07T07:03:25:  ✓ Starting...
+2025-12-07T07:03:25:  ELIFECYCLE  Command failed with exit code 1.
+2025-12-07T07:03:25: 
+2025-12-07T07:03:25: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:03:25: > next start -p 3000
+2025-12-07T07:03:25: 
+2025-12-07T07:03:25:   ▲ Next.js 14.2.33
+2025-12-07T07:03:25:   - Local:        http://localhost:3000
+2025-12-07T07:03:25: 
+2025-12-07T07:03:25:  ✓ Starting...
+2025-12-07T07:03:26:  ELIFECYCLE  Command failed with exit code 1.
+2025-12-07T07:03:26: 
+2025-12-07T07:03:26: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:03:26: > next start -p 3000
+2025-12-07T07:03:26: 
+2025-12-07T07:03:26:   ▲ Next.js 14.2.33
+2025-12-07T07:03:26:   - Local:        http://localhost:3000
+2025-12-07T07:03:26: 
+2025-12-07T07:03:26:  ✓ Starting...
+2025-12-07T07:03:26:  ELIFECYCLE  Command failed with exit code 1.
+2025-12-07T07:24:27: 
+2025-12-07T07:24:27: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:24:27: > next start -p 3000
+2025-12-07T07:24:27: 
+2025-12-07T07:24:27:   ▲ Next.js 14.2.33
+2025-12-07T07:24:27:   - Local:        http://localhost:3000
+2025-12-07T07:24:27: 
+2025-12-07T07:24:27:  ✓ Starting...
+2025-12-07T07:24:27:  ✓ Ready in 164ms
+2025-12-07T07:31:03: 
+2025-12-07T07:31:03: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:31:03: > next start -p 3000
+2025-12-07T07:31:03: 
+2025-12-07T07:31:03:   ▲ Next.js 14.2.33
+2025-12-07T07:31:03:   - Local:        http://localhost:3000
+2025-12-07T07:31:03: 
+2025-12-07T07:31:03:  ✓ Starting...
+2025-12-07T07:31:03:  ✓ Ready in 161ms
+2025-12-07T07:35:26: 
+2025-12-07T07:35:26: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:35:26: > next start -p 3000
+2025-12-07T07:35:26: 
+2025-12-07T07:35:26:   ▲ Next.js 14.2.33
+2025-12-07T07:35:26:   - Local:        http://localhost:3000
+2025-12-07T07:35:26: 
+2025-12-07T07:35:26:  ✓ Starting...
+2025-12-07T07:35:27:  ✓ Ready in 162ms
+2025-12-07T07:36:21: 
+2025-12-07T07:36:21: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:36:21: > next start -p 3000
+2025-12-07T07:36:21: 
+2025-12-07T07:36:21:   ▲ Next.js 14.2.33
+2025-12-07T07:36:21:   - Local:        http://localhost:3000
+2025-12-07T07:36:21: 
+2025-12-07T07:36:21:  ✓ Starting...
+2025-12-07T07:36:22:  ✓ Ready in 168ms
+2025-12-07T07:39:39: 
+2025-12-07T07:39:39: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:39:39: > next start -p 3000
+2025-12-07T07:39:39: 
+2025-12-07T07:39:39:   ▲ Next.js 14.2.33
+2025-12-07T07:39:39:   - Local:        http://localhost:3000
+2025-12-07T07:39:39: 
+2025-12-07T07:39:39:  ✓ Starting...
+2025-12-07T07:39:39:  ✓ Ready in 161ms
+2025-12-07T07:44:04: 
+2025-12-07T07:44:04: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:44:04: > next start -p 3000
+2025-12-07T07:44:04: 
+2025-12-07T07:44:04:   ▲ Next.js 14.2.33
+2025-12-07T07:44:04:   - Local:        http://localhost:3000
+2025-12-07T07:44:04: 
+2025-12-07T07:44:04:  ✓ Starting...
+2025-12-07T07:44:04:  ✓ Ready in 164ms
+2025-12-07T07:46:25: 
+2025-12-07T07:46:25: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:46:25: > next start -p 3000
+2025-12-07T07:46:25: 
+2025-12-07T07:46:25:   ▲ Next.js 14.2.33
+2025-12-07T07:46:25:   - Local:        http://localhost:3000
+2025-12-07T07:46:25: 
+2025-12-07T07:46:25:  ✓ Starting...
+2025-12-07T07:46:25:  ✓ Ready in 165ms
+2025-12-07T07:52:42: 
+2025-12-07T07:52:42: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T07:52:42: > next start -p 3000
+2025-12-07T07:52:42: 
+2025-12-07T07:52:42:   ▲ Next.js 14.2.33
+2025-12-07T07:52:42:   - Local:        http://localhost:3000
+2025-12-07T07:52:42: 
+2025-12-07T07:52:42:  ✓ Starting...
+2025-12-07T07:52:42:  ✓ Ready in 160ms
+2025-12-07T08:00:58: 
+2025-12-07T08:00:58: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T08:00:58: > next start -p 3000
+2025-12-07T08:00:58: 
+2025-12-07T08:00:58:   ▲ Next.js 14.2.33
+2025-12-07T08:00:58:   - Local:        http://localhost:3000
+2025-12-07T08:00:58: 
+2025-12-07T08:00:58:  ✓ Starting...
+2025-12-07T08:00:58:  ✓ Ready in 161ms
+2025-12-07T08:16:10: 
+2025-12-07T08:16:10: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T08:16:10: > next start -p 3000
+2025-12-07T08:16:10: 
+2025-12-07T08:16:10:   ▲ Next.js 14.2.33
+2025-12-07T08:16:10:   - Local:        http://localhost:3000
+2025-12-07T08:16:10: 
+2025-12-07T08:16:10:  ✓ Starting...
+2025-12-07T08:16:10:  ✓ Ready in 170ms
+2025-12-07T08:18:00: 
+2025-12-07T08:18:00: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-07T08:18:00: > next start -p 3000
+2025-12-07T08:18:00: 
+2025-12-07T08:18:00:   ▲ Next.js 14.2.33
+2025-12-07T08:18:00:   - Local:        http://localhost:3000
+2025-12-07T08:18:00: 
+2025-12-07T08:18:00:  ✓ Starting...
+2025-12-07T08:18:00:  ✓ Ready in 161ms
