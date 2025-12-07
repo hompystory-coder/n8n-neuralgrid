@@ -1,313 +1,287 @@
-'use client';
+"use client"
 
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import Link from "next/link"
+import { LineChart, Line, BarChart, Bar, AreaChart, Area, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+
+export const dynamic = 'force-dynamic'
+
+interface DashboardStats {
+  workflows: { total: number; active: number }
+  executions: { today: number; thisWeek: number; thisMonth: number }
+  aiShorts: { generated: number; pending: number }
+  storage: { used: string; limit: string; percentage: number }
+}
+
+interface ChartData {
+  executionTrend: Array<{ date: string; executions: number; success: number; failed: number }>
+  workflowActivity: Array<{ name: string; value: number }>
+  dailyStats: Array<{ day: string; workflows: number; executions: number }>
+}
 
 export default function Dashboard() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-  const [stats, setStats] = useState({
-    workflows: 0,
-    executions: 0,
-    aiShorts: 0,
-    storage: 0,
-  });
+  const router = useRouter()
+  const session = useSession()
+  const [stats, setStats] = useState<DashboardStats | null>(null)
+  const [chartData, setChartData] = useState<ChartData | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/auth/signin');
+    if (session.status === "unauthenticated") {
+      router.push("/auth/signin")
+    } else if (session.status === "authenticated") {
+      fetchStats()
+      const interval = setInterval(fetchStats, 30000)
+      return () => clearInterval(interval)
     }
-  }, [status, router]);
+  }, [session.status, router])
 
-  useEffect(() => {
-    // 애니메이션 효과로 숫자 증가
-    const timer = setInterval(() => {
-      setStats(prev => ({
-        workflows: Math.min(prev.workflows + 1, 12),
-        executions: Math.min(prev.executions + 50, 1547),
-        aiShorts: Math.min(prev.aiShorts + 1, 38),
-        storage: Math.min(prev.storage + 0.5, 15.8),
-      }));
-    }, 30);
+  const fetchStats = async () => {
+    try {
+      const now = new Date()
+      const dayOfWeek = now.getDay()
+      
+      setStats({
+        workflows: { total: 12, active: 8 },
+        executions: { 
+          today: 145 + Math.floor(Math.random() * 20), 
+          thisWeek: 892, 
+          thisMonth: 3421 
+        },
+        aiShorts: { generated: 34, pending: 5 },
+        storage: { used: "2.3 GB", limit: "10 GB", percentage: 23 }
+      })
 
-    setTimeout(() => clearInterval(timer), 1000);
-    return () => clearInterval(timer);
-  }, []);
+      const last7Days = Array.from({ length: 7 }, (_, i) => {
+        const date = new Date(now)
+        date.setDate(date.getDate() - (6 - i))
+        return date
+      })
 
-  if (status === 'loading') {
+      setChartData({
+        executionTrend: last7Days.map(date => ({
+          date: `${date.getMonth() + 1}/${date.getDate()}`,
+          executions: 120 + Math.floor(Math.random() * 80),
+          success: 110 + Math.floor(Math.random() * 80),
+          failed: 5 + Math.floor(Math.random() * 10),
+        })),
+        workflowActivity: [
+          { name: 'Active', value: 8 },
+          { name: 'Inactive', value: 4 },
+        ],
+        dailyStats: [
+          { day: 'Mon', workflows: 8, executions: 120 },
+          { day: 'Tue', workflows: 10, executions: 145 },
+          { day: 'Wed', workflows: 9, executions: 167 },
+          { day: 'Thu', workflows: 11, executions: 134 },
+          { day: 'Fri', workflows: 12, executions: 189 },
+          { day: 'Sat', workflows: 8, executions: 201 },
+          { day: 'Sun', workflows: 7, executions: 145 },
+        ]
+      })
+    } catch (error) {
+      console.error("Failed to fetch stats:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const COLORS = ['#8b5cf6', '#ec4899', '#06b6d4', '#f59e0b']
+
+  if (session.status === "loading" || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-900">
-        <div className="text-xl text-white">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-black">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="text-xl text-white">Loading...</div>
+        </div>
       </div>
-    );
+    )
   }
 
-  if (!session) {
-    return null;
-  }
+  if (!session.data) return null
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white">
-      {/* Navigation */}
       <nav className="fixed top-0 w-full bg-black/50 backdrop-blur-xl z-50 border-b border-white/10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center font-bold">
-                NG
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                NeuralGrid
-              </span>
+              <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center font-bold">NG</div>
+              <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">NeuralGrid</span>
             </Link>
-
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/dashboard" className="text-purple-400 font-semibold">
-                대시보드
-              </Link>
-              <Link href="http://n8n.neuralgrid.kr" className="hover:text-purple-400 transition-colors">
-                워크플로우
-              </Link>
-              <Link href="/mypage" className="hover:text-purple-400 transition-colors">
-                마이페이지
-              </Link>
-              {session.user?.role === 'ADMIN' && (
-                <Link href="/admin" className="hover:text-purple-400 transition-colors">
-                  관리자
-                </Link>
+              <Link href="/dashboard" className="text-purple-400 font-semibold">대시보드</Link>
+              <Link href="/mypage" className="hover:text-purple-400 transition-colors">마이페이지</Link>
+              {session.data.user?.role === 'ADMIN' && (
+                <Link href="/admin" className="hover:text-purple-400 transition-colors">관리자</Link>
               )}
             </div>
-
             <div className="flex items-center gap-4">
-              <div className="px-4 py-2 bg-purple-500/20 border border-purple-500/30 rounded-full text-sm">
-                {session.user?.role || 'USER'}
+              <div className="px-4 py-2 bg-purple-500/20 border border-purple-500/30 rounded-full text-sm">{session.data.user?.role || 'USER'}</div>
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center font-bold">
+                {session.data.user?.name?.[0]?.toUpperCase() || 'U'}
               </div>
-              <Link href="/mypage" className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center font-bold">
-                {session.user?.name?.[0]?.toUpperCase() || 'U'}
-              </Link>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Main Content */}
       <main className="pt-24 pb-16 px-4">
         <div className="container mx-auto max-w-7xl">
-          {/* Header */}
           <div className="mb-12">
-            <h1 className="text-5xl font-black mb-4 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
-              대시보드
-            </h1>
-            <p className="text-xl text-gray-400">
-              환영합니다, {session.user?.name || session.user?.email}님! 📊
-            </p>
+            <h1 className="text-5xl font-black bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">대시보드</h1>
+            <p className="text-xl text-gray-400">안녕하세요, {session.data.user?.name || session.data.user?.email}님! 👋</p>
           </div>
 
-          {/* Stats Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {/* Workflows */}
-            <div className="bg-gradient-to-br from-purple-900/30 to-purple-600/10 border border-purple-500/30 rounded-3xl p-8 hover:border-purple-500/50 transition-all group">
-              <div className="flex items-center justify-between mb-4">
-                <div className="text-4xl">🔄</div>
-                <div className="px-3 py-1 bg-green-500/20 border border-green-500/30 rounded-full text-xs text-green-400">
-                  +3 이번 주
+          {stats && (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div className="bg-gradient-to-br from-blue-900/30 to-blue-600/10 border border-blue-500/30 rounded-3xl p-6 hover:scale-105 transition-transform">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center text-2xl">🔄</div>
+                    <div className="text-sm text-blue-400">+12%</div>
+                  </div>
+                  <h3 className="text-gray-400 text-sm mb-2">워크플로우</h3>
+                  <div className="text-4xl font-bold text-blue-400">{stats.workflows.total}</div>
+                  <p className="text-xs text-gray-500 mt-2">{stats.workflows.active}개 활성화</p>
                 </div>
-              </div>
-              <div className="text-5xl font-black mb-2 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                {stats.workflows}
-              </div>
-              <div className="text-gray-400 font-semibold">활성 워크플로우</div>
-              <div className="mt-4 pt-4 border-t border-white/10">
-                <div className="text-sm text-gray-500">
-                  총 실행 가능: <span className="text-purple-400 font-semibold">무제한</span>
-                </div>
-              </div>
-            </div>
 
-            {/* Executions */}
-            <div className="bg-gradient-to-br from-blue-900/30 to-blue-600/10 border border-blue-500/30 rounded-3xl p-8 hover:border-blue-500/50 transition-all group">
-              <div className="flex items-center justify-between mb-4">
-                <div className="text-4xl">⚡</div>
-                <div className="px-3 py-1 bg-blue-500/20 border border-blue-500/30 rounded-full text-xs text-blue-400">
-                  98.5% 성공
+                <div className="bg-gradient-to-br from-green-900/30 to-green-600/10 border border-green-500/30 rounded-3xl p-6 hover:scale-105 transition-transform">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center text-2xl">⚡</div>
+                    <div className="text-sm text-green-400">+8%</div>
+                  </div>
+                  <h3 className="text-gray-400 text-sm mb-2">오늘 실행</h3>
+                  <div className="text-4xl font-bold text-green-400">{stats.executions.today}</div>
+                  <p className="text-xs text-gray-500 mt-2">이번 주 {stats.executions.thisWeek}회</p>
                 </div>
-              </div>
-              <div className="text-5xl font-black mb-2 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                {stats.executions.toLocaleString()}
-              </div>
-              <div className="text-gray-400 font-semibold">이번 달 실행</div>
-              <div className="mt-4 pt-4 border-t border-white/10">
-                <div className="text-sm text-gray-500">
-                  월 한도: <span className="text-blue-400 font-semibold">10,000회</span>
-                </div>
-              </div>
-            </div>
 
-            {/* AI Shorts */}
-            <div className="bg-gradient-to-br from-pink-900/30 to-pink-600/10 border border-pink-500/30 rounded-3xl p-8 hover:border-pink-500/50 transition-all group">
-              <div className="flex items-center justify-between mb-4">
-                <div className="text-4xl">🎬</div>
-                <div className="px-3 py-1 bg-pink-500/20 border border-pink-500/30 rounded-full text-xs text-pink-400">
-                  12개 대기중
+                <div className="bg-gradient-to-br from-purple-900/30 to-purple-600/10 border border-purple-500/30 rounded-3xl p-6 hover:scale-105 transition-transform">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center text-2xl">🎬</div>
+                    <div className="text-sm text-purple-400">+25%</div>
+                  </div>
+                  <h3 className="text-gray-400 text-sm mb-2">AI 쇼츠</h3>
+                  <div className="text-4xl font-bold text-purple-400">{stats.aiShorts.generated}</div>
+                  <p className="text-xs text-gray-500 mt-2">{stats.aiShorts.pending}개 대기중</p>
                 </div>
-              </div>
-              <div className="text-5xl font-black mb-2 bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-transparent">
-                {stats.aiShorts}
-              </div>
-              <div className="text-gray-400 font-semibold">AI 쇼츠 생성</div>
-              <div className="mt-4 pt-4 border-t border-white/10">
-                <div className="text-sm text-gray-500">
-                  월 한도: <span className="text-pink-400 font-semibold">50개</span>
-                </div>
-              </div>
-            </div>
 
-            {/* Storage */}
-            <div className="bg-gradient-to-br from-green-900/30 to-green-600/10 border border-green-500/30 rounded-3xl p-8 hover:border-green-500/50 transition-all group">
-              <div className="flex items-center justify-between mb-4">
-                <div className="text-4xl">💾</div>
-                <div className="px-3 py-1 bg-green-500/20 border border-green-500/30 rounded-full text-xs text-green-400">
-                  21% 사용
+                <div className="bg-gradient-to-br from-pink-900/30 to-pink-600/10 border border-pink-500/30 rounded-3xl p-6 hover:scale-105 transition-transform">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-12 h-12 bg-pink-500/20 rounded-xl flex items-center justify-center text-2xl">💾</div>
+                    <div className="text-sm text-pink-400">{stats.storage.percentage}%</div>
+                  </div>
+                  <h3 className="text-gray-400 text-sm mb-2">스토리지</h3>
+                  <div className="text-4xl font-bold text-pink-400">{stats.storage.used}</div>
+                  <p className="text-xs text-gray-500 mt-2">{stats.storage.limit} 중</p>
                 </div>
-              </div>
-              <div className="text-5xl font-black mb-2 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
-                {stats.storage.toFixed(1)}GB
-              </div>
-              <div className="text-gray-400 font-semibold">스토리지 사용량</div>
-              <div className="mt-4 pt-4 border-t border-white/10">
-                <div className="text-sm text-gray-500">
-                  총 용량: <span className="text-green-400 font-semibold">100GB</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Recent Activity & Quick Actions */}
-          <div className="grid lg:grid-cols-3 gap-8 mb-12">
-            {/* Recent Workflows */}
-            <div className="lg:col-span-2 bg-white/5 border border-white/10 rounded-3xl p-8">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold">최근 워크플로우</h2>
-                <a href="http://n8n.neuralgrid.kr" className="text-sm text-purple-400 hover:text-purple-300 transition-colors">
-                  전체 보기 →
-                </a>
               </div>
 
-              <div className="space-y-4">
-                {[
-                  { name: '이메일 자동 분류', status: 'running', executions: 234, success: 98 },
-                  { name: 'Slack 알림 자동화', status: 'running', executions: 156, success: 100 },
-                  { name: 'Google Sheets 동기화', status: 'stopped', executions: 89, success: 94 },
-                  { name: 'GitHub 이슈 추적', status: 'running', executions: 45, success: 97 },
-                ].map((workflow, i) => (
-                  <div key={i} className="flex items-center justify-between p-4 bg-black/30 rounded-2xl hover:bg-black/50 transition-all cursor-pointer group">
-                    <div className="flex items-center gap-4">
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                        workflow.status === 'running'
-                          ? 'bg-green-500/20 border border-green-500/30'
-                          : 'bg-gray-500/20 border border-gray-500/30'
-                      }`}>
-                        {workflow.status === 'running' ? '▶️' : '⏸️'}
-                      </div>
-                      <div>
-                        <div className="font-semibold group-hover:text-purple-400 transition-colors">
-                          {workflow.name}
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          {workflow.executions}회 실행 · 성공률 {workflow.success}%
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {workflow.status === 'running' && (
-                        <div className="px-3 py-1 bg-green-500/20 border border-green-500/30 rounded-full text-xs text-green-400">
-                          실행 중
-                        </div>
-                      )}
-                      <button className="w-8 h-8 bg-white/5 hover:bg-white/10 rounded-lg flex items-center justify-center transition-all">
-                        <span className="text-gray-400">⋯</span>
-                      </button>
+              {chartData && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                  <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-xl">
+                    <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                      <span className="text-2xl">📈</span>
+                      실행 추이 (최근 7일)
+                    </h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <AreaChart data={chartData.executionTrend}>
+                        <defs>
+                          <linearGradient id="colorExecutions" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8}/>
+                            <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                          </linearGradient>
+                          <linearGradient id="colorSuccess" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#10b981" stopOpacity={0.8}/>
+                            <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                        <XAxis dataKey="date" stroke="#9ca3af" />
+                        <YAxis stroke="#9ca3af" />
+                        <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }} labelStyle={{ color: '#f3f4f6' }} />
+                        <Legend />
+                        <Area type="monotone" dataKey="executions" stroke="#8b5cf6" fillOpacity={1} fill="url(#colorExecutions)" name="총 실행" />
+                        <Area type="monotone" dataKey="success" stroke="#10b981" fillOpacity={1} fill="url(#colorSuccess)" name="성공" />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-xl">
+                    <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                      <span className="text-2xl">📊</span>
+                      워크플로우 상태
+                    </h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <PieChart>
+                        <Pie data={chartData.workflowActivity} cx="50%" cy="50%" labelLine={false} label={({ name, percent }: any) => `${name}: ${((percent || 0) * 100).toFixed(0)}%`} outerRadius={100} fill="#8884d8" dataKey="value">
+                          {chartData.workflowActivity.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }} />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-xl lg:col-span-2">
+                    <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                      <span className="text-2xl">📅</span>
+                      주간 활동
+                    </h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={chartData.dailyStats}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                        <XAxis dataKey="day" stroke="#9ca3af" />
+                        <YAxis stroke="#9ca3af" />
+                        <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }} labelStyle={{ color: '#f3f4f6' }} />
+                        <Legend />
+                        <Bar dataKey="workflows" fill="#8b5cf6" name="워크플로우" radius={[8, 8, 0, 0]} />
+                        <Bar dataKey="executions" fill="#ec4899" name="실행" radius={[8, 8, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <a href="http://n8n.neuralgrid.kr" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-br from-blue-900/20 to-purple-900/20 border border-blue-500/30 rounded-2xl p-6 hover:scale-105 transition-all group">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-blue-500/20 rounded-xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">🔄</div>
+                    <div>
+                      <h3 className="text-xl font-bold">워크플로우 생성</h3>
+                      <p className="text-sm text-gray-400">n8n 에디터 열기</p>
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-purple-500/20 rounded-3xl p-8">
-              <h2 className="text-2xl font-bold mb-6">빠른 작업</h2>
-
-              <div className="space-y-3">
-                <a href="http://n8n.neuralgrid.kr" className="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-600/20 to-blue-600/20 border border-purple-500/30 rounded-2xl hover:border-purple-500/50 transition-all group">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl flex items-center justify-center text-2xl">
-                    🔄
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-semibold group-hover:text-purple-300 transition-colors">
-                      워크플로우 만들기
-                    </div>
-                    <div className="text-xs text-gray-500">n8n 에디터 열기</div>
-                  </div>
-                  <span className="text-gray-500 group-hover:text-purple-400 transition-colors">→</span>
                 </a>
 
-                <Link href="/mypage" className="flex items-center gap-3 p-4 bg-gradient-to-r from-green-600/20 to-emerald-600/20 border border-green-500/30 rounded-2xl hover:border-green-500/50 transition-all group">
-                  <div className="w-12 h-12 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl flex items-center justify-center text-2xl">
-                    👤
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-semibold group-hover:text-green-300 transition-colors">
-                      마이페이지
+                <a href="http://115.91.5.140:5678" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-br from-pink-900/20 to-orange-900/20 border border-pink-500/30 rounded-2xl p-6 hover:scale-105 transition-all group">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-pink-500/20 rounded-xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">🎬</div>
+                    <div>
+                      <h3 className="text-xl font-bold">AI 쇼츠 생성</h3>
+                      <p className="text-sm text-gray-400">자동 영상 제작</p>
                     </div>
-                    <div className="text-xs text-gray-500">프로필 및 사용량</div>
                   </div>
-                  <span className="text-gray-500 group-hover:text-green-400 transition-colors">→</span>
-                </Link>
+                </a>
 
-                {session.user?.role === 'ADMIN' && (
-                  <Link href="/admin" className="flex items-center gap-3 p-4 bg-gradient-to-r from-red-600/20 to-orange-600/20 border border-red-500/30 rounded-2xl hover:border-red-500/50 transition-all group">
-                    <div className="w-12 h-12 bg-gradient-to-r from-red-600 to-orange-600 rounded-xl flex items-center justify-center text-2xl">
-                      🛡️
+                <a href="https://monitor.neuralgrid.kr" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-br from-green-900/20 to-teal-900/20 border border-green-500/30 rounded-2xl p-6 hover:scale-105 transition-all group">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-green-500/20 rounded-xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">📊</div>
+                    <div>
+                      <h3 className="text-xl font-bold">시스템 모니터링</h3>
+                      <p className="text-sm text-gray-400">실시간 상태 확인</p>
                     </div>
-                    <div className="flex-1">
-                      <div className="font-semibold group-hover:text-red-300 transition-colors">
-                        관리자 대시보드
-                      </div>
-                      <div className="text-xs text-gray-500">시스템 관리</div>
-                    </div>
-                    <span className="text-gray-500 group-hover:text-red-400 transition-colors">→</span>
-                  </Link>
-                )}
+                  </div>
+                </a>
               </div>
-            </div>
-          </div>
-
-          {/* System Status */}
-          <div className="bg-white/5 border border-white/10 rounded-3xl p-8">
-            <h2 className="text-2xl font-bold mb-6">시스템 상태</h2>
-
-            <div className="grid md:grid-cols-4 gap-6">
-              {[
-                { name: 'n8n 서버', status: 'online', uptime: '99.9%', color: 'green' },
-                { name: 'Web 서버', status: 'online', uptime: '99.7%', color: 'green' },
-                { name: 'API 게이트웨이', status: 'online', uptime: '100%', color: 'green' },
-                { name: '데이터베이스', status: 'online', uptime: '99.8%', color: 'green' },
-              ].map((service, i) => (
-                <div key={i} className="p-6 bg-black/30 rounded-2xl">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="font-semibold">{service.name}</div>
-                    <div className={`w-3 h-3 rounded-full ${service.status === 'online' ? 'bg-green-500' : 'bg-red-500'} animate-pulse`}></div>
-                  </div>
-                  <div className="text-sm text-gray-500 mb-2">가동률</div>
-                  <div className="text-2xl font-bold text-green-400">{service.uptime}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+            </>
+          )}
         </div>
       </main>
     </div>
-  );
+  )
 }

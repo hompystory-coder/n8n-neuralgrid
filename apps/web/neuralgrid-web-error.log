@@ -102,3 +102,61 @@
 2025-12-07T07:30:08:   clientVersion: '5.22.0',
 2025-12-07T07:30:08:   errorCode: undefined
 2025-12-07T07:30:08: }
+2025-12-07T10:25:14: TypeError: Cannot read properties of null (reading 'digest')
+2025-12-07T10:25:14:     at /home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:13:19722
+2025-12-07T10:25:14:     at AsyncLocalStorage.run (node:async_hooks:346:14)
+2025-12-07T10:25:14:     at e_ (/home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:141421)
+2025-12-07T10:25:14:     at /home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138763
+2025-12-07T10:25:14:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-07T10:25:49: TypeError: Cannot read properties of null (reading 'digest')
+2025-12-07T10:25:49:     at /home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:13:19722
+2025-12-07T10:25:49:     at AsyncLocalStorage.run (node:async_hooks:346:14)
+2025-12-07T10:25:49:     at e_ (/home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:141421)
+2025-12-07T10:25:49:     at /home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138763
+2025-12-07T10:25:49:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-07T12:13:56: Error: Failed to find Server Action "x". This request might be from an older or newer deployment. Original error: Cannot read properties of undefined (reading 'workers')
+2025-12-07T12:13:56:     at rT (/home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:16:1766)
+2025-12-07T12:13:56:     at /home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:16:303
+2025-12-07T12:13:56:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-07T12:13:56:     at async rE (/home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:15:8146)
+2025-12-07T12:13:56:     at async r7 (/home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:18:1144)
+2025-12-07T12:13:56:     at async doRender (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/base-server.js:1427:30)
+2025-12-07T12:13:56:     at async cacheEntry.responseCache.get.routeKind (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/base-server.js:1588:28)
+2025-12-07T12:13:56:     at async NextNodeServer.renderToResponseWithComponentsImpl (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/base-server.js:1496:28)
+2025-12-07T12:13:56:     at async NextNodeServer.renderPageComponent (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/base-server.js:1924:24)
+2025-12-07T12:13:56:     at async NextNodeServer.renderToResponseImpl (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/base-server.js:1962:32)
+2025-12-07T12:17:11: Error: Failed to find Server Action "x". This request might be from an older or newer deployment. Original error: Cannot read properties of undefined (reading 'workers')
+2025-12-07T12:17:11:     at rT (/home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:16:1766)
+2025-12-07T12:17:11:     at /home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:16:303
+2025-12-07T12:17:11:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-07T12:17:11:     at async rE (/home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:15:8146)
+2025-12-07T12:17:11:     at async r7 (/home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:18:1144)
+2025-12-07T12:17:11:     at async doRender (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/base-server.js:1427:30)
+2025-12-07T12:17:11:     at async cacheEntry.responseCache.get.routeKind (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/base-server.js:1588:28)
+2025-12-07T12:17:11:     at async NextNodeServer.renderToResponseWithComponentsImpl (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/base-server.js:1496:28)
+2025-12-07T12:17:11:     at async NextNodeServer.renderPageComponent (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/base-server.js:1924:24)
+2025-12-07T12:17:11:     at async NextNodeServer.renderToResponseImpl (/home/azamans/n8n-neuralgrid/node_modules/next/dist/server/base-server.js:1962:32)
+2025-12-07T14:51:23: TypeError: Cannot read properties of null (reading 'digest')
+2025-12-07T14:51:23:     at /home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:13:19722
+2025-12-07T14:51:23:     at AsyncLocalStorage.run (node:async_hooks:346:14)
+2025-12-07T14:51:23:     at e_ (/home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:141421)
+2025-12-07T14:51:23:     at /home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138763
+2025-12-07T14:51:23:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-07T14:51:58: TypeError: Cannot read properties of null (reading 'digest')
+2025-12-07T14:51:58:     at /home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:13:19722
+2025-12-07T14:51:58:     at AsyncLocalStorage.run (node:async_hooks:346:14)
+2025-12-07T14:51:58:     at e_ (/home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:141421)
+2025-12-07T14:51:58:     at /home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138763
+2025-12-07T14:51:58:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-07T19:42:34: TypeError: Cannot read properties of null (reading 'digest')
+2025-12-07T19:42:34:     at /home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:13:19722
+2025-12-07T19:42:34:     at AsyncLocalStorage.run (node:async_hooks:346:14)
+2025-12-07T19:42:34:     at e_ (/home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:141421)
+2025-12-07T19:42:34:     at /home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138763
+2025-12-07T19:42:34:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-12-07T19:43:09: TypeError: Cannot read properties of null (reading 'digest')
+2025-12-07T19:43:09:     at /home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:13:19722
+2025-12-07T19:43:09:     at AsyncLocalStorage.run (node:async_hooks:346:14)
+2025-12-07T19:43:09:     at e_ (/home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:141421)
+2025-12-07T19:43:09:     at /home/azamans/n8n-neuralgrid/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138763
+2025-12-07T19:43:09:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
