@@ -23,6 +23,12 @@ interface ChartData {
   userDistribution: Array<{ name: string; value: number }>
   systemMetrics: Array<{ metric: string; value: number; fullMark: number }>
   topWorkflows: Array<{ name: string; executions: number }>
+  cpuUsage: Array<{ time: string; usage: number; cores: number }>
+  memoryUsage: Array<{ time: string; used: number; free: number; cached: number }>
+  diskIO: Array<{ time: string; read: number; write: number }>
+  networkTraffic: Array<{ time: string; incoming: number; outgoing: number }>
+  responseTime: Array<{ time: string; api: number; db: number; cache: number }>
+  errorRate: Array<{ time: string; rate: number; count: number }>
 }
 
 interface RecentUser {
@@ -79,6 +85,18 @@ export default function AdminPage() {
         return date
       })
 
+      const last24Hours = Array.from({ length: 24 }, (_, i) => {
+        const date = new Date(now)
+        date.setHours(date.getHours() - (23 - i))
+        return date
+      })
+
+      const last30Minutes = Array.from({ length: 30 }, (_, i) => {
+        const date = new Date(now)
+        date.setMinutes(date.getMinutes() - (29 - i))
+        return date
+      })
+
       setChartData({
         userGrowth: last6Months.map(date => ({
           month: date.toLocaleDateString('ko-KR', { month: 'short' }),
@@ -109,7 +127,39 @@ export default function AdminPage() {
           { name: 'Data Sync', executions: 856 },
           { name: 'Social Media Post', executions: 723 },
           { name: 'Report Generation', executions: 654 },
-        ]
+        ],
+        cpuUsage: last30Minutes.map(date => ({
+          time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+          usage: 50 + Math.floor(Math.random() * 40),
+          cores: 4 + Math.floor(Math.random() * 4),
+        })),
+        memoryUsage: last30Minutes.map(date => ({
+          time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+          used: 6000 + Math.floor(Math.random() * 2000),
+          free: 2000 + Math.floor(Math.random() * 1000),
+          cached: 1500 + Math.floor(Math.random() * 500),
+        })),
+        diskIO: last30Minutes.map(date => ({
+          time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+          read: 100 + Math.floor(Math.random() * 150),
+          write: 50 + Math.floor(Math.random() * 100),
+        })),
+        networkTraffic: last30Minutes.map(date => ({
+          time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+          incoming: 500 + Math.floor(Math.random() * 500),
+          outgoing: 300 + Math.floor(Math.random() * 300),
+        })),
+        responseTime: last24Hours.map(date => ({
+          time: `${date.getHours()}시`,
+          api: 50 + Math.floor(Math.random() * 100),
+          db: 30 + Math.floor(Math.random() * 70),
+          cache: 10 + Math.floor(Math.random() * 30),
+        })),
+        errorRate: last24Hours.map(date => ({
+          time: `${date.getHours()}시`,
+          rate: Math.random() * 5,
+          count: Math.floor(Math.random() * 50),
+        })),
       })
 
       setRecentUsers([
@@ -315,6 +365,130 @@ export default function AdminPage() {
                           <YAxis dataKey="name" type="category" stroke="#9ca3af" width={150} />
                           <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }} labelStyle={{ color: '#f3f4f6' }} />
                           <Bar dataKey="executions" fill="#ec4899" radius={[0, 8, 8, 0]} name="실행 횟수" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  <div className="mb-8">
+                    <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
+                      <span className="text-3xl">🖥️</span>
+                      실시간 시스템 모니터링
+                      <span className="text-sm font-normal text-gray-400">(30초 자동 갱신)</span>
+                    </h2>
+                  </div>
+
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-xl">
+                      <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                        <span className="text-2xl">💻</span>
+                        CPU 사용률 (최근 30분)
+                      </h3>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <AreaChart data={chartData.cpuUsage}>
+                          <defs>
+                            <linearGradient id="colorCpu" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
+                              <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                          <XAxis dataKey="time" stroke="#9ca3af" />
+                          <YAxis stroke="#9ca3af" />
+                          <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }} labelStyle={{ color: '#f3f4f6' }} />
+                          <Legend />
+                          <Area type="monotone" dataKey="usage" stroke="#3b82f6" fillOpacity={1} fill="url(#colorCpu)" name="CPU 사용률 (%)" />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+
+                    <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-xl">
+                      <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                        <span className="text-2xl">🧠</span>
+                        메모리 사용량 (최근 30분)
+                      </h3>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <AreaChart data={chartData.memoryUsage}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                          <XAxis dataKey="time" stroke="#9ca3af" />
+                          <YAxis stroke="#9ca3af" />
+                          <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }} labelStyle={{ color: '#f3f4f6' }} />
+                          <Legend />
+                          <Area type="monotone" dataKey="used" stackId="1" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.6} name="사용중 (MB)" />
+                          <Area type="monotone" dataKey="cached" stackId="1" stroke="#06b6d4" fill="#06b6d4" fillOpacity={0.6} name="캐시 (MB)" />
+                          <Area type="monotone" dataKey="free" stackId="1" stroke="#10b981" fill="#10b981" fillOpacity={0.6} name="여유 (MB)" />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+
+                    <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-xl">
+                      <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                        <span className="text-2xl">💾</span>
+                        디스크 I/O (최근 30분)
+                      </h3>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <LineChart data={chartData.diskIO}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                          <XAxis dataKey="time" stroke="#9ca3af" />
+                          <YAxis stroke="#9ca3af" />
+                          <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }} labelStyle={{ color: '#f3f4f6' }} />
+                          <Legend />
+                          <Line type="monotone" dataKey="read" stroke="#10b981" strokeWidth={3} dot={{ r: 4 }} name="읽기 (MB/s)" />
+                          <Line type="monotone" dataKey="write" stroke="#f59e0b" strokeWidth={3} dot={{ r: 4 }} name="쓰기 (MB/s)" />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+
+                    <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-xl">
+                      <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                        <span className="text-2xl">🌐</span>
+                        네트워크 트래픽 (최근 30분)
+                      </h3>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <AreaChart data={chartData.networkTraffic}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                          <XAxis dataKey="time" stroke="#9ca3af" />
+                          <YAxis stroke="#9ca3af" />
+                          <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }} labelStyle={{ color: '#f3f4f6' }} />
+                          <Legend />
+                          <Area type="monotone" dataKey="incoming" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} name="수신 (KB/s)" />
+                          <Area type="monotone" dataKey="outgoing" stroke="#ec4899" fill="#ec4899" fillOpacity={0.6} name="송신 (KB/s)" />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+
+                    <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-xl">
+                      <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                        <span className="text-2xl">⚡</span>
+                        응답 시간 (최근 24시간)
+                      </h3>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <LineChart data={chartData.responseTime}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                          <XAxis dataKey="time" stroke="#9ca3af" />
+                          <YAxis stroke="#9ca3af" />
+                          <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }} labelStyle={{ color: '#f3f4f6' }} />
+                          <Legend />
+                          <Line type="monotone" dataKey="api" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 3 }} name="API (ms)" />
+                          <Line type="monotone" dataKey="db" stroke="#10b981" strokeWidth={2} dot={{ r: 3 }} name="데이터베이스 (ms)" />
+                          <Line type="monotone" dataKey="cache" stroke="#06b6d4" strokeWidth={2} dot={{ r: 3 }} name="캐시 (ms)" />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+
+                    <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-xl">
+                      <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                        <span className="text-2xl">🚨</span>
+                        에러 발생률 (최근 24시간)
+                      </h3>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={chartData.errorRate}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                          <XAxis dataKey="time" stroke="#9ca3af" />
+                          <YAxis stroke="#9ca3af" />
+                          <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }} labelStyle={{ color: '#f3f4f6' }} />
+                          <Legend />
+                          <Bar dataKey="rate" fill="#ef4444" name="에러율 (%)" radius={[8, 8, 0, 0]} />
                         </BarChart>
                       </ResponsiveContainer>
                     </div>
