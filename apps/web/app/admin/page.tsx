@@ -46,6 +46,7 @@ export default function AdminPage() {
   const [chartData, setChartData] = useState<ChartData | null>(null)
   const [recentUsers, setRecentUsers] = useState<RecentUser[]>([])
   const [loading, setLoading] = useState(true)
+  const [realTimeMetrics, setRealTimeMetrics] = useState<any>(null)
 
   useEffect(() => {
     if (session.status === "unauthenticated") {
@@ -63,14 +64,30 @@ export default function AdminPage() {
 
   const fetchData = async () => {
     try {
-      setStats({
-        totalUsers: 247,
-        activeUsers: 189,
-        totalWorkflows: 1523,
-        totalExecutions: 45678,
-        storageUsed: "127.5 GB",
-        systemHealth: 98
-      })
+      // 실제 시스템 메트릭 가져오기
+      const metricsRes = await fetch('/api/system/metrics')
+      if (metricsRes.ok) {
+        const metrics = await metricsRes.json()
+        setRealTimeMetrics(metrics)
+        
+        setStats({
+          totalUsers: 247,
+          activeUsers: 189,
+          totalWorkflows: 1523,
+          totalExecutions: 45678,
+          storageUsed: metrics.memory ? `${metrics.memory.used} GB / ${metrics.memory.total} GB` : "127.5 GB",
+          systemHealth: metrics.memory ? Math.round(100 - parseFloat(metrics.memory.usagePercent)) : 98
+        })
+      } else {
+        setStats({
+          totalUsers: 247,
+          activeUsers: 189,
+          totalWorkflows: 1523,
+          totalExecutions: 45678,
+          storageUsed: "127.5 GB",
+          systemHealth: 98
+        })
+      }
 
       const now = new Date()
       const last6Months = Array.from({ length: 6 }, (_, i) => {
@@ -114,7 +131,13 @@ export default function AdminPage() {
           { name: 'Pro', value: 87 },
           { name: 'Business', value: 40 },
         ],
-        systemMetrics: [
+        systemMetrics: realTimeMetrics ? [
+          { metric: 'CPU', value: parseFloat(realTimeMetrics.cpu.usage), fullMark: 100 },
+          { metric: 'Memory', value: parseFloat(realTimeMetrics.memory.usagePercent), fullMark: 100 },
+          { metric: 'Disk', value: Math.min(parseFloat(realTimeMetrics.disk.write) * 10, 100), fullMark: 100 },
+          { metric: 'Network', value: Math.min((parseFloat(realTimeMetrics.network.received) + parseFloat(realTimeMetrics.network.transmitted)) / 100, 100), fullMark: 100 },
+          { metric: 'Uptime', value: Math.min(realTimeMetrics.system.uptime / 864000 * 100, 100), fullMark: 100 },
+        ] : [
           { metric: 'CPU', value: 65, fullMark: 100 },
           { metric: 'Memory', value: 78, fullMark: 100 },
           { metric: 'Disk', value: 45, fullMark: 100 },
@@ -128,26 +151,46 @@ export default function AdminPage() {
           { name: 'Social Media Post', executions: 723 },
           { name: 'Report Generation', executions: 654 },
         ],
-        cpuUsage: last30Minutes.map(date => ({
+        cpuUsage: last30Minutes.map((date, index) => ({
           time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
-          usage: 50 + Math.floor(Math.random() * 40),
-          cores: 4 + Math.floor(Math.random() * 4),
+          usage: realTimeMetrics && index === last30Minutes.length - 1 
+            ? parseFloat(realTimeMetrics.cpu.usage)
+            : 50 + Math.floor(Math.random() * 40),
+          cores: realTimeMetrics ? realTimeMetrics.cpu.cores : 4,
         })),
-        memoryUsage: last30Minutes.map(date => ({
+        memoryUsage: last30Minutes.map((date, index) => {
+          if (realTimeMetrics && index === last30Minutes.length - 1) {
+            return {
+              time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+              used: parseFloat(realTimeMetrics.memory.used) * 1024,
+              free: parseFloat(realTimeMetrics.memory.free) * 1024,
+              cached: (parseFloat(realTimeMetrics.memory.total) - parseFloat(realTimeMetrics.memory.used) - parseFloat(realTimeMetrics.memory.free)) * 1024,
+            }
+          }
+          return {
+            time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+            used: 6000 + Math.floor(Math.random() * 2000),
+            free: 2000 + Math.floor(Math.random() * 1000),
+            cached: 1500 + Math.floor(Math.random() * 500),
+          }
+        }),
+        diskIO: last30Minutes.map((date, index) => ({
           time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
-          used: 6000 + Math.floor(Math.random() * 2000),
-          free: 2000 + Math.floor(Math.random() * 1000),
-          cached: 1500 + Math.floor(Math.random() * 500),
+          read: realTimeMetrics && index === last30Minutes.length - 1
+            ? parseFloat(realTimeMetrics.disk.read)
+            : 100 + Math.floor(Math.random() * 150),
+          write: realTimeMetrics && index === last30Minutes.length - 1
+            ? parseFloat(realTimeMetrics.disk.write)
+            : 50 + Math.floor(Math.random() * 100),
         })),
-        diskIO: last30Minutes.map(date => ({
+        networkTraffic: last30Minutes.map((date, index) => ({
           time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
-          read: 100 + Math.floor(Math.random() * 150),
-          write: 50 + Math.floor(Math.random() * 100),
-        })),
-        networkTraffic: last30Minutes.map(date => ({
-          time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
-          incoming: 500 + Math.floor(Math.random() * 500),
-          outgoing: 300 + Math.floor(Math.random() * 300),
+          incoming: realTimeMetrics && index === last30Minutes.length - 1
+            ? parseFloat(realTimeMetrics.network.received) * 1024
+            : 500 + Math.floor(Math.random() * 500),
+          outgoing: realTimeMetrics && index === last30Minutes.length - 1
+            ? parseFloat(realTimeMetrics.network.transmitted) * 1024
+            : 300 + Math.floor(Math.random() * 300),
         })),
         responseTime: last24Hours.map(date => ({
           time: `${date.getHours()}시`,
