@@ -21,6 +21,25 @@ async function getSystemMetrics() {
     const freeMem = os.freemem()
     const usedMem = totalMem - freeMem
     
+    // 디스크 용량 정보 (Linux 전용)
+    let diskTotal = 0
+    let diskUsed = 0
+    let diskAvailable = 0
+    let diskUsagePercent = 0
+    try {
+      const { stdout: diskSpace } = await execAsync("df -BG / | tail -1")
+      const parts = diskSpace.trim().split(/\s+/)
+      if (parts.length >= 5) {
+        diskTotal = parseInt(parts[1]) // GB
+        diskUsed = parseInt(parts[2]) // GB
+        diskAvailable = parseInt(parts[3]) // GB
+        diskUsagePercent = parseInt(parts[4]) // %
+      }
+    } catch (e) {
+      // 디스크 용량을 읽을 수 없는 경우 기본값 사용
+      console.error("Failed to read disk space:", e)
+    }
+    
     // 디스크 I/O (Linux 전용)
     let diskRead = 0
     let diskWrite = 0
@@ -63,8 +82,14 @@ async function getSystemMetrics() {
         usagePercent: ((usedMem / totalMem) * 100).toFixed(2)
       },
       disk: {
-        read: diskRead.toFixed(2),
-        write: diskWrite.toFixed(2)
+        total: diskTotal,
+        used: diskUsed,
+        available: diskAvailable,
+        usagePercent: diskUsagePercent,
+        io: {
+          read: diskRead.toFixed(2),
+          write: diskWrite.toFixed(2)
+        }
       },
       network: {
         received: networkRx.toFixed(2),

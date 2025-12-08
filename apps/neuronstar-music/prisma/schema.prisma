@@ -1,0 +1,140 @@
+// This is your Prisma schema file
+// learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Users table (회원 정보)
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  downloads DownloadHistory[]
+  cart      Cart[]
+  likes     Like[]
+
+  @@map("users")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+// Music table (음악 정보)
+model Music {
+  id            String   @id @default(cuid())
+  sunoId        String   @unique @map("suno_id")
+  title         String
+  genre         String
+  thumbnailUrl  String?  @map("thumbnail_url")
+  lyrics        String?  @db.Text
+  audioUrl      String   @map("audio_url")
+  duration      Int      @default(0)
+  viewCount     Int      @default(0) @map("view_count")
+  likeCount     Int      @default(0) @map("like_count")
+  downloadCount Int      @default(0) @map("download_count")
+  tags          String?
+  status        MusicStatus @default(ACTIVE)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  downloads DownloadHistory[]
+  cart      Cart[]
+  likes     Like[]
+
+  @@index([genre])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+  @@map("music")
+}
+
+enum MusicStatus {
+  ACTIVE
+  INACTIVE
+  DELETED
+}
+
+// Download history (다운로드 이력)
+model DownloadHistory {
+  id           String   @id @default(cuid())
+  userId       String   @map("user_id")
+  musicId      String   @map("music_id")
+  downloadedAt DateTime @default(now()) @map("downloaded_at")
+
+  // Relations
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  music Music @relation(fields: [musicId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([musicId])
+  @@map("download_history")
+}
+
+// Cart (장바구니)
+model Cart {
+  id      String   @id @default(cuid())
+  userId  String   @map("user_id")
+  musicId String   @map("music_id")
+  addedAt DateTime @default(now()) @map("added_at")
+
+  // Relations
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  music Music @relation(fields: [musicId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, musicId])
+  @@index([userId])
+  @@map("cart")
+}
+
+// Likes (좋아요)
+model Like {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  musicId   String   @map("music_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  music Music @relation(fields: [musicId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, musicId])
+  @@index([userId])
+  @@index([musicId])
+  @@map("likes")
+}
+
+// Suno generation tasks (수노AI 생성 작업 기록)
+model SunoTask {
+  id             String     @id @default(cuid())
+  taskDate       DateTime   @unique @map("task_date") @db.Date
+  targetCount    Int        @default(20) @map("target_count")
+  completedCount Int        @default(0) @map("completed_count")
+  status         TaskStatus @default(PENDING)
+  errorMessage   String?    @map("error_message") @db.Text
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
+
+  @@index([taskDate])
+  @@map("suno_tasks")
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}

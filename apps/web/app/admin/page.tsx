@@ -26,6 +26,7 @@ interface ChartData {
   cpuUsage: Array<{ time: string; usage: number; cores: number }>
   memoryUsage: Array<{ time: string; used: number; free: number; cached: number }>
   diskIO: Array<{ time: string; read: number; write: number }>
+  diskCapacity: Array<{ time: string; used: number; available: number; usagePercent: number }>
   networkTraffic: Array<{ time: string; incoming: number; outgoing: number }>
   responseTime: Array<{ time: string; api: number; db: number; cache: number }>
   errorRate: Array<{ time: string; rate: number; count: number }>
@@ -152,7 +153,7 @@ export default function AdminPage() {
         systemMetrics: realTimeMetrics ? [
           { metric: 'CPU', value: parseFloat(realTimeMetrics.cpu.usage), fullMark: 100 },
           { metric: 'Memory', value: parseFloat(realTimeMetrics.memory.usagePercent), fullMark: 100 },
-          { metric: 'Disk', value: Math.min(parseFloat(realTimeMetrics.disk.write) * 10, 100), fullMark: 100 },
+          { metric: 'Disk', value: realTimeMetrics.disk.usagePercent || 0, fullMark: 100 },
           { metric: 'Network', value: Math.min((parseFloat(realTimeMetrics.network.received) + parseFloat(realTimeMetrics.network.transmitted)) / 100, 100), fullMark: 100 },
           { metric: 'Uptime', value: Math.min(realTimeMetrics.system.uptime / 864000 * 100, 100), fullMark: 100 },
         ] : [
@@ -207,14 +208,32 @@ export default function AdminPage() {
           if (historyIndex >= 0 && metricsHistoryRef.current[historyIndex]) {
             return {
               time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
-              read: parseFloat(metricsHistoryRef.current[historyIndex].disk.read),
-              write: parseFloat(metricsHistoryRef.current[historyIndex].disk.write),
+              read: parseFloat(metricsHistoryRef.current[historyIndex].disk.io?.read || 0),
+              write: parseFloat(metricsHistoryRef.current[historyIndex].disk.io?.write || 0),
             }
           }
           return {
             time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
             read: 100 + Math.floor(Math.random() * 150),
             write: 50 + Math.floor(Math.random() * 100),
+          }
+        }),
+        diskCapacity: last30Minutes.map((date, index) => {
+          const historyIndex = index - (30 - metricsHistoryRef.current.length)
+          if (historyIndex >= 0 && metricsHistoryRef.current[historyIndex]) {
+            const disk = metricsHistoryRef.current[historyIndex].disk
+            return {
+              time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+              used: disk.used || 0,
+              available: disk.available || 0,
+              usagePercent: disk.usagePercent || 0,
+            }
+          }
+          return {
+            time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+            used: 0,
+            available: 0,
+            usagePercent: 0,
           }
         }),
         networkTraffic: last30Minutes.map((date, index) => {
@@ -527,6 +546,64 @@ export default function AdminPage() {
                           <Line type="monotone" dataKey="write" stroke="#f59e0b" strokeWidth={3} dot={{ r: 4 }} name="쓰기 (MB/s)" />
                         </LineChart>
                       </ResponsiveContainer>
+                    </div>
+
+                    <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-xl">
+                      <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                        <span className="text-2xl">💽</span>
+                        디스크 용량 (최근 30분 실시간)
+                      </h3>
+                      {realTimeMetrics?.disk && (
+                        <div className="mb-6 grid grid-cols-3 gap-4">
+                          <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 rounded-2xl p-4">
+                            <div className="text-sm text-gray-400 mb-1">전체 용량</div>
+                            <div className="text-2xl font-bold text-blue-400">{realTimeMetrics.disk.total}G</div>
+                          </div>
+                          <div className="bg-gradient-to-br from-red-500/20 to-red-600/20 border border-red-500/30 rounded-2xl p-4">
+                            <div className="text-sm text-gray-400 mb-1">사용 중</div>
+                            <div className="text-2xl font-bold text-red-400">{realTimeMetrics.disk.used}G</div>
+                          </div>
+                          <div className="bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-500/30 rounded-2xl p-4">
+                            <div className="text-sm text-gray-400 mb-1">사용 가능</div>
+                            <div className="text-2xl font-bold text-green-400">{realTimeMetrics.disk.available}G</div>
+                          </div>
+                        </div>
+                      )}
+                      <ResponsiveContainer width="100%" height={300}>
+                        <AreaChart data={chartData.diskCapacity}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                          <XAxis dataKey="time" stroke="#9ca3af" />
+                          <YAxis stroke="#9ca3af" label={{ value: 'GB', angle: -90, position: 'insideLeft', style: { fill: '#9ca3af' } }} />
+                          <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' }} labelStyle={{ color: '#f3f4f6' }} />
+                          <Legend />
+                          <Area type="monotone" dataKey="used" stroke="#ef4444" fill="#ef4444" fillOpacity={0.7} name="사용 중 (GB)" stackId="1" />
+                          <Area type="monotone" dataKey="available" stroke="#10b981" fill="#10b981" fillOpacity={0.7} name="사용 가능 (GB)" stackId="1" />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                      {realTimeMetrics?.disk && (
+                        <div className="mt-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm text-gray-400">디스크 사용률</span>
+                            <span className={`text-sm font-bold ${
+                              realTimeMetrics.disk.usagePercent > 90 ? 'text-red-400' : 
+                              realTimeMetrics.disk.usagePercent > 75 ? 'text-yellow-400' : 
+                              'text-green-400'
+                            }`}>
+                              {realTimeMetrics.disk.usagePercent}%
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-700 rounded-full h-3 overflow-hidden">
+                            <div 
+                              className={`h-full rounded-full transition-all duration-500 ${
+                                realTimeMetrics.disk.usagePercent > 90 ? 'bg-gradient-to-r from-red-500 to-red-600' : 
+                                realTimeMetrics.disk.usagePercent > 75 ? 'bg-gradient-to-r from-yellow-500 to-yellow-600' : 
+                                'bg-gradient-to-r from-green-500 to-green-600'
+                              }`}
+                              style={{ width: `${realTimeMetrics.disk.usagePercent}%` }}
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-xl">
