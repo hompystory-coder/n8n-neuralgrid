@@ -220,17 +220,30 @@ export default function AdminPage() {
             outgoing: 300 + Math.floor(Math.random() * 300),
           }
         }),
-        responseTime: last24Hours.map(date => ({
-          time: `${date.getHours()}시`,
-          api: 50 + Math.floor(Math.random() * 100),
-          db: 30 + Math.floor(Math.random() * 70),
-          cache: 10 + Math.floor(Math.random() * 30),
-        })),
-        errorRate: last24Hours.map(date => ({
-          time: `${date.getHours()}시`,
-          rate: Math.random() * 5,
-          count: Math.floor(Math.random() * 50),
-        })),
+        responseTime: realTimeMetrics?.performance?.hourlyStats 
+          ? realTimeMetrics.performance.hourlyStats.map((stat: any) => ({
+              time: `${stat.hour}시`,
+              api: stat.avgResponseTime || 0,
+              db: Math.max(0, (stat.avgResponseTime || 0) * 0.6),
+              cache: Math.max(0, (stat.avgResponseTime || 0) * 0.2),
+            }))
+          : last24Hours.map(date => ({
+              time: `${date.getHours()}시`,
+              api: 50 + Math.floor(Math.random() * 100),
+              db: 30 + Math.floor(Math.random() * 70),
+              cache: 10 + Math.floor(Math.random() * 30),
+            })),
+        errorRate: realTimeMetrics?.performance?.hourlyStats
+          ? realTimeMetrics.performance.hourlyStats.map((stat: any) => ({
+              time: `${stat.hour}시`,
+              rate: stat.errorRate || 0,
+              count: stat.errorCount || 0,
+            }))
+          : last24Hours.map(date => ({
+              time: `${date.getHours()}시`,
+              rate: Math.random() * 5,
+              count: Math.floor(Math.random() * 50),
+            })),
       })
 
       setRecentUsers([

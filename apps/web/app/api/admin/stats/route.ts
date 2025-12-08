@@ -4,10 +4,12 @@ import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { PrismaClient } from "@prisma/client"
+import { measureResponseTime } from "@/lib/monitoring/metrics"
 
 const prisma = new PrismaClient()
 
 export async function GET(req: NextRequest) {
+  const startTime = Date.now()
   try {
     const session = await getServerSession(authOptions)
     
@@ -25,7 +27,10 @@ export async function GET(req: NextRequest) {
       )
     }
     
-    const totalUsers = await prisma.user.count()
+    const { result: totalUsers } = await measureResponseTime(
+      () => prisma.user.count(),
+      '/api/admin/stats - user.count'
+    )
     const activeUsers = await prisma.subscription.count({
       where: { status: "ACTIVE" }
     })

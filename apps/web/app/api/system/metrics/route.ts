@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth"
 import { exec } from "child_process"
 import { promisify } from "util"
 import os from "os"
+import { metricsStore } from "@/lib/monitoring/metrics"
 
 const execAsync = promisify(exec)
 
@@ -83,10 +84,17 @@ async function getSystemMetrics() {
 }
 
 export async function GET(request: Request) {
+  const startTime = Date.now()
   try {
     const session = await getServerSession(authOptions)
     
     if (!session || session.user?.role !== "ADMIN") {
+      metricsStore.addMetric({
+        timestamp: Date.now(),
+        responseTime: Date.now() - startTime,
+        endpoint: '/api/system/metrics',
+        statusCode: 401
+      })
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
@@ -95,9 +103,32 @@ export async function GET(request: Request) {
     
     const metrics = await getSystemMetrics()
     
-    return NextResponse.json(metrics)
+    // 응답 시간 및 에러율 통계 추가
+    const hourlyStats = metricsStore.getHourlyStats(24)
+    
+    metricsStore.addMetric({
+      timestamp: Date.now(),
+      responseTime: Date.now() - startTime,
+      endpoint: '/api/system/metrics',
+      statusCode: 200
+    })
+    
+    return NextResponse.json({
+      ...metrics,
+      performance: {
+        hourlyStats,
+        currentResponseTime: Date.now() - startTime
+      }
+    })
   } catch (error) {
     console.error("System metrics API error:", error)
+    metricsStore.addMetric({
+      timestamp: Date.now(),
+      responseTime: Date.now() - startTime,
+      endpoint: '/api/system/metrics',
+      statusCode: 500,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    })
     return NextResponse.json(
       { error: "Failed to fetch system metrics" },
       { status: 500 }
