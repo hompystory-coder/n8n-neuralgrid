@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import { LineChart, Line, BarChart, Bar, AreaChart, Area, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts'
 
@@ -47,6 +47,7 @@ export default function AdminPage() {
   const [recentUsers, setRecentUsers] = useState<RecentUser[]>([])
   const [loading, setLoading] = useState(true)
   const [realTimeMetrics, setRealTimeMetrics] = useState<any>(null)
+  const metricsHistoryRef = useRef<any[]>([])
   const [metricsHistory, setMetricsHistory] = useState<any[]>([])
 
   useEffect(() => {
@@ -72,10 +73,8 @@ export default function AdminPage() {
         setRealTimeMetrics(metrics)
         
         // 메트릭 히스토리에 추가 (최근 30개만 유지)
-        setMetricsHistory(prev => {
-          const newHistory = [...prev, { ...metrics, fetchedAt: new Date() }]
-          return newHistory.slice(-30)
-        })
+        const newHistory = [...metricsHistoryRef.current, { ...metrics, fetchedAt: new Date() }]
+        metricsHistoryRef.current = newHistory.slice(-30)
         
         setStats({
           totalUsers: 247,
@@ -159,12 +158,12 @@ export default function AdminPage() {
           { name: 'Report Generation', executions: 654 },
         ],
         cpuUsage: last30Minutes.map((date, index) => {
-          const historyIndex = index - (30 - metricsHistory.length)
-          if (historyIndex >= 0 && metricsHistory[historyIndex]) {
+          const historyIndex = index - (30 - metricsHistoryRef.current.length)
+          if (historyIndex >= 0 && metricsHistoryRef.current[historyIndex]) {
             return {
               time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
-              usage: parseFloat(metricsHistory[historyIndex].cpu.usage),
-              cores: metricsHistory[historyIndex].cpu.cores,
+              usage: parseFloat(metricsHistoryRef.current[historyIndex].cpu.usage),
+              cores: metricsHistoryRef.current[historyIndex].cpu.cores,
             }
           }
           return {
@@ -174,9 +173,9 @@ export default function AdminPage() {
           }
         }),
         memoryUsage: last30Minutes.map((date, index) => {
-          const historyIndex = index - (30 - metricsHistory.length)
-          if (historyIndex >= 0 && metricsHistory[historyIndex]) {
-            const m = metricsHistory[historyIndex].memory
+          const historyIndex = index - (30 - metricsHistoryRef.current.length)
+          if (historyIndex >= 0 && metricsHistoryRef.current[historyIndex]) {
+            const m = metricsHistoryRef.current[historyIndex].memory
             return {
               time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
               used: parseFloat(m.used) * 1024,
@@ -192,12 +191,12 @@ export default function AdminPage() {
           }
         }),
         diskIO: last30Minutes.map((date, index) => {
-          const historyIndex = index - (30 - metricsHistory.length)
-          if (historyIndex >= 0 && metricsHistory[historyIndex]) {
+          const historyIndex = index - (30 - metricsHistoryRef.current.length)
+          if (historyIndex >= 0 && metricsHistoryRef.current[historyIndex]) {
             return {
               time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
-              read: parseFloat(metricsHistory[historyIndex].disk.read),
-              write: parseFloat(metricsHistory[historyIndex].disk.write),
+              read: parseFloat(metricsHistoryRef.current[historyIndex].disk.read),
+              write: parseFloat(metricsHistoryRef.current[historyIndex].disk.write),
             }
           }
           return {
@@ -207,12 +206,12 @@ export default function AdminPage() {
           }
         }),
         networkTraffic: last30Minutes.map((date, index) => {
-          const historyIndex = index - (30 - metricsHistory.length)
-          if (historyIndex >= 0 && metricsHistory[historyIndex]) {
+          const historyIndex = index - (30 - metricsHistoryRef.current.length)
+          if (historyIndex >= 0 && metricsHistoryRef.current[historyIndex]) {
             return {
               time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
-              incoming: parseFloat(metricsHistory[historyIndex].network.received) * 1024,
-              outgoing: parseFloat(metricsHistory[historyIndex].network.transmitted) * 1024,
+              incoming: parseFloat(metricsHistoryRef.current[historyIndex].network.received) * 1024,
+              outgoing: parseFloat(metricsHistoryRef.current[historyIndex].network.transmitted) * 1024,
             }
           }
           return {
