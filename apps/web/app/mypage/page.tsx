@@ -294,23 +294,53 @@ export default function MyPage() {
 
                 {/* Activity Timeline */}
                 <div className="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-xl">
-                  <h3 className="text-2xl font-bold mb-6">최근 활동</h3>
+                  <h3 className="text-2xl font-bold mb-6">활동 요약</h3>
                   <div className="space-y-4">
-                    {[
-                      { icon: '🎉', title: '계정 생성', time: new Date(profile.user.createdAt).toLocaleString('ko-KR'), color: 'green' },
-                      { icon: '🔄', title: '워크플로우 생성', time: '2시간 전', color: 'blue' },
-                      { icon: '⚡', title: '워크플로우 실행', time: '5시간 전', color: 'purple' },
-                    ].map((activity, index) => (
-                      <div key={index} className="flex items-center gap-4 p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all">
-                        <div className={`w-12 h-12 bg-${activity.color}-500/20 rounded-xl flex items-center justify-center text-2xl`}>
-                          {activity.icon}
+                    <div className="flex items-center gap-4 p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all">
+                      <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center text-2xl">
+                        🎉
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-semibold">계정 생성</div>
+                        <div className="text-sm text-gray-400">{new Date(profile.user.createdAt).toLocaleString('ko-KR')}</div>
+                      </div>
+                    </div>
+                    
+                    {profile.usage.workflowCount > 0 && (
+                      <div className="flex items-center gap-4 p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all">
+                        <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center text-2xl">
+                          🔄
                         </div>
                         <div className="flex-1">
-                          <div className="font-semibold">{activity.title}</div>
-                          <div className="text-sm text-gray-400">{activity.time}</div>
+                          <div className="font-semibold">워크플로우 생성</div>
+                          <div className="text-sm text-gray-400">총 {profile.usage.workflowCount}개 생성됨</div>
                         </div>
                       </div>
-                    ))}
+                    )}
+                    
+                    {profile.usage.executionCount > 0 && (
+                      <div className="flex items-center gap-4 p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all">
+                        <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center text-2xl">
+                          ⚡
+                        </div>
+                        <div className="flex-1">
+                          <div className="font-semibold">워크플로우 실행</div>
+                          <div className="text-sm text-gray-400">총 {profile.usage.executionCount}회 실행됨</div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {profile.usage.aiShortsCount > 0 && (
+                      <div className="flex items-center gap-4 p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all">
+                        <div className="w-12 h-12 bg-pink-500/20 rounded-xl flex items-center justify-center text-2xl">
+                          🎬
+                        </div>
+                        <div className="flex-1">
+                          <div className="font-semibold">AI 쇼츠 생성</div>
+                          <div className="text-sm text-gray-400">총 {profile.usage.aiShortsCount}개 생성됨</div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

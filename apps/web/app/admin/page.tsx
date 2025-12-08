@@ -133,21 +133,21 @@ export default function AdminPage() {
       })
 
       setChartData({
-        userGrowth: last6Months.map(date => ({
+        userGrowth: adminStats?.userGrowth || last6Months.map(date => ({
           month: date.toLocaleDateString('ko-KR', { month: 'short' }),
-          users: 150 + Math.floor(Math.random() * 100),
-          active: 100 + Math.floor(Math.random() * 80),
+          users: 0,
+          active: 0,
         })),
-        executionStats: last7Days.map(date => ({
+        executionStats: adminStats?.executionStats || last7Days.map(date => ({
           date: `${date.getMonth() + 1}/${date.getDate()}`,
-          executions: 5000 + Math.floor(Math.random() * 2000),
-          success: 4500 + Math.floor(Math.random() * 1800),
-          failed: 100 + Math.floor(Math.random() * 200),
+          executions: 0,
+          success: 0,
+          failed: 0,
         })),
-        userDistribution: [
-          { name: 'Free', value: 120 },
-          { name: 'Pro', value: 87 },
-          { name: 'Business', value: 40 },
+        userDistribution: adminStats?.userDistribution || [
+          { name: 'Free', value: 0 },
+          { name: 'Pro', value: 0 },
+          { name: 'Business', value: 0 },
         ],
         systemMetrics: realTimeMetrics ? [
           { metric: 'CPU', value: parseFloat(realTimeMetrics.cpu.usage), fullMark: 100 },

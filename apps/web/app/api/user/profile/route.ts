@@ -93,10 +93,10 @@ export async function GET(req: NextRequest) {
         startDate: user.createdAt,
       },
       usage: {
-        workflowsCount: usage.workflowsCount,
-        executionsCount: usage.executionsCount,
+        workflowCount: usage.workflowsCount,
+        executionCount: usage.executionsCount,
         aiShortsCount: usage.aiShortsCount,
-        storageUsed: usage.storageUsed,
+        storageUsed: `${(usage.storageUsed / 1024).toFixed(1)} GB`,
       }
     })
   } catch (error) {

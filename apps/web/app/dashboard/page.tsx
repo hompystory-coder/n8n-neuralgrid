@@ -40,49 +40,50 @@ export default function Dashboard() {
 
   const fetchStats = async () => {
     try {
-      const now = new Date()
-      const dayOfWeek = now.getDay()
-      
-      setStats({
-        workflows: { total: 12, active: 8 },
-        executions: { 
-          today: 145 + Math.floor(Math.random() * 20), 
-          thisWeek: 892, 
-          thisMonth: 3421 
-        },
-        aiShorts: { generated: 34, pending: 5 },
-        storage: { used: "2.3 GB", limit: "10 GB", percentage: 23 }
-      })
-
-      const last7Days = Array.from({ length: 7 }, (_, i) => {
-        const date = new Date(now)
-        date.setDate(date.getDate() - (6 - i))
-        return date
-      })
-
-      setChartData({
-        executionTrend: last7Days.map(date => ({
-          date: `${date.getMonth() + 1}/${date.getDate()}`,
-          executions: 120 + Math.floor(Math.random() * 80),
-          success: 110 + Math.floor(Math.random() * 80),
-          failed: 5 + Math.floor(Math.random() * 10),
-        })),
-        workflowActivity: [
-          { name: 'Active', value: 8 },
-          { name: 'Inactive', value: 4 },
-        ],
-        dailyStats: [
-          { day: 'Mon', workflows: 8, executions: 120 },
-          { day: 'Tue', workflows: 10, executions: 145 },
-          { day: 'Wed', workflows: 9, executions: 167 },
-          { day: 'Thu', workflows: 11, executions: 134 },
-          { day: 'Fri', workflows: 12, executions: 189 },
-          { day: 'Sat', workflows: 8, executions: 201 },
-          { day: 'Sun', workflows: 7, executions: 145 },
-        ]
-      })
+      const res = await fetch('/api/dashboard/stats')
+      if (res.ok) {
+        const data = await res.json()
+        setStats({
+          workflows: data.workflows,
+          executions: data.executions,
+          aiShorts: data.aiShorts,
+          storage: data.storage,
+        })
+        setChartData(data.chartData)
+      } else {
+        // API 실패 시 기본값
+        setStats({
+          workflows: { total: 0, active: 0 },
+          executions: { today: 0, thisWeek: 0, thisMonth: 0 },
+          aiShorts: { generated: 0, pending: 0 },
+          storage: { used: "0 GB", limit: "10 GB", percentage: 0 }
+        })
+        setChartData({
+          executionTrend: [],
+          workflowActivity: [
+            { name: 'Active', value: 0 },
+            { name: 'Inactive', value: 0 },
+          ],
+          dailyStats: [],
+        })
+      }
     } catch (error) {
       console.error("Failed to fetch stats:", error)
+      // 에러 시 기본값
+      setStats({
+        workflows: { total: 0, active: 0 },
+        executions: { today: 0, thisWeek: 0, thisMonth: 0 },
+        aiShorts: { generated: 0, pending: 0 },
+        storage: { used: "0 GB", limit: "10 GB", percentage: 0 }
+      })
+      setChartData({
+        executionTrend: [],
+        workflowActivity: [
+          { name: 'Active', value: 0 },
+          { name: 'Inactive', value: 0 },
+        ],
+        dailyStats: [],
+      })
     } finally {
       setLoading(false)
     }
