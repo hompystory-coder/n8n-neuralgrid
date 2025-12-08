@@ -21,6 +21,7 @@ interface ProfileData {
   usage: {
     workflowCount: number
     executionCount: number
+    aiShortsCount: number
     storageUsed: string
   }
 }
