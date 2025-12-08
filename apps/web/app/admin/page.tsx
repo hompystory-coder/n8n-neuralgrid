@@ -56,7 +56,7 @@ export default function AdminPage() {
         return
       }
       fetchData()
-      const interval = setInterval(fetchData, 30000)
+      const interval = setInterval(fetchData, 5000)
       return () => clearInterval(interval)
     }
   }, [session.status, router])
@@ -374,7 +374,7 @@ export default function AdminPage() {
                     <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
                       <span className="text-3xl">🖥️</span>
                       실시간 시스템 모니터링
-                      <span className="text-sm font-normal text-gray-400">(30초 자동 갱신)</span>
+                      <span className="text-sm font-normal text-green-400 animate-pulse">(5초 자동 갱신)</span>
                     </h2>
                   </div>
 
