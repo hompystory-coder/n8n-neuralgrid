@@ -20,13 +20,20 @@ export default function Home() {
               <Link href="#solutions" className="hover:text-purple-400 transition-colors">솔루션</Link>
               <Link href="#features" className="hover:text-purple-400 transition-colors">기능</Link>
               <Link href="#ai-shorts" className="hover:text-purple-400 transition-colors">AI 쇼츠</Link>
+              <a href="https://monitor.neuralgrid.kr" target="_blank" rel="noopener noreferrer" className="hover:text-purple-400 transition-colors">모니터링</a>
               <Link href="#pricing" className="hover:text-purple-400 transition-colors">가격</Link>
               <Link href="/api-docs" className="hover:text-purple-400 transition-colors">API</Link>
             </div>
 
             <div className="flex items-center gap-4">
               <Link
-                href="/api/auth/signin"
+                href="/auth/signin"
+                className="text-gray-300 hover:text-white transition-colors"
+              >
+                로그인
+              </Link>
+              <Link
+                href="/auth/signup"
                 className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full hover:from-purple-500 hover:to-pink-500 transition-all font-semibold"
               >
                 시작하기
@@ -56,7 +63,7 @@ export default function Home() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Link
-              href="/api/auth/signin"
+              href="/auth/signup"
               className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full hover:from-purple-500 hover:to-pink-500 transition-all font-bold text-lg shadow-lg shadow-purple-500/50"
             >
               🚀 무료로 시작하기
@@ -167,9 +174,14 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="inline-block px-6 py-3 bg-gradient-to-r from-pink-600/20 to-orange-600/20 border border-pink-500/30 rounded-full font-semibold">
-                  곧 출시 🔥
-                </div>
+                <a
+                  href="http://115.91.5.140:5678"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-pink-600 to-orange-600 rounded-full hover:from-pink-500 hover:to-orange-500 transition-all font-semibold"
+                >
+                  생성기 열기 →
+                </a>
               </div>
             </div>
           </div>
@@ -385,7 +397,7 @@ export default function Home() {
                 </li>
               </ul>
               <Link
-                href="/api/auth/signin"
+                href="/auth/signup"
                 className="block w-full text-center px-6 py-3 bg-white/10 rounded-full hover:bg-white/20 transition-all font-semibold"
               >
                 무료 시작
@@ -430,7 +442,7 @@ export default function Home() {
                 </li>
               </ul>
               <Link
-                href="/api/auth/signin"
+                href="/auth/signup"
                 className="block w-full text-center px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full hover:from-purple-500 hover:to-pink-500 transition-all font-bold"
               >
                 지금 시작
@@ -471,7 +483,7 @@ export default function Home() {
                 </li>
               </ul>
               <Link
-                href="/api/auth/signin"
+                href="/auth/signup"
                 className="block w-full text-center px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full hover:from-blue-500 hover:to-cyan-500 transition-all font-semibold"
               >
                 문의하기
@@ -496,7 +508,7 @@ export default function Home() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
-                  href="/api/auth/signin"
+                  href="/auth/signup"
                   className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full hover:from-purple-500 hover:to-pink-500 transition-all font-bold text-lg shadow-lg shadow-purple-500/50"
                 >
                   무료로 시작하기 →
@@ -534,8 +546,8 @@ export default function Home() {
               <ul className="space-y-2 text-sm text-gray-400">
                 <li><Link href="#solutions" className="hover:text-white transition-colors">워크플로우 자동화</Link></li>
                 <li><Link href="#ai-shorts" className="hover:text-white transition-colors">AI 쇼츠 생성</Link></li>
-                <li><Link href="/api-docs" className="hover:text-white transition-colors">API 문서</Link></li>
-                <li><a href="http://n8n.neuralgrid.kr" className="hover:text-white transition-colors">n8n 에디터</a></li>
+                <li><a href="http://115.91.5.140:5678" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">유튜브 쇼츠 생성기</a></li>
+                <li><a href="http://n8n.neuralgrid.kr" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">n8n 에디터</a></li>
               </ul>
             </div>
 
@@ -544,8 +556,9 @@ export default function Home() {
               <ul className="space-y-2 text-sm text-gray-400">
                 <li><Link href="#features" className="hover:text-white transition-colors">기능</Link></li>
                 <li><Link href="#pricing" className="hover:text-white transition-colors">가격</Link></li>
+                <li><a href="https://monitor.neuralgrid.kr" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">모니터링</a></li>
                 <li><Link href="/dashboard" className="hover:text-white transition-colors">대시보드</Link></li>
-                <li><Link href="/templates" className="hover:text-white transition-colors">템플릿</Link></li>
+                <li><Link href="/api-docs" className="hover:text-white transition-colors">API 문서</Link></li>
               </ul>
             </div>
 
