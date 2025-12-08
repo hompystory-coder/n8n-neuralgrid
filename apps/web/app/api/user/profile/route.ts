@@ -4,14 +4,22 @@ import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { PrismaClient } from "@prisma/client"
+import { metricsStore } from "@/lib/monitoring/metrics"
 
 const prisma = new PrismaClient()
 
 export async function GET(req: NextRequest) {
+  const startTime = Date.now()
   try {
     const session = await getServerSession(authOptions)
     
     if (!session?.user?.id) {
+      metricsStore.addMetric({
+        timestamp: Date.now(),
+        responseTime: Date.now() - startTime,
+        endpoint: '/api/user/profile',
+        statusCode: 401
+      })
       return NextResponse.json(
         { error: "인증되지 않았습니다" },
         { status: 401 }
@@ -30,6 +38,12 @@ export async function GET(req: NextRequest) {
     })
     
     if (!user) {
+      metricsStore.addMetric({
+        timestamp: Date.now(),
+        responseTime: Date.now() - startTime,
+        endpoint: '/api/user/profile',
+        statusCode: 404
+      })
       return NextResponse.json(
         { error: "사용자를 찾을 수 없습니다" },
         { status: 404 }
@@ -64,6 +78,13 @@ export async function GET(req: NextRequest) {
       })
     }
     
+    metricsStore.addMetric({
+      timestamp: Date.now(),
+      responseTime: Date.now() - startTime,
+      endpoint: '/api/user/profile',
+      statusCode: 200
+    })
+    
     return NextResponse.json({
       user,
       subscription: subscription || {
@@ -80,6 +101,12 @@ export async function GET(req: NextRequest) {
     })
   } catch (error) {
     console.error("Profile fetch error:", error)
+    metricsStore.addMetric({
+      timestamp: Date.now(),
+      responseTime: Date.now() - startTime,
+      endpoint: '/api/user/profile',
+      statusCode: 500
+    })
     return NextResponse.json(
       { error: "프로필을 불러오는 중 오류가 발생했습니다" },
       { status: 500 }

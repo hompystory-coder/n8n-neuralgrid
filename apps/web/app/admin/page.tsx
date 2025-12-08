@@ -66,6 +66,13 @@ export default function AdminPage() {
 
   const fetchData = async () => {
     try {
+      // 실제 관리자 통계 가져오기
+      const statsRes = await fetch('/api/admin/stats')
+      let adminStats = null
+      if (statsRes.ok) {
+        adminStats = await statsRes.json()
+      }
+      
       // 실제 시스템 메트릭 가져오기
       const metricsRes = await fetch('/api/system/metrics')
       if (metricsRes.ok) {
@@ -77,20 +84,25 @@ export default function AdminPage() {
         metricsHistoryRef.current = newHistory.slice(-30)
         
         setStats({
-          totalUsers: 247,
-          activeUsers: 189,
-          totalWorkflows: 1523,
-          totalExecutions: 45678,
-          storageUsed: metrics.memory ? `${metrics.memory.used} GB / ${metrics.memory.total} GB` : "127.5 GB",
+          totalUsers: adminStats?.totalUsers || 0,
+          activeUsers: adminStats?.activeUsers || 0,
+          totalWorkflows: adminStats?.totalWorkflows || 0,
+          totalExecutions: adminStats?.totalExecutions || 0,
+          storageUsed: metrics.memory ? `${metrics.memory.used} GB / ${metrics.memory.total} GB` : "0 GB",
           systemHealth: metrics.memory ? Math.round(100 - parseFloat(metrics.memory.usagePercent)) : 98
         })
+        
+        // 최근 사용자 정보 업데이트
+        if (adminStats?.recentUsers) {
+          setRecentUsers(adminStats.recentUsers)
+        }
       } else {
         setStats({
-          totalUsers: 247,
-          activeUsers: 189,
-          totalWorkflows: 1523,
-          totalExecutions: 45678,
-          storageUsed: "127.5 GB",
+          totalUsers: adminStats?.totalUsers || 0,
+          activeUsers: adminStats?.activeUsers || 0,
+          totalWorkflows: adminStats?.totalWorkflows || 0,
+          totalExecutions: adminStats?.totalExecutions || 0,
+          storageUsed: "0 GB",
           systemHealth: 98
         })
       }
@@ -245,12 +257,6 @@ export default function AdminPage() {
               count: Math.floor(Math.random() * 50),
             })),
       })
-
-      setRecentUsers([
-        { id: '1', email: 'user1@example.com', name: 'User One', role: 'USER', createdAt: new Date().toISOString() },
-        { id: '2', email: 'user2@example.com', name: 'User Two', role: 'USER', createdAt: new Date().toISOString() },
-        { id: '3', email: 'user3@example.com', name: 'User Three', role: 'PRO', createdAt: new Date().toISOString() },
-      ])
     } catch (error) {
       console.error("Failed to fetch admin data:", error)
     } finally {

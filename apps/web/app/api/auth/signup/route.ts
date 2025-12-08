@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { PrismaClient } from "@prisma/client"
 import bcrypt from "bcryptjs"
 import { z } from "zod"
+import { metricsStore } from "@/lib/monitoring/metrics"
 
 const prisma = new PrismaClient()
 
@@ -12,6 +13,7 @@ const signupSchema = z.object({
 })
 
 export async function POST(req: NextRequest) {
+  const startTime = Date.now()
   try {
     const body = await req.json()
     const validated = signupSchema.parse(body)
@@ -21,6 +23,12 @@ export async function POST(req: NextRequest) {
     })
     
     if (existingUser) {
+      metricsStore.addMetric({
+        timestamp: Date.now(),
+        responseTime: Date.now() - startTime,
+        endpoint: '/api/auth/signup',
+        statusCode: 400
+      })
       return NextResponse.json(
         { error: "이미 등록된 이메일입니다" },
         { status: 400 }
@@ -65,6 +73,13 @@ export async function POST(req: NextRequest) {
       }
     })
     
+    metricsStore.addMetric({
+      timestamp: Date.now(),
+      responseTime: Date.now() - startTime,
+      endpoint: '/api/auth/signup',
+      statusCode: 201
+    })
+    
     return NextResponse.json(
       {
         message: "회원가입이 완료되었습니다",
@@ -78,6 +93,12 @@ export async function POST(req: NextRequest) {
     )
   } catch (error) {
     if (error instanceof z.ZodError) {
+      metricsStore.addMetric({
+        timestamp: Date.now(),
+        responseTime: Date.now() - startTime,
+        endpoint: '/api/auth/signup',
+        statusCode: 400
+      })
       return NextResponse.json(
         { error: error.errors[0].message },
         { status: 400 }
@@ -85,6 +106,12 @@ export async function POST(req: NextRequest) {
     }
     
     console.error("Signup error:", error)
+    metricsStore.addMetric({
+      timestamp: Date.now(),
+      responseTime: Date.now() - startTime,
+      endpoint: '/api/auth/signup',
+      statusCode: 500
+    })
     return NextResponse.json(
       { error: "회원가입 중 오류가 발생했습니다" },
       { status: 500 }

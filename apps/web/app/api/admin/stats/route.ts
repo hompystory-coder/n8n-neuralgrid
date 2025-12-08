@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { PrismaClient } from "@prisma/client"
-import { measureResponseTime } from "@/lib/monitoring/metrics"
+import { metricsStore } from "@/lib/monitoring/metrics"
 
 const prisma = new PrismaClient()
 
@@ -14,6 +14,12 @@ export async function GET(req: NextRequest) {
     const session = await getServerSession(authOptions)
     
     if (!session?.user?.id) {
+      metricsStore.addMetric({
+        timestamp: Date.now(),
+        responseTime: Date.now() - startTime,
+        endpoint: '/api/admin/stats',
+        statusCode: 401
+      })
       return NextResponse.json(
         { error: "인증되지 않았습니다" },
         { status: 401 }
@@ -21,16 +27,19 @@ export async function GET(req: NextRequest) {
     }
     
     if ((session.user as any).role !== "ADMIN") {
+      metricsStore.addMetric({
+        timestamp: Date.now(),
+        responseTime: Date.now() - startTime,
+        endpoint: '/api/admin/stats',
+        statusCode: 403
+      })
       return NextResponse.json(
         { error: "권한이 없습니다" },
         { status: 403 }
       )
     }
     
-    const { result: totalUsers } = await measureResponseTime(
-      () => prisma.user.count(),
-      '/api/admin/stats - user.count'
-    )
+    const totalUsers = await prisma.user.count()
     const activeUsers = await prisma.subscription.count({
       where: { status: "ACTIVE" }
     })
@@ -58,6 +67,13 @@ export async function GET(req: NextRequest) {
       }
     })
     
+    metricsStore.addMetric({
+      timestamp: Date.now(),
+      responseTime: Date.now() - startTime,
+      endpoint: '/api/admin/stats',
+      statusCode: 200
+    })
+    
     return NextResponse.json({
       totalUsers,
       activeUsers,
@@ -69,6 +85,12 @@ export async function GET(req: NextRequest) {
     })
   } catch (error) {
     console.error("Admin stats error:", error)
+    metricsStore.addMetric({
+      timestamp: Date.now(),
+      responseTime: Date.now() - startTime,
+      endpoint: '/api/admin/stats',
+      statusCode: 500
+    })
     return NextResponse.json(
       { error: "통계를 불러오는 중 오류가 발생했습니다" },
       { status: 500 }
