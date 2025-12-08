@@ -47,6 +47,7 @@ export default function AdminPage() {
   const [recentUsers, setRecentUsers] = useState<RecentUser[]>([])
   const [loading, setLoading] = useState(true)
   const [realTimeMetrics, setRealTimeMetrics] = useState<any>(null)
+  const [metricsHistory, setMetricsHistory] = useState<any[]>([])
 
   useEffect(() => {
     if (session.status === "unauthenticated") {
@@ -69,6 +70,12 @@ export default function AdminPage() {
       if (metricsRes.ok) {
         const metrics = await metricsRes.json()
         setRealTimeMetrics(metrics)
+        
+        // 메트릭 히스토리에 추가 (최근 30개만 유지)
+        setMetricsHistory(prev => {
+          const newHistory = [...prev, { ...metrics, fetchedAt: new Date() }]
+          return newHistory.slice(-30)
+        })
         
         setStats({
           totalUsers: 247,
@@ -151,20 +158,30 @@ export default function AdminPage() {
           { name: 'Social Media Post', executions: 723 },
           { name: 'Report Generation', executions: 654 },
         ],
-        cpuUsage: last30Minutes.map((date, index) => ({
-          time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
-          usage: realTimeMetrics && index === last30Minutes.length - 1 
-            ? parseFloat(realTimeMetrics.cpu.usage)
-            : 50 + Math.floor(Math.random() * 40),
-          cores: realTimeMetrics ? realTimeMetrics.cpu.cores : 4,
-        })),
-        memoryUsage: last30Minutes.map((date, index) => {
-          if (realTimeMetrics && index === last30Minutes.length - 1) {
+        cpuUsage: last30Minutes.map((date, index) => {
+          const historyIndex = index - (30 - metricsHistory.length)
+          if (historyIndex >= 0 && metricsHistory[historyIndex]) {
             return {
               time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
-              used: parseFloat(realTimeMetrics.memory.used) * 1024,
-              free: parseFloat(realTimeMetrics.memory.free) * 1024,
-              cached: (parseFloat(realTimeMetrics.memory.total) - parseFloat(realTimeMetrics.memory.used) - parseFloat(realTimeMetrics.memory.free)) * 1024,
+              usage: parseFloat(metricsHistory[historyIndex].cpu.usage),
+              cores: metricsHistory[historyIndex].cpu.cores,
+            }
+          }
+          return {
+            time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+            usage: 50 + Math.floor(Math.random() * 40),
+            cores: 4,
+          }
+        }),
+        memoryUsage: last30Minutes.map((date, index) => {
+          const historyIndex = index - (30 - metricsHistory.length)
+          if (historyIndex >= 0 && metricsHistory[historyIndex]) {
+            const m = metricsHistory[historyIndex].memory
+            return {
+              time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+              used: parseFloat(m.used) * 1024,
+              free: parseFloat(m.free) * 1024,
+              cached: (parseFloat(m.total) - parseFloat(m.used) - parseFloat(m.free)) * 1024,
             }
           }
           return {
@@ -174,24 +191,36 @@ export default function AdminPage() {
             cached: 1500 + Math.floor(Math.random() * 500),
           }
         }),
-        diskIO: last30Minutes.map((date, index) => ({
-          time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
-          read: realTimeMetrics && index === last30Minutes.length - 1
-            ? parseFloat(realTimeMetrics.disk.read)
-            : 100 + Math.floor(Math.random() * 150),
-          write: realTimeMetrics && index === last30Minutes.length - 1
-            ? parseFloat(realTimeMetrics.disk.write)
-            : 50 + Math.floor(Math.random() * 100),
-        })),
-        networkTraffic: last30Minutes.map((date, index) => ({
-          time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
-          incoming: realTimeMetrics && index === last30Minutes.length - 1
-            ? parseFloat(realTimeMetrics.network.received) * 1024
-            : 500 + Math.floor(Math.random() * 500),
-          outgoing: realTimeMetrics && index === last30Minutes.length - 1
-            ? parseFloat(realTimeMetrics.network.transmitted) * 1024
-            : 300 + Math.floor(Math.random() * 300),
-        })),
+        diskIO: last30Minutes.map((date, index) => {
+          const historyIndex = index - (30 - metricsHistory.length)
+          if (historyIndex >= 0 && metricsHistory[historyIndex]) {
+            return {
+              time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+              read: parseFloat(metricsHistory[historyIndex].disk.read),
+              write: parseFloat(metricsHistory[historyIndex].disk.write),
+            }
+          }
+          return {
+            time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+            read: 100 + Math.floor(Math.random() * 150),
+            write: 50 + Math.floor(Math.random() * 100),
+          }
+        }),
+        networkTraffic: last30Minutes.map((date, index) => {
+          const historyIndex = index - (30 - metricsHistory.length)
+          if (historyIndex >= 0 && metricsHistory[historyIndex]) {
+            return {
+              time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+              incoming: parseFloat(metricsHistory[historyIndex].network.received) * 1024,
+              outgoing: parseFloat(metricsHistory[historyIndex].network.transmitted) * 1024,
+            }
+          }
+          return {
+            time: date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+            incoming: 500 + Math.floor(Math.random() * 500),
+            outgoing: 300 + Math.floor(Math.random() * 300),
+          }
+        }),
         responseTime: last24Hours.map(date => ({
           time: `${date.getHours()}시`,
           api: 50 + Math.floor(Math.random() * 100),
