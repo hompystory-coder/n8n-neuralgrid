@@ -1,11 +1,25 @@
 /**
- * 🎨 썸네일 자동 생성 모듈 (CTR 최적화 버전 v2.0)
- * 성공 채널 분석 기반 프롬프트 시스템
+ * 🎨 썸네일 자동 생성 모듈 (AI 자동 분석 버전 v3.0)
+ * AI 기반 장르 자동 분석으로 202개 모든 장르 지원
  * 예상 CTR: 7-12% (기존 3-5% 대비 2-3배 향상)
  */
 
+const aiMatcher = require('./aiThumbnailMatcher');
+const fs = require('fs');
+const path = require('path');
+
+// 장르 데이터 로드
+let genresData = null;
+try {
+  const genresPath = path.join(__dirname, '../data/genres.json');
+  genresData = JSON.parse(fs.readFileSync(genresPath, 'utf8'));
+} catch (err) {
+  console.warn('⚠️ genres.json 로드 실패, 기본 템플릿 사용:', err.message);
+}
+
 /**
- * 🎯 CTR 최적화 템플릿 (실제 성공 채널 분석 기반)
+ * 🎯 CTR 최적화 템플릿 (대표 7개 - 폴백용)
+ * AI 매칭 실패 시에만 사용됨
  */
 const thumbnailTemplates = {
   'lofi': {
@@ -150,11 +164,64 @@ const thumbnailTemplates = {
 };
 
 /**
- * 스타일 매칭 (스마트 매칭)
+ * 🤖 AI 기반 스마트 템플릿 선택
+ * 1. 먼저 genres.json에서 정확한 장르 정보 찾기
+ * 2. AI가 자동으로 시각적 제약조건 생성
+ * 3. 실패 시 폴백 템플릿 사용
  */
 function selectTemplate(style) {
   const styleLower = style.toLowerCase();
+  const styleOriginal = style;
   
+  // 1단계: genres.json에서 정확한 장르 찾기
+  if (genresData && genresData.categories) {
+    // 첫 번째 시도: 정확한 ID 매칭
+    for (const category of genresData.categories) {
+      if (category.genres) {
+        for (const genre of category.genres) {
+          if (genre.id === styleLower) {
+            console.log(`✅ AI 매칭 성공 (정확): ${genre.name} (${genre.nameKo})`);
+            return aiMatcher.generateThumbnailTemplate(genre);
+          }
+        }
+      }
+    }
+    
+    // 두 번째 시도: 부분 문자열 매칭
+    for (const category of genresData.categories) {
+      if (category.genres) {
+        for (const genre of category.genres) {
+          const nameMatch = genre.name && genre.name.toLowerCase().includes(styleLower);
+          const nameKoMatch = genre.nameKo && genre.nameKo.includes(styleOriginal);
+          const idMatch = styleLower.includes(genre.id);
+          
+          if (nameMatch || nameKoMatch || idMatch) {
+            console.log(`✅ AI 매칭 성공 (유사): ${genre.name} (${genre.nameKo})`);
+            return aiMatcher.generateThumbnailTemplate(genre);
+          }
+        }
+      }
+    }
+    
+    // 세 번째 시도: 카테고리 레벨 매칭
+    for (const category of genresData.categories) {
+      const categoryIdMatch = styleLower.includes(category.id);
+      const categoryNameMatch = category.name && styleLower.includes(category.name.toLowerCase());
+      
+      if (categoryIdMatch || categoryNameMatch) {
+        // 카테고리의 첫 번째 대표 장르 사용
+        if (category.genres && category.genres.length > 0) {
+          const representativeGenre = category.genres[0];
+          console.log(`✅ AI 매칭 성공 (카테고리): ${category.name} → ${representativeGenre.name}`);
+          return aiMatcher.generateThumbnailTemplate(representativeGenre);
+        }
+      }
+    }
+  }
+  
+  console.log(`⚠️ AI 매칭 실패, 폴백 템플릿 사용: ${style}`);
+  
+  // 2단계: 폴백 - 기존 7개 템플릿 매칭
   // Lo-fi / Chill
   if (styleLower.includes('lofi') || styleLower.includes('lo-fi') || 
       styleLower.includes('chill') || styleLower.includes('beats')) {
@@ -197,6 +264,7 @@ function selectTemplate(style) {
   }
   
   // Default: Lo-fi (가장 높은 CTR)
+  console.log(`❌ 매칭 실패, 기본 템플릿 사용`);
   return thumbnailTemplates['lofi'];
 }
 
