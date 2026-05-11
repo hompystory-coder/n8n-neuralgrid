@@ -286,3 +286,93 @@
 2025-12-07T08:18:00: 
 2025-12-07T08:18:00:  ✓ Starting...
 2025-12-07T08:18:00:  ✓ Ready in 161ms
+2025-12-08T00:52:25: 
+2025-12-08T00:52:25: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-08T00:52:25: > next start -p 3000
+2025-12-08T00:52:25: 
+2025-12-08T00:52:25:   ▲ Next.js 14.2.33
+2025-12-08T00:52:25:   - Local:        http://localhost:3000
+2025-12-08T00:52:25: 
+2025-12-08T00:52:25:  ✓ Starting...
+2025-12-08T00:52:25:  ✓ Ready in 163ms
+2025-12-08T01:12:58: 
+2025-12-08T01:12:58: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-08T01:12:58: > next start -p 3000
+2025-12-08T01:12:58: 
+2025-12-08T01:12:59:   ▲ Next.js 14.2.33
+2025-12-08T01:12:59:   - Local:        http://localhost:3000
+2025-12-08T01:12:59: 
+2025-12-08T01:12:59:  ✓ Starting...
+2025-12-08T01:12:59:  ✓ Ready in 161ms
+2025-12-08T01:17:28: 
+2025-12-08T01:17:28: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-08T01:17:28: > next start -p 3000
+2025-12-08T01:17:28: 
+2025-12-08T01:17:28:   ▲ Next.js 14.2.33
+2025-12-08T01:17:28:   - Local:        http://localhost:3000
+2025-12-08T01:17:28: 
+2025-12-08T01:17:28:  ✓ Starting...
+2025-12-08T01:17:28:  ✓ Ready in 162ms
+2025-12-08T01:29:21: 
+2025-12-08T01:29:21: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-08T01:29:21: > next start -p 3000
+2025-12-08T01:29:21: 
+2025-12-08T01:29:21:   ▲ Next.js 14.2.33
+2025-12-08T01:29:21:   - Local:        http://localhost:3000
+2025-12-08T01:29:21: 
+2025-12-08T01:29:21:  ✓ Starting...
+2025-12-08T01:29:21:  ✓ Ready in 161ms
+2025-12-08T01:46:56: 
+2025-12-08T01:46:56: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-08T01:46:56: > next start -p 3000
+2025-12-08T01:46:56: 
+2025-12-08T01:46:56:   ▲ Next.js 14.2.33
+2025-12-08T01:46:56:   - Local:        http://localhost:3000
+2025-12-08T01:46:56: 
+2025-12-08T01:46:56:  ✓ Starting...
+2025-12-08T01:46:56:  ✓ Ready in 161ms
+2025-12-08T01:57:54: 
+2025-12-08T01:57:54: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-08T01:57:54: > next start -p 3000
+2025-12-08T01:57:54: 
+2025-12-08T01:57:54:   ▲ Next.js 14.2.33
+2025-12-08T01:57:54:   - Local:        http://localhost:3000
+2025-12-08T01:57:54: 
+2025-12-08T01:57:54:  ✓ Starting...
+2025-12-08T01:57:54:  ✓ Ready in 163ms
+2025-12-08T02:11:20: 
+2025-12-08T02:11:20: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-08T02:11:20: > next start -p 3000
+2025-12-08T02:11:20: 
+2025-12-08T02:11:20:   ▲ Next.js 14.2.33
+2025-12-08T02:11:20:   - Local:        http://localhost:3000
+2025-12-08T02:11:20: 
+2025-12-08T02:11:20:  ✓ Starting...
+2025-12-08T02:11:20:  ✓ Ready in 163ms
+2025-12-08T02:26:32: 
+2025-12-08T02:26:32: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-08T02:26:32: > next start -p 3000
+2025-12-08T02:26:32: 
+2025-12-08T02:26:32:   ▲ Next.js 14.2.33
+2025-12-08T02:26:32:   - Local:        http://localhost:3000
+2025-12-08T02:26:32: 
+2025-12-08T02:26:32:  ✓ Starting...
+2025-12-08T02:26:32:  ✓ Ready in 165ms
+2025-12-08T02:39:16: 
+2025-12-08T02:39:16: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-08T02:39:16: > next start -p 3000
+2025-12-08T02:39:16: 
+2025-12-08T02:39:16:   ▲ Next.js 14.2.33
+2025-12-08T02:39:16:   - Local:        http://localhost:3000
+2025-12-08T02:39:16: 
+2025-12-08T02:39:16:  ✓ Starting...
+2025-12-08T02:39:16:  ✓ Ready in 164ms
+2025-12-08T03:35:04: 
+2025-12-08T03:35:04: > @neuralgrid/web@1.0.0 start /home/azamans/n8n-neuralgrid/apps/web
+2025-12-08T03:35:04: > next start -p 3000
+2025-12-08T03:35:04: 
+2025-12-08T03:35:05:   ▲ Next.js 14.2.33
+2025-12-08T03:35:05:   - Local:        http://localhost:3000
+2025-12-08T03:35:05: 
+2025-12-08T03:35:05:  ✓ Starting...
+2025-12-08T03:35:05:  ✓ Ready in 161ms
