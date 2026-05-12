@@ -27,140 +27,140 @@ const thumbnailTemplates = {
     name: 'Lo-fi / Chill Beats',
     targetCTR: '9-12%',
     mood: 'nostalgic, cozy, and deeply comforting',
-    mustHave: ['studying', 'desk', 'books', 'headphones', 'cozy room', 'night scene'],
-    mustAvoid: ['party', 'festival', 'dancing', 'bright daylight', 'crowd'],
+    mustHave: ['cozy room', 'night scene', 'rainy city view', 'warm lighting', 'vinyl records', 'fairy lights'],
+    mustAvoid: ['people', 'characters', 'faces', 'party', 'festival', 'dancing', 'bright daylight', 'crowd'],
     primaryColors: {
       main: '#8B5CF6',      // Warm Purple
       secondary: '#F9A8D4', // Soft Pink
       accent: '#FCD34D',    // Golden Yellow
       background: '#1E293B' // Dark Navy
     },
-    visualElements: 'Anime character studying at wooden desk, vinyl records, retro radio, cassette tape, coffee mug with steam, plants in pots, fairy lights, large window showing rainy city view or night sky',
-    specificDetails: 'Character wearing cozy hoodie, headphones on, peaceful expression, warm desk lamp creating golden glow, books stacked neatly, notebook open with pen, lo-fi aesthetic room',
-    atmosphere: 'dreamy, nostalgic, inviting - makes viewers want to study and relax',
+    visualElements: 'Cozy room interior with wooden desk, vinyl records on wall, retro radio, cassette tape, steaming coffee mug, potted plants, fairy lights, large window showing rainy city night view with neon lights reflecting on wet streets',
+    specificDetails: 'Warm desk lamp glow, books stacked artistically, open notebook with pen, lo-fi aesthetic room, soft purple and pink ambient lighting, rain droplets on window, city lights bokeh in background, empty chair suggesting peaceful solitude',
+    atmosphere: 'dreamy, nostalgic, inviting - peaceful environment that makes viewers want to study and relax',
     keywords: 'lofi hip hop, chill beats, study beats, relaxation',
-    referenceStyle: 'Lofi Girl channel, Studio Ghibli aesthetic, ChilledCow vibes',
-    composition: 'Character takes 60% of frame, background 40%, rule of thirds'
+    referenceStyle: 'Lofi Girl channel aesthetic (but without character), Studio Ghibli room backgrounds, ChilledCow vibes',
+    composition: 'Room environment takes 100% of frame, emphasis on atmospheric lighting and depth, rule of thirds for window placement'
   },
   
   'study': {
     name: 'Study / Focus Music',
     targetCTR: '7-10%',
     mood: 'focused, productive, and inspiring',
-    mustHave: ['workspace', 'laptop', 'organized desk', 'clean environment', 'studying'],
-    mustAvoid: ['party', 'dancing', 'festival', 'nightlife', 'alcohol'],
+    mustHave: ['workspace', 'organized desk', 'clean environment', 'natural lighting', 'plants', 'window view'],
+    mustAvoid: ['people', 'characters', 'faces', 'party', 'dancing', 'festival', 'nightlife', 'alcohol'],
     primaryColors: {
       main: '#3B82F6',      // Bright Blue
       secondary: '#10B981', // Green
       accent: '#FDE047',    // Yellow
       background: '#F8FAFC' // Light Gray
     },
-    visualElements: 'Modern clean workspace, open laptop with glowing screen, noise-canceling headphones, organized desk with minimal items, succulent plants, notebook with neat notes, coffee cup',
-    specificDetails: 'Bright natural lighting from large window, clean minimalist aesthetic, motivational quote visible, pen holder with colorful pens, desk calendar, ambient desk lamp',
-    atmosphere: 'clean, organized, motivating - perfect study environment',
+    visualElements: 'Modern clean workspace scene, organized desk with laptop glowing softly, noise-canceling headphones resting on desk, minimal items neatly arranged, succulent plants, open notebook with neat notes, coffee cup with steam',
+    specificDetails: 'Bright natural lighting streaming through large window, clean minimalist aesthetic, city skyline or nature view outside window, pen holder with colorful pens, desk calendar, ambient desk lamp, white and blue tones, scandinavian design',
+    atmosphere: 'clean, organized, motivating - perfect study environment without distractions',
     keywords: 'study music, focus, concentration, productivity, deep work',
-    referenceStyle: 'Modern productivity aesthetic, Apple product ads, minimalist design',
-    composition: 'Clean composition with lots of negative space, balanced layout'
+    referenceStyle: 'Modern productivity aesthetic, Apple product ads style (environmental shots), minimalist design photography',
+    composition: 'Clean composition with lots of negative space, balanced layout, no people, focus on environment'
   },
   
   'upbeat': {
     name: 'Upbeat / Happy Vibes',
     targetCTR: '7-9%',
     mood: 'energetic, joyful, and vibrant',
-    mustHave: ['dancing', 'party', 'festival', 'celebration', 'bright colors', 'outdoor fun', 'sunlight'],
-    mustAvoid: ['studying', 'desk', 'books', 'laptop', 'work', 'dark room', 'rain'],
+    mustHave: ['party scene', 'festival atmosphere', 'celebration', 'bright colors', 'outdoor fun', 'sunlight', 'confetti'],
+    mustAvoid: ['people', 'characters', 'faces', 'studying', 'desk', 'books', 'laptop', 'work', 'dark room', 'rain'],
     primaryColors: {
       main: '#FB923C',      // Bright Orange
       secondary: '#FDE047', // Sunny Yellow
       accent: '#22D3EE',    // Vibrant Cyan
       background: '#DBEAFE' // Sky Blue
     },
-    visualElements: 'Colorful party scene, confetti in the air, disco ball reflections, dancing silhouettes, bright sunlight, beach vibes with palm trees, vibrant street art, festival atmosphere',
-    specificDetails: 'Motion blur for energy, lens flare effects, bokeh from lights, rainbow gradients, playful geometric shapes, summer vibes, happy people enjoying music',
-    atmosphere: 'fun, exciting, makes you want to dance and smile',
+    visualElements: 'Colorful party scene environment, confetti falling in mid-air, disco ball reflections creating light patterns, bright sunlight streaming through, beach setting with palm trees silhouettes, vibrant street art murals, festival stage lighting, empty dance floor with dramatic lighting',
+    specificDetails: 'Motion blur effects suggesting movement, lens flare from sunlight, bokeh from colorful lights, rainbow gradients in sky, playful geometric light patterns, summer atmosphere, energy and excitement in the environment itself without people',
+    atmosphere: 'fun, exciting, energetic environment that makes you want to dance and smile',
     keywords: 'happy music, feel good, party, celebration, summer vibes',
-    referenceStyle: 'Festival posters, summer playlist covers, energetic lifestyle brands',
-    composition: 'Dynamic diagonal lines, asymmetric layout for energy'
+    referenceStyle: 'Festival posters, summer playlist covers, energetic lifestyle photography (environmental)',
+    composition: 'Dynamic diagonal lines, asymmetric layout for energy, environmental focus'
   },
   
   'emotional': {
     name: 'Emotional / Heartbreak',
     targetCTR: '8-11%',
     mood: 'melancholic, emotional, and deeply touching',
-    mustHave: ['rain', 'alone', 'silhouette', 'night scene', 'urban', 'emotional'],
-    mustAvoid: ['party', 'celebration', 'bright colors', 'smiling', 'dancing'],
+    mustHave: ['rain', 'night scene', 'urban environment', 'street lamps', 'wet pavement', 'emotional lighting'],
+    mustAvoid: ['people', 'characters', 'faces', 'party', 'celebration', 'bright colors', 'smiling', 'dancing'],
     primaryColors: {
       main: '#1E40AF',      // Deep Blue
       secondary: '#A78BFA', // Soft Purple
       accent: '#F472B6',    // Neon Pink
       background: '#0F172A' // Almost Black
     },
-    visualElements: 'Silhouette walking alone in rain, urban night scene with street lamps, wet pavement with reflections, city lights blurred in background, broken heart symbol (subtle), falling rain drops, foggy atmosphere',
-    specificDetails: 'Backlit silhouette for mystery, neon signs in distance (pink/purple), umbrella optional, lonely bench, bridge at night, emotional body language, tear on cheek (subtle)',
-    atmosphere: 'sad but beautiful, relatable heartbreak, cinematic emotion',
+    visualElements: 'Empty urban night scene with rain, street lamps casting golden glow on wet pavement, city lights reflecting in puddles, neon signs blurred in foggy distance, lonely bench on empty street, bridge over calm water at night, falling rain creating atmosphere',
+    specificDetails: 'Dramatic backlighting creating moody atmosphere, neon signs in pink and purple hues, empty umbrella left on bench, rain droplets on camera lens effect, emotional lighting with deep shadows, cinematic depth of field, urban loneliness',
+    atmosphere: 'sad but beautiful, relatable heartbreak, cinematic emotion, solitude and reflection',
     keywords: 'sad songs, heartbreak, healing music, emotional',
-    referenceStyle: 'K-drama posters, indie album covers, emotional movie scenes',
-    composition: 'Rule of thirds with subject off-center, leading lines, lots of negative space'
+    referenceStyle: 'K-drama atmospheric shots (no people), indie album covers, emotional movie environmental scenes',
+    composition: 'Rule of thirds with empty space conveying loneliness, leading lines from street, lots of negative space'
   },
   
   'nightdrive': {
     name: 'Night Drive / Synthwave',
     targetCTR: '8-10%',
     mood: 'cool, mysterious, and cinematic',
-    mustHave: ['neon lights', 'cyberpunk', 'night', 'city', 'car', 'synthwave'],
-    mustAvoid: ['daylight', 'nature', 'books', 'studying', 'party'],
+    mustHave: ['neon lights', 'cyberpunk city', 'night', 'city skyline', 'highway', 'synthwave aesthetic'],
+    mustAvoid: ['people', 'characters', 'faces', 'daylight', 'nature', 'books', 'studying', 'party'],
     primaryColors: {
       main: '#A855F7',      // Neon Purple
       secondary: '#EC4899', // Hot Pink
       accent: '#06B6D4',    // Cyan
       background: '#3B0764' // Dark Purple
     },
-    visualElements: 'Cyberpunk city skyline at night, neon signs glowing, wet streets reflecting colorful lights, car dashboard view, highway at night, skyscrapers with illuminated windows, synthwave grid pattern',
-    specificDetails: 'Neon glow effects, light trails from cars, atmospheric fog, bokeh from city lights, retro 80s aesthetic, palm tree silhouettes, vaporwave elements, lens flares',
-    atmosphere: 'cool, futuristic, night drive feeling - urban exploration',
+    visualElements: 'Cyberpunk city skyline at night, towering neon signs glowing in purple and pink, wet streets reflecting colorful lights creating mirror effect, empty highway at night with light trails, futuristic skyscrapers with illuminated windows, synthwave grid pattern in background, palm tree silhouettes against neon sky',
+    specificDetails: 'Neon glow effects radiating from signs, light trails from passing vehicles, atmospheric fog creating depth, bokeh from distant city lights, retro 80s aesthetic, vaporwave color palette, lens flares, no people visible, pure environmental shot',
+    atmosphere: 'cool, futuristic, night drive feeling - urban exploration and mystery',
     keywords: 'synthwave, retrowave, night drive, cyberpunk',
-    referenceStyle: 'Blade Runner, Cyberpunk 2077, Synthwave album covers',
-    composition: 'Perspective lines converging, symmetry or dynamic angles'
+    referenceStyle: 'Blade Runner environmental shots (no people), Cyberpunk 2077 cityscapes, Synthwave album covers',
+    composition: 'Perspective lines converging to create depth, symmetry or dynamic angles, environmental focus'
   },
   
   'cafe': {
     name: 'Cafe / Coffee Music',
     targetCTR: '6-9%',
     mood: 'warm, intimate, and comfortable',
-    mustHave: ['coffee', 'cafe', 'cozy', 'warm lighting', 'wooden table'],
-    mustAvoid: ['party', 'gym', 'office desk', 'technology', 'neon'],
+    mustHave: ['coffee cup', 'cafe interior', 'cozy environment', 'warm lighting', 'wooden table', 'plants'],
+    mustAvoid: ['people', 'characters', 'faces', 'party', 'gym', 'office desk', 'technology', 'neon'],
     primaryColors: {
       main: '#92400E',      // Deep Brown
       secondary: '#FEF3C7', // Cream
       accent: '#F59E0B',    // Amber
       background: '#451A03' // Dark Brown
     },
-    visualElements: 'Cozy cafe interior, steaming coffee cup on wooden table, latte art visible, vintage cafe furniture, warm pendant lights, indoor plants, brick wall, bookshelves, croissant on plate',
-    specificDetails: 'Soft natural window light, steam rising from coffee, barista in background (blurred), vintage coffee grinder, chalkboard menu, cozy armchair, rustic wood texture',
-    atmosphere: 'warm, inviting, feels like your favorite coffee shop',
+    visualElements: 'Cozy cafe interior scene, steaming coffee cup with latte art on wooden table, vintage cafe furniture arranged artistically, warm pendant lights casting golden glow, lush indoor plants, exposed brick wall, filled bookshelves, croissant on ceramic plate, empty chairs suggesting peaceful atmosphere',
+    specificDetails: 'Soft natural window light streaming in, steam rising gracefully from coffee, vintage coffee grinder on counter, handwritten chalkboard menu, empty cozy armchair, rustic wood texture, warm amber tones, no people visible, inviting empty space',
+    atmosphere: 'warm, inviting, feels like your favorite coffee shop when it\'s quiet and peaceful',
     keywords: 'cafe music, coffee time, relaxation, cozy vibes',
-    referenceStyle: 'Instagram cafe aesthetic, cozy lifestyle photography',
-    composition: 'Warm lighting, shallow depth of field, inviting composition'
+    referenceStyle: 'Instagram cafe aesthetic (environmental shots), cozy lifestyle photography, coffee table books',
+    composition: 'Warm lighting, shallow depth of field focusing on coffee cup, inviting environmental composition'
   },
   
   'workout': {
     name: 'Workout / Gym Music',
     targetCTR: '7-9%',
     mood: 'powerful, intense, and motivating',
-    mustHave: ['gym', 'exercise', 'athlete', 'muscles', 'dumbbells', 'intense'],
-    mustAvoid: ['sitting', 'studying', 'cafe', 'relaxation', 'sleeping'],
+    mustHave: ['gym equipment', 'dumbbells', 'workout space', 'intense lighting', 'athletic environment', 'motivational'],
+    mustAvoid: ['people', 'characters', 'faces', 'sitting', 'studying', 'cafe', 'relaxation', 'sleeping'],
     primaryColors: {
       main: '#DC2626',      // Bold Red
       secondary: '#171717', // Black
       accent: '#FACC15',    // Yellow
       background: '#0A0A0A' // Deep Black
     },
-    visualElements: 'Athletic person working out, dumbbells and gym equipment, sweat drops, muscular silhouette, gym interior with dramatic lighting, weights being lifted, running motion blur',
-    specificDetails: 'High contrast lighting, motion blur for energy, chalk dust in air, dramatic shadows, determined expression, veins showing effort, gym badge on clothing, water bottle',
-    atmosphere: 'intense, powerful, makes you want to push harder',
+    visualElements: 'Modern gym interior with dramatic lighting, arranged dumbbells and gym equipment, empty workout space with motivational atmosphere, dramatic spotlights creating shadows, weights on rack, running track or treadmills, athletic environment with energy',
+    specificDetails: 'High contrast dramatic lighting, motion blur effects suggesting recent activity, chalk dust particles floating in air creating atmosphere, dramatic shadows adding intensity, empty gym space suggesting dedication, water bottle and towel left behind, motivational quotes on walls',
+    atmosphere: 'intense, powerful, motivational environment that makes you want to push harder',
     keywords: 'workout music, gym, exercise, motivation, beast mode',
-    referenceStyle: 'Nike ads, fitness influencer content, sports photography',
-    composition: 'Dynamic action shot, diagonal lines for movement, high energy'
+    referenceStyle: 'Nike environmental ads (gym spaces), fitness magazine photography (equipment focus), sports facility shots',
+    composition: 'Dynamic angles showing equipment, diagonal lines for movement energy, high contrast and intensity'
   }
 };
 
@@ -353,26 +353,26 @@ function generateThumbnailPrompt(title, style, language = 'korean') {
   const template = selectTemplate(style);
   const cleanedTitle = cleanTitle(title);
   
-  // 4가지 버전: 전략적으로 다른 접근
+  // 4가지 버전: 모두 분위기/환경 중심 (캐릭터 제외)
   const prompts = [
     {
       version: 'design_a_with_text',
-      label: '캐릭터 중심 + 텍스트 (최고 CTR)',
-      prompt: generateCharacterFocused(cleanedTitle, template, language, true)
+      label: '분위기 풍경 + 텍스트 (메인)',
+      prompt: generateMoodLandscape(cleanedTitle, template, language, true)
     },
     {
       version: 'design_a_no_text',
-      label: '캐릭터 중심 + 텍스트 없음',
-      prompt: generateCharacterFocused(cleanedTitle, template, language, false)
+      label: '분위기 풍경 + 텍스트 없음',
+      prompt: generateMoodLandscape(cleanedTitle, template, language, false)
     },
     {
       version: 'design_b_with_text',
-      label: '분위기 풍경 + 텍스트',
+      label: '분위기 풍경 + 텍스트 (변형)',
       prompt: generateMoodLandscape(cleanedTitle, template, language, true)
     },
     {
       version: 'design_b_no_text',
-      label: '분위기 풍경 + 텍스트 없음',
+      label: '분위기 풍경 + 텍스트 없음 (변형)',
       prompt: generateMoodLandscape(cleanedTitle, template, language, false)
     }
   ];
