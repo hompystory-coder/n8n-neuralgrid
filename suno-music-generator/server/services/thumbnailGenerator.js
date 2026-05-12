@@ -391,116 +391,17 @@ function generateThumbnailPrompt(title, style, language = 'korean') {
 const promptGen = require('./thumbnailPromptGenerator');
 
 /**
- * Version 1: Character-Focused (캐릭터 중심) - 최고 CTR
+ * 환경/분위기 중심 생성 (캐릭터 없음)
+ * 하위 호환성을 위해 함수명 유지, 실제로는 환경 중심으로 생성
  */
 function generateCharacterFocused(title, template, language, includeText) {
-  // 새 생성기 사용
+  // 이제 항상 환경 중심으로 생성 (캐릭터 없음)
   return promptGen.generateCharacterFocused(title, template, language, includeText);
 }
 
 /**
  * Version 1 (OLD): Character-Focused - 이전 버전 (백업용)
  */
-function generateCharacterFocusedOld(title, template, language, includeText) {
-  const colors = template.primaryColors;
-  
-  const textSection = includeText ? `
-TITLE TEXT (VERY IMPORTANT):
-- Text: "${title}"
-- Font: LARGE, BOLD, sans-serif (minimum 72px equivalent)
-- Position: Top center or bottom center (don't block character's face)
-- Color: White (#FFFFFF) with soft glow effect
-- Glow: ${colors.secondary} or ${colors.accent} color glow around text
-- Shadow: Soft drop shadow for depth and readability
-- Style: Clean, modern, highly readable
-- ${language === 'korean' ? 'Korean font: Pretendard Bold or Noto Sans KR Black' : 'English font: Montserrat Bold or Poppins Black'}
-- Make text POP and STAND OUT - it should be the second thing viewers notice after the character
-- Text should be LARGE enough to read on mobile phones (thumbnail size)
-` : `
-CRITICAL - NO TEXT AT ALL:
-- DO NOT include ANY text, titles, numbers, or letters in the image
-- This is a background-only version for later text overlay
-- Pure visual design without any typography
-- Leave clear space at top or bottom for text to be added later
-- Focus 100% on the visual elements and atmosphere
-`;
-
-  return `IMPORTANT: This is for ${template.name} music, NOT lofi/study music!
-
-Professional YouTube music playlist thumbnail - Character-Focused Design (Highest CTR style)
-
-CRITICAL REQUIREMENTS - MUST FOLLOW:
-- Genre: ${template.name}
-- Keywords: ${template.keywords}
-- Mood: ${template.mood}
-${template.name === 'Upbeat / Happy Vibes' ? `- DO NOT show: studying, books, desk, homework, laptop, work
-- DO show: dancing, party, festival, celebration, smiling faces, outdoor fun
-- Energy level: HIGH, VIBRANT, JOYFUL` : ''}
-
-MAIN SUBJECT (MOST IMPORTANT - 60% of composition):
-${template.visualElements.split(',')[0]}
-- Style: ${template.referenceStyle}
-- Expression: ${template.mood.split(',')[0]} face with genuine ${template.mood.split(',')[1] || 'emotion'}
-- Action: ${template.name.includes('Upbeat') ? 'dancing, celebrating, enjoying party atmosphere' : 'calm, focused activity'}
-- Position: Center or slightly off-center (rule of thirds)
-- Detail: High quality, detailed illustration, expressive eyes that connect with viewer
-- The character should be the FOCAL POINT that immediately draws attention
-- Character should look inviting and relatable to the target audience
-
-BACKGROUND & ENVIRONMENT (40% of composition):
-${template.visualElements}
-- Style: ${template.referenceStyle}
-- Composition: ${template.composition}
-- Detail level: Rich but not overwhelming, supports the main character
-
-COLOR PALETTE (EXACT COLORS - Critical for CTR):
-- Primary/Dominant: ${colors.main} (${Math.round(100 * 0.4)}% of image)
-- Secondary: ${colors.secondary} (${Math.round(100 * 0.3)}% of image)
-- Accent: ${colors.accent} (${Math.round(100 * 0.2)}% of image)
-- Background base: ${colors.background} (${Math.round(100 * 0.1)}% of image)
-- Color scheme creates ${template.mood} feeling
-- High contrast: minimum 70% brightness difference between elements
-- Colors should be vibrant but not oversaturated
-
-LIGHTING & ATMOSPHERE:
-- Mood: ${template.atmosphere}
-- Lighting: Warm, cinematic lighting with clear light source
-- Shadows: Soft shadows for depth, not too dark
-- Highlights: Strategic highlights on character and key elements
-- Overall feel: ${template.mood}
-- Atmosphere should make viewers feel: ${template.atmosphere}
-
-${textSection}
-
-TECHNICAL REQUIREMENTS (YouTube Optimization):
-- Aspect ratio: 16:9 (perfect for YouTube thumbnails)
-- Resolution: High quality, sharp, professional
-- Composition: Balanced, eye-catching, follows ${template.composition}
-- Contrast: High contrast (70%+ difference) between foreground and background
-- Focal point: Character's face/eyes should be the immediate attention grabber
-- Depth: Clear foreground, midground, background separation
-- Style: Clean, professional, ${template.referenceStyle}
-
-MOOD & PSYCHOLOGY:
-- Target emotion: ${template.mood}
-- Viewer feeling: ${template.atmosphere}
-- Click trigger: Makes viewers feel "${template.atmosphere}"
-- Genre keywords: ${template.keywords}
-- Reference style: ${template.referenceStyle}
-
-DESIGN GOALS:
-- Create an IMMEDIATE emotional connection with the viewer
-- Make the thumbnail INSTANTLY recognizable at small sizes (mobile)
-- Stand out among dozens of other thumbnails in search results
-- Convey the music's mood/vibe at a single glance
-- Professional quality that builds trust and channel branding
-- Target CTR: ${template.targetCTR} (top-performing range)
-
-${includeText ? 
-  `Final output: Professional thumbnail with prominent title text that combines beautiful character art with excellent typography.` : 
-  `Final output: Professional background design perfect for adding text overlay later, with clear space reserved for title.`}`;
-}
-
 /**
  * Version 2: Mood-Landscape (분위기 풍경) - 높은 CTR
  */
@@ -512,108 +413,6 @@ function generateMoodLandscape(title, template, language, includeText) {
 /**
  * Version 2 (OLD): Mood-Landscape - 이전 버전 (백업용)
  */
-function generateMoodLandscapeOld(title, template, language, includeText) {
-  const colors = template.primaryColors;
-  
-  const textSection = includeText ? `
-TITLE TEXT (CENTER STAGE):
-- Text: "${title}"
-- Font: EXTRA LARGE, BOLD (minimum 80px equivalent)
-- Position: Center or top-center (text is the hero here)
-- Color: White (#FFFFFF) or ${colors.accent}
-- Effect: Strong glow effect in ${colors.secondary} or ${colors.main}
-- Shadow: Deep shadow for maximum contrast and readability
-- Style: Bold, impactful, modern typography
-- ${language === 'korean' ? 'Korean font: Pretendard Extra Bold' : 'English font: Bebas Neue or Oswald Bold'}
-- Text should be MASSIVE and DOMINANT - the main focus
-- Text takes 50-60% of the visual attention
-` : `
-NO TEXT VERSION:
-- Absolutely NO text, titles, or typography
-- Pure cinematic scene/landscape
-- Designed as a background for text overlay
-- Maximum visual impact without text distraction
-- Leave obvious space for title placement
-`;
-
-  return `IMPORTANT: This is for ${template.name} music, NOT lofi/study music!
-
-Professional YouTube music playlist thumbnail - Mood-Landscape Design (Cinematic style)
-
-CRITICAL GENRE: ${template.name}
-Keywords: ${template.keywords}
-${template.name === 'Upbeat / Happy Vibes' ? `MUST AVOID: study scenes, desks, books, laptops, homework
-MUST INCLUDE: party, festival, dancing, outdoor celebration, bright daylight` : ''}
-
-MAIN SCENE (PANORAMIC COMPOSITION):
-${template.visualElements}
-- Style: Cinematic, wide-angle, immersive scene
-- Composition: ${template.composition}
-- Perspective: ${template.referenceStyle}
-- Visual storytelling: Scene should immediately convey ${template.mood}
-- The entire scene creates the mood, not just one element
-
-VISUAL ELEMENTS & DETAILS:
-${template.specificDetails}
-- Quality: Photorealistic with artistic enhancement
-- Detail: Rich, immersive, but not cluttered
-- Focus: Clear main subject with supporting elements
-- Depth: Strong sense of depth with foreground, midground, background
-- Movement: ${template.mood.includes('energetic') ? 'Sense of motion and energy' : 'Calm, peaceful stillness'}
-
-COLOR PALETTE & GRADING:
-- Primary: ${colors.main} (dominant color, sets the mood)
-- Secondary: ${colors.secondary} (supporting color)
-- Accent: ${colors.accent} (highlights and points of interest)
-- Base: ${colors.background} (foundation color)
-- Color grading: ${template.mood} color temperature
-- Saturation: Vibrant and eye-catching but not oversaturated
-- Contrast: High contrast (70%+) for visual pop
-
-LIGHTING & EFFECTS:
-- Lighting style: ${template.atmosphere}
-- Light source: Clear, motivated lighting (natural or artificial)
-- Shadows: Strategic shadows for depth and drama
-- Effects: ${template.specificDetails.includes('glow') ? 'Glow effects, light rays, atmospheric haze' : 'Clean lighting, minimal effects'}
-- Atmosphere: ${template.atmosphere}
-- Mood lighting: Colors and lighting work together to create ${template.mood}
-
-${textSection}
-
-COMPOSITION & LAYOUT:
-- Layout: ${template.composition}
-- Balance: Visual balance with clear focal points
-- Leading lines: Guide viewer's eye through the composition
-- Negative space: ${includeText ? '30-40% for text placement' : '20-30% for breathing room'}
-- Symmetry: ${template.mood.includes('calm') ? 'Balanced, symmetrical' : 'Dynamic, asymmetrical'}
-
-MOOD & ATMOSPHERE:
-- Primary mood: ${template.mood}
-- Emotional impact: ${template.atmosphere}
-- Viewer feeling: Should make viewers feel ${template.atmosphere}
-- Genre: ${template.keywords}
-- Reference: ${template.referenceStyle}
-
-TECHNICAL SPECS:
-- Aspect ratio: 16:9 (YouTube standard)
-- Quality: High resolution, professional grade
-- Style: ${template.referenceStyle}
-- Clarity: Sharp, clear, no blur (except artistic motion blur)
-- Color depth: Rich, deep colors with proper gradation
-- Contrast ratio: Minimum 70% between key elements
-
-YOUTUBE OPTIMIZATION:
-- Mobile-friendly: Clear and impactful even at small sizes
-- Thumbnail psychology: ${template.atmosphere}
-- Click trigger: Immediate mood recognition
-- Brand consistency: Style aligns with ${template.keywords}
-- Target CTR: ${template.targetCTR}
-
-${includeText ? 
-  `Final output: Cinematic scene with powerful central typography that dominates the composition.` : 
-  `Final output: Cinematic background scene ready for text overlay, with clear composition and visual hierarchy.`}`;
-}
-
 module.exports = {
   thumbnailTemplates,
   selectTemplate,
