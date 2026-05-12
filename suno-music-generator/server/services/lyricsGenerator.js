@@ -1,22 +1,63 @@
 /**
- * Gemini API를 사용한 가사 및 제목 생성 서비스
+ * OpenAI/Gemini API를 사용한 가사 및 제목 생성 서비스
  */
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const axios = require('axios');
 const fs = require('fs');
 const yaml = require('js-yaml');
 const os = require('os');
 const path = require('path');
 
-// Gemini API 키 설정
-const GEMINI_API_KEY = 'AIzaSyCS3nl6jkeSaWFKByCbCUJZSOjSXVQOnp4';
+// OpenAI API 설정 (우선 사용)
+const USE_OPENAI = true;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+
+// Gemini API 키 설정 (fallback)
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'AIzaSyCS3nl6jkeSaWFKByCbCUJZSOjSXVQOnp4';
 const GEMINI_PROJECT = 'projects/517255627325';
 
-console.log(`🔑 Gemini API initialized`);
-console.log(`   API Key: ${GEMINI_API_KEY.substring(0, 15)}... (${GEMINI_API_KEY.length} chars)`);
-console.log(`   Project: ${GEMINI_PROJECT}`);
+if (USE_OPENAI && OPENAI_API_KEY) {
+  console.log(`🔑 OpenAI API initialized (Primary)`);
+  console.log(`   API Key: ${OPENAI_API_KEY.substring(0, 15)}... (${OPENAI_API_KEY.length} chars)`);
+} else {
+  console.log(`🔑 Gemini API initialized (Fallback)`);
+  console.log(`   API Key: ${GEMINI_API_KEY.substring(0, 15)}... (${GEMINI_API_KEY.length} chars)`);
+  console.log(`   Project: ${GEMINI_PROJECT}`);
+}
 
 // Gemini API 클라이언트 초기화
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+
+/**
+ * OpenAI API 호출 (GPT-4)
+ */
+async function callOpenAI(systemPrompt, userPrompt, temperature = 0.9, maxTokens = 2048) {
+  try {
+    const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+      model: 'gpt-4',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ],
+      temperature: temperature,
+      max_tokens: maxTokens
+    }, {
+      headers: {
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    return {
+      response: {
+        text: () => response.data.choices[0].message.content
+      }
+    };
+  } catch (error) {
+    console.error('❌ OpenAI API 오류:', error.message);
+    throw error;
+  }
+}
 
 /**
  * Gemini 모델 생성 헬퍼 함수
@@ -35,6 +76,18 @@ function createGeminiModel(temperature = 1.0, maxTokens = 8192, systemInstructio
   }
   
   return genAI.getGenerativeModel(config);
+}
+
+/**
+ * 통합 LLM 호출 함수 (OpenAI 우선, Gemini fallback)
+ */
+async function generateWithLLM(systemPrompt, userPrompt, temperature = 0.9, maxTokens = 2048) {
+  if (USE_OPENAI && OPENAI_API_KEY) {
+    return await callOpenAI(systemPrompt, userPrompt, temperature, maxTokens);
+  } else {
+    const model = createGeminiModel(temperature, maxTokens, systemPrompt);
+    return await model.generateContent(userPrompt);
+  }
 }
 
 /**
@@ -164,9 +217,8 @@ ${count}개의 안전한 이슈를 검색해주세요.
 - 실제 웹 검색 결과 사용
 - JSON만 출력 (설명 금지)`;
 
-    // 🔥 Gemini API 호출 (간단한 이슈 수집만)
-    const model = createGeminiModel(0.3, 2000, systemInstruction);
-    const result = await model.generateContent(userPrompt);
+    // 🔥 LLM API 호출 (간단한 이슈 수집만)
+    const result = await generateWithLLM(systemInstruction, userPrompt, 0.3, 2000);
     const responseText = result.response.text().trim();
     console.log(`📊 이슈 검색 결과 (원본 일부):`, responseText.substring(0, 200));
     
@@ -233,8 +285,7 @@ ${count}개의 안전한 이슈를 검색해주세요.
 
 ⚠️ **필수**: emotionalStory 400자 이상, sensoryDetails 50자 이상`;
 
-        const storyModel = createGeminiModel(0.7, 1500, '당신은 감성 스토리 작가입니다. 영화 시나리오처럼 구체적이고 상세하게 작성하세요.');
-        const storyResult = await storyModel.generateContent(storyPrompt);
+        const storyResult = await generateWithLLM('당신은 감성 스토리 작가입니다. 영화 시나리오처럼 구체적이고 상세하게 작성하세요.', storyPrompt, 0.7, 1500);
         const storyText = storyResult.response.text().trim();
         
         // JSON 파싱
@@ -290,8 +341,7 @@ Output only JSON:
 Language: ${targetLanguage}`;
 
     // 🔥 Gemini API 호출
-    const model = createGeminiModel(0.3, 3000, systemInstruction);
-    const result = await model.generateContent(userPrompt);
+    const result = await generateWithLLM(systemInstruction, userPrompt, 0.3, 3000);
     const responseText = result.response.text().trim();
     const jsonMatch = responseText.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
@@ -591,8 +641,7 @@ async function generateLyricsFromIssue(issue, style, language, gender, index, pr
       attempt++;
       console.log(`🎵 가사 생성 시도 ${attempt}/${maxAttempts}...`);
       
-      const model = createGeminiModel(0.9, 2048, systemInstruction);
-      const result = await model.generateContent(userPrompt);
+      const result = await generateWithLLM(systemInstruction, userPrompt, 0.9, 2048);
       lyrics = result.response.text().trim();
       
       // 🔍 디버그: Gemini 응답 확인
@@ -4286,8 +4335,7 @@ Output only the title. No quotes or explanations!
 Example: The Season of You`;
 
     // 🔥 Gemini API 호출
-    const model = createGeminiModel(0.8, 200, systemInstruction);
-    const result = await model.generateContent(userPrompt);
+    const result = await generateWithLLM(systemInstruction, userPrompt, 0.8, 200);
     const titleText = result.response.text().trim();
     
     // 따옴표 제거 및 정리
