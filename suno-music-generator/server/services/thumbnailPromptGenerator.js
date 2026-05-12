@@ -88,52 +88,12 @@ TITLE TEXT (IMPORTANT):
 }
 
 /**
- * 캐릭터 중심 프롬프트 생성
+ * 환경/분위기 중심 프롬프트 생성 (캐릭터 없음)
+ * 이 함수는 더 이상 캐릭터를 생성하지 않고 오직 환경과 분위기만 생성합니다
  */
 function generateCharacterFocused(title, template, language, includeText) {
-  const colors = template.primaryColors;
-  const constraints = getGenreConstraints(template);
-  
-  return `${generatePromptHeader(template)}
-
-DESIGN TYPE: Professional YouTube music playlist thumbnail - Character-Focused Style
-
-MAIN SUBJECT (60% of composition):
-- ${template.visualElements.split(',')[0].trim()}
-- Reference style: ${template.referenceStyle}
-- Expression/Mood: ${template.mood}
-- Position: Center or slightly off-center (rule of thirds)
-- Quality: High-detail illustration with expressive eyes that connect with viewers
-- Action: ${constraints.energy.includes('HIGH') ? 'Dynamic, energetic movement' : 'Calm, peaceful activity'}
-
-BACKGROUND ENVIRONMENT (40% of composition):
-- Scene: ${template.visualElements}
-- Atmosphere: ${template.atmosphere}
-- Composition style: ${template.composition}
-- Details: ${template.specificDetails}
-
-COLOR PALETTE (EXACT COLORS):
-- Primary: ${colors.main} (40% dominance)
-- Secondary: ${colors.secondary} (30%)
-- Accent: ${colors.accent} (20%)
-- Background base: ${colors.background} (10%)
-- High contrast (70%+ brightness difference)
-- Vibrant but not oversaturated
-
-LIGHTING & ATMOSPHERE:
-- Mood: ${template.atmosphere}
-- Lighting style: Warm, cinematic with clear light source
-- Shadows: Soft shadows for depth
-- Overall feeling: ${template.mood}
-${generateTextSection(title, colors, language, includeText)}
-
-TECHNICAL SPECS:
-- Aspect ratio: 16:9 (YouTube standard)
-- Resolution: High quality, sharp, professional
-- Mobile-optimized: Clear even at thumbnail size
-- Target CTR: ${template.targetCTR}
-
-Final output: ${includeText ? 'Character-focused thumbnail with prominent text overlay' : 'Character-focused thumbnail background ready for text overlay'}`;
+  // 이 함수 이름은 하위 호환성을 위해 유지하지만, 실제로는 환경 중심 생성
+  return generateMoodLandscape(title, template, language, includeText);
 }
 
 /**
@@ -146,6 +106,12 @@ function generateMoodLandscape(title, template, language, includeText) {
   return `${generatePromptHeader(template)}
 
 DESIGN TYPE: Professional YouTube music playlist thumbnail - Cinematic Landscape Style
+
+🚫 ABSOLUTELY NO PEOPLE/CHARACTERS:
+- DO NOT include any people, characters, humans, faces, or body parts
+- This must be a pure environmental/atmospheric shot
+- Focus 100% on environment, mood, and atmosphere
+- Any AI-generated people will result in rejection
 
 MAIN SCENE (Panoramic wide-angle):
 - Scene: ${template.visualElements}
