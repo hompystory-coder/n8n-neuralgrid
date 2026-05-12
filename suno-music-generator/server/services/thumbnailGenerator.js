@@ -5,6 +5,7 @@
  */
 
 const aiMatcher = require('./aiThumbnailMatcher');
+const styleParser = require('./styleParser');
 const fs = require('fs');
 const path = require('path');
 
@@ -170,8 +171,14 @@ const thumbnailTemplates = {
  * 3. 실패 시 폴백 템플릿 사용
  */
 function selectTemplate(style) {
+  console.log('🎯 [Template Selection] 입력 스타일:', style);
+  
   const styleLower = style.toLowerCase();
   const styleOriginal = style;
+  
+  // 🧠 Step 0: 스타일 문자열 지능형 파싱
+  const parsedStyle = styleParser.parseStyle(style);
+  console.log('🧠 [Parsed Features]:', JSON.stringify(parsedStyle, null, 2));
   
   // 1단계: genres.json에서 정확한 장르 찾기
   if (genresData && genresData.categories) {
@@ -219,53 +226,109 @@ function selectTemplate(style) {
     }
   }
   
-  console.log(`⚠️ AI 매칭 실패, 폴백 템플릿 사용: ${style}`);
+  console.log(`⚠️ AI 매칭 실패, 파싱된 특징 기반 폴백 템플릿 선택`);
   
-  // 2단계: 폴백 - 기존 7개 템플릿 매칭
+  // 2단계: 파싱된 특징 기반 지능형 템플릿 선택
+  
+  // 🚫 CRITICAL: "up tempo" 키워드나 높은 BPM이면 study 템플릿 절대 사용 금지
+  if (parsedStyle.isHighEnergy && !parsedStyle.isStudyMusic) {
+    console.log('🎵 High energy 감지 → upbeat 템플릿 선택');
+    return thumbnailTemplates['upbeat'];
+  }
+  
+  // Dance/EDM 장르 감지
+  if (parsedStyle.isDance || parsedStyle.genreCategory === 'dance') {
+    console.log('💃 Dance 장르 감지 → upbeat 템플릿 선택');
+    return thumbnailTemplates['upbeat'];
+  }
+  
+  // R&B/Jazz/Pop 조합 (trendy, upbeat 특징)
+  if ((parsedStyle.genreCategory === 'rnb' || parsedStyle.genreCategory === 'jazz' || parsedStyle.genreCategory === 'pop') &&
+      parsedStyle.isHighEnergy) {
+    console.log('🎺 R&B/Jazz/Pop + High Energy → cafe 템플릿 선택');
+    return thumbnailTemplates['cafe'];
+  }
+  
+  // Emotional/Sad
+  if (parsedStyle.moods.includes('sad') || parsedStyle.moods.includes('emotional')) {
+    console.log('😢 Emotional 분위기 감지 → emotional 템플릿 선택');
+    return thumbnailTemplates['emotional'];
+  }
+  
+  // Calm/Relaxing
+  if (parsedStyle.isCalm && !parsedStyle.isStudyMusic) {
+    console.log('😌 Calm 분위기 감지 → cafe 템플릿 선택');
+    return thumbnailTemplates['cafe'];
+  }
+  
+  // 3단계: 키워드 기반 폴백 (기존 로직 유지, 단 순서 조정)
+  
+  // Upbeat / Happy (우선순위 높임)
+  if (styleLower.includes('upbeat') || styleLower.includes('up tempo') || styleLower.includes('uptempo') ||
+      styleLower.includes('happy') || styleLower.includes('energy') || styleLower.includes('party') ||
+      styleLower.includes('dance')) {
+    console.log('🎉 Upbeat 키워드 감지 → upbeat 템플릿');
+    return thumbnailTemplates['upbeat'];
+  }
+  
   // Lo-fi / Chill
   if (styleLower.includes('lofi') || styleLower.includes('lo-fi') || 
       styleLower.includes('chill') || styleLower.includes('beats')) {
+    console.log('🎧 Lo-fi 키워드 감지 → lofi 템플릿');
     return thumbnailTemplates['lofi'];
   }
   
-  // Study / Focus
-  if (styleLower.includes('study') || styleLower.includes('focus') || 
-      styleLower.includes('concentration')) {
+  // Study / Focus (낮은 우선순위)
+  if ((styleLower.includes('study') || styleLower.includes('focus') || 
+       styleLower.includes('concentration')) && !parsedStyle.isHighEnergy) {
+    console.log('📚 Study 키워드 감지 (에너지 레벨 확인됨) → study 템플릿');
     return thumbnailTemplates['study'];
-  }
-  
-  // Upbeat / Happy
-  if (styleLower.includes('upbeat') || styleLower.includes('happy') || 
-      styleLower.includes('energy') || styleLower.includes('party')) {
-    return thumbnailTemplates['upbeat'];
   }
   
   // Emotional / Sad
   if (styleLower.includes('emotional') || styleLower.includes('sad') || 
       styleLower.includes('heartbreak') || styleLower.includes('healing')) {
+    console.log('💔 Emotional 키워드 감지 → emotional 템플릿');
     return thumbnailTemplates['emotional'];
   }
   
   // Night Drive
   if (styleLower.includes('night') || styleLower.includes('drive') || 
       styleLower.includes('synthwave') || styleLower.includes('cyberpunk')) {
+    console.log('🌃 Night Drive 키워드 감지 → nightdrive 템플릿');
     return thumbnailTemplates['nightdrive'];
   }
   
   // Cafe
-  if (styleLower.includes('cafe') || styleLower.includes('coffee')) {
+  if (styleLower.includes('cafe') || styleLower.includes('coffee') ||
+      styleLower.includes('jazz') || styleLower.includes('r&b')) {
+    console.log('☕ Cafe/Jazz 키워드 감지 → cafe 템플릿');
     return thumbnailTemplates['cafe'];
   }
   
   // Workout
   if (styleLower.includes('workout') || styleLower.includes('gym') || 
       styleLower.includes('exercise')) {
+    console.log('💪 Workout 키워드 감지 → workout 템플릿');
     return thumbnailTemplates['workout'];
   }
   
-  // Default: Lo-fi (가장 높은 CTR)
-  console.log(`❌ 매칭 실패, 기본 템플릿 사용`);
-  return thumbnailTemplates['lofi'];
+  // 4단계: 최후 폴백 - 에너지 레벨 기반
+  console.log('⚠️ 키워드 매칭 실패, 에너지 레벨 기반 선택');
+  
+  if (parsedStyle.bpm !== null && parsedStyle.bpm >= 100) {
+    console.log(`🎵 BPM ${parsedStyle.bpm} → upbeat 템플릿 (기본값 대신)`);
+    return thumbnailTemplates['upbeat'];
+  }
+  
+  if (parsedStyle.isHighEnergy) {
+    console.log('⚡ High energy 감지 → upbeat 템플릿 (기본값 대신)');
+    return thumbnailTemplates['upbeat'];
+  }
+  
+  // 최후의 기본값: cafe (lofi보다 범용성 높음)
+  console.log('❓ 특징 불명확 → cafe 템플릿 (범용 기본값)');
+  return thumbnailTemplates['cafe'];
 }
 
 /**

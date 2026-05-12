@@ -18,3 +18,13 @@ out/
 .vscode/
 .idea/
 *.tar.gz
+
+# Large backup files
+*.tar.gz
+*.zip
+*.backup
+
+# Temporary test files
+test-*.js
+test_*.js
+test-*.py

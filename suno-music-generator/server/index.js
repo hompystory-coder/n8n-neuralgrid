@@ -31,6 +31,7 @@ const chartsRoutes = require('./routes/charts'); // 🔥 추가
 const statsRoutes = require('./routes/stats'); // 🔥 통계 라우트 추가
 const genresRoutes = require('./routes/genres'); // 🔥 장르 라우트 추가
 const youtubeRoutes = require('./routes/youtube'); // 🎬 유튜브 분석 라우트 추가
+const youtubeMetadataRoutes = require('./routes/youtube-metadata'); // 🎬 유튜브 메타데이터 생성 라우트 추가
 const webhookRoutes = require('./routes/webhook'); // 📥 웹훅 라우트 추가
 const personaRoutes = require('./routes/persona'); // 🎤 페르소나 라우트 추가
 const styleRoutes = require('./routes/style'); // 🎨 스타일 기반 생성 라우트 추가
@@ -85,6 +86,7 @@ app.set('io', io);
 // Routes
 app.use('/api/music', musicRoutes);
 app.use('/api/music', youtubeRoutes); // 🎬 유튜브 분석 (/api/music/analyze-youtube)
+app.use('/api/youtube', youtubeMetadataRoutes); // 🎬 유튜브 메타데이터 생성 (/api/youtube/generate-metadata)
 app.use('/api/queue', queueRoutes);
 app.use('/api/status', statusRoutes);
 app.use('/api/lyrics', lyricsRoutes);

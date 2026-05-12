@@ -31,6 +31,7 @@ let currentGenerationTaskId = null;
 let currentPlayingAudio = null;
 let selectedSongs = new Map(); // songId -> {song, order}
 let currentGeneratedStyle = ''; // 현재 생성 중인 스타일 저장
+let currentGeneratedLanguage = 'korean'; // 현재 생성 중인 언어 저장 (기본값: korean)
 let selectedImages = new Map(); // songIndex -> {imageUrl, isUpgraded, upgradedUrl}
 let selectionOrder = []; // 선택한 순서대로 songIndex 배열 (Time Track용)
 let trackOrder = new Map(); // songIndex -> trackNumber (1~20) - 앨범 트랙 순서 관리
@@ -132,8 +133,9 @@ async function generateSimpleStyleMusic() {
 
     console.log('📝 최종 스타일:', finalStyle);
     
-    // 스타일 저장 (메타데이터용 - 원본 입력값만 저장)
+    // 스타일과 언어 저장 (메타데이터용 - 원본 입력값만 저장)
     currentGeneratedStyle = styleInput;
+    currentGeneratedLanguage = language;
 
     // 6. 서버에 간단 생성 요청
     const response = await fetch('/api/style/generate-simple', {
@@ -1750,7 +1752,7 @@ async function showFinalSummary(autoMode = false) {
       const thumbnailData = await generateThumbnail(
         data.youtubeTitle || data.youtubeTitleKo || '음악 플레이리스트',
         currentStyle || 'Lo-Fi Hip Hop',
-        'korean'
+        currentGeneratedLanguage
       );
       
       // 썸네일 프롬프트 표시
@@ -1858,11 +1860,11 @@ async function generateAlbumMetadata() {
     
     console.log('🎯 AI 메타데이터 생성 요청:', { trackCount: tracks.length, style });
     
-    // AI 메타데이터 생성 요청
+    // AI 메타데이터 생성 요청 (저장된 언어 사용)
     const response = await fetch('/api/style/generate-album-metadata', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tracks, style, language: 'korean' })
+      body: JSON.stringify({ tracks, style, language: currentGeneratedLanguage })
     });
     
     const data = await response.json();
@@ -4221,7 +4223,7 @@ async function generateYouTubeThumbnail() {
       body: JSON.stringify({
         title: window.albumMetadata.youtubeTitle || window.albumMetadata.albumTitle,
         style: window.albumMetadata.style || 'Music Playlist',
-        language: 'korean',
+        language: currentGeneratedLanguage,
         aiModel: aiModel  // 'openai' (자동) 또는 'genspark' (수동)
       })
     });
