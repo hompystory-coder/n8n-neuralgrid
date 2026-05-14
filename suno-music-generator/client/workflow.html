@@ -1416,6 +1416,48 @@
                                     🔍 스타일 분석하기
                                 </button>
                                 
+                                <!-- 🎯 스타일 적용 강도 조절 -->
+                                <div style="margin-top: 20px; padding: 16px; background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid rgba(72,209,204,0.3);">
+                                    <div style="margin-bottom: 12px;">
+                                        <label style="display: flex; align-items: center; gap: 8px; color: #48d1cc; font-weight: 600; font-size: 0.95em; margin-bottom: 8px;">
+                                            🎯 스타일 적용 강도
+                                            <span style="font-size: 0.85em; color: rgba(255,255,255,0.5); font-weight: normal;">(높을수록 원본 오디오와 비슷)</span>
+                                        </label>
+                                        <input type="range" id="styleWeightSlider" min="0" max="100" value="100" 
+                                               style="width: 100%; height: 6px; border-radius: 3px; background: linear-gradient(to right, rgba(72,209,204,0.3) 0%, #48d1cc 100%); outline: none; cursor: pointer;"
+                                               oninput="document.getElementById('styleWeightValue').textContent = (this.value / 100).toFixed(2)">
+                                        <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.85em;">
+                                            <span style="color: rgba(255,255,255,0.5);">0.0 (자유로움)</span>
+                                            <span id="styleWeightValue" style="color: #48d1cc; font-weight: 600;">1.00</span>
+                                            <span style="color: rgba(255,255,255,0.5);">1.0 (완벽 복제)</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="margin-top: 16px;">
+                                        <label style="display: flex; align-items: center; gap: 8px; color: #48d1cc; font-weight: 600; font-size: 0.95em; margin-bottom: 8px;">
+                                            🎨 창의성 수준
+                                            <span style="font-size: 0.85em; color: rgba(255,255,255,0.5); font-weight: normal;">(낮을수록 스타일 엄격 준수)</span>
+                                        </label>
+                                        <input type="range" id="weirdnessSlider" min="0" max="100" value="10" 
+                                               style="width: 100%; height: 6px; border-radius: 3px; background: linear-gradient(to right, #48d1cc 0%, rgba(251,146,60,0.6) 100%); outline: none; cursor: pointer;"
+                                               oninput="document.getElementById('weirdnessValue').textContent = (this.value / 100).toFixed(2)">
+                                        <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.85em;">
+                                            <span style="color: rgba(255,255,255,0.5);">0.0 (엄격)</span>
+                                            <span id="weirdnessValue" style="color: #48d1cc; font-weight: 600;">0.10</span>
+                                            <span style="color: rgba(255,255,255,0.5);">1.0 (창의적)</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="margin-top: 12px; padding: 10px; background: rgba(72,209,204,0.1); border-radius: 6px; border-left: 3px solid #48d1cc;">
+                                        <div style="color: rgba(255,255,255,0.8); font-size: 0.85em; line-height: 1.5;">
+                                            💡 <strong>추천 설정</strong><br>
+                                            • 원본과 거의 똑같이: 스타일 1.0, 창의성 0.1<br>
+                                            • 원본 느낌 + 약간 변화: 스타일 0.8, 창의성 0.3<br>
+                                            • 참고만 하고 자유롭게: 스타일 0.5, 창의성 0.7
+                                        </div>
+                                    </div>
+                                </div>
+                                
                                 <!-- 업로드 진행 상태 -->
                                 <div id="styleAudioProgress" style="display: none; margin-top: 16px; padding: 16px; background: rgba(0,0,0,0.4); border-radius: 8px;">
                                     <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
@@ -2751,6 +2793,12 @@
                     }
                     
                     // Suno API 요청 파라미터
+                    // 🎯 슬라이더에서 스타일 강도 값 가져오기
+                    const styleWeightSlider = document.getElementById('styleWeightSlider');
+                    const weirdnessSlider = document.getElementById('weirdnessSlider');
+                    const styleWeight = styleWeightSlider ? parseFloat(styleWeightSlider.value) / 100 : 1.0;
+                    const weirdnessConstraint = weirdnessSlider ? parseFloat(weirdnessSlider.value) / 100 : 0.1;
+                    
                     const params = {
                         customMode: true,
                         model: 'V5',
@@ -2759,9 +2807,9 @@
                         style: stylePrompt,
                         title: lyric.title || `곡 ${i+1}`,
                         instrumental: false,
-                        // 🎯 스타일 적용 강도 추가 (높을수록 스타일에 충실)
-                        styleWeight: 0.8,  // 0-1, 기본값보다 높게 설정
-                        weirdnessConstraint: 0.3  // 0-1, 창의성 제한 (낮을수록 스타일 준수)
+                        // 🎯 슬라이더에서 가져온 값 (사용자가 조정 가능)
+                        styleWeight: styleWeight,
+                        weirdnessConstraint: weirdnessConstraint
                     };
                     
                     // 🎤 페르소나 ID 추가 (있는 경우)
@@ -2775,7 +2823,9 @@
                         language: selectedLang,
                         gender: selectedGender,
                         lyricsPreview: lyricsText.substring(0, 50) + '...',
-                        stylePrompt: stylePrompt
+                        stylePrompt: stylePrompt,
+                        styleWeight: styleWeight,
+                        weirdnessConstraint: weirdnessConstraint
                     });
                     
                     // API 호출
