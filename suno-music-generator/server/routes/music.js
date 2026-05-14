@@ -444,65 +444,82 @@ const multer = require('multer');
 const upload = multer({ 
   storage: multer.memoryStorage(),
   limits: {
-    fileSize: 10 * 1024 * 1024 // 10MB
+    fileSize: 25 * 1024 * 1024 // 25MB (더 긴 고품질 오디오 파일 지원)
   },
   fileFilter: (req, file, cb) => {
     // 오디오 파일만 허용
     if (file.mimetype.startsWith('audio/')) {
       cb(null, true);
     } else {
-      cb(new Error('Only audio files are allowed'));
+      cb(new Error('오디오 파일만 업로드 가능합니다. MP3, WAV, M4A 등을 사용해주세요.'));
     }
   }
 });
 
-router.post('/upload-audio', upload.single('audio'), async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({
-        success: false,
-        error: 'No audio file provided'
-      });
-    }
+router.post('/upload-audio', (req, res) => {
+  // Multer 에러 핸들링을 위한 커스텀 미들웨어
+  upload.single('audio')(req, res, async (err) => {
+    try {
+      // Multer 에러 처리
+      if (err) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+          return res.status(413).json({
+            success: false,
+            error: `파일 크기가 너무 큽니다. 25MB 이하의 파일을 업로드해주세요. (현재: ${(req.file?.size / 1024 / 1024).toFixed(2) || '?'} MB)`
+          });
+        }
+        return res.status(400).json({
+          success: false,
+          error: err.message || '파일 업로드 중 오류가 발생했습니다.'
+        });
+      }
 
-    console.log('🎵 Analyzing audio with OpenAI:', req.file.originalname);
-    console.log(`   File size: ${(req.file.size / 1024 / 1024).toFixed(2)} MB`);
-    console.log(`   MIME type: ${req.file.mimetype}`);
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          error: '오디오 파일이 제공되지 않았습니다.'
+        });
+      }
 
-    // OpenAI로 오디오 스타일 분석
-    const analysisResult = await audioAnalyzer.analyzeAudioStyle(
-      req.file.buffer,
-      req.file.mimetype
-    );
+      console.log('🎵 OpenAI로 초정밀 오디오 분석 시작:', req.file.originalname);
+      console.log(`   📦 파일 크기: ${(req.file.size / 1024 / 1024).toFixed(2)} MB`);
+      console.log(`   🎼 MIME 타입: ${req.file.mimetype}`);
 
-    if (!analysisResult.success) {
-      console.warn('⚠️ Analysis failed, using fallback tags');
-      return res.json({
+      // OpenAI로 오디오 스타일 분석 (초정밀 모드)
+      const analysisResult = await audioAnalyzer.analyzeAudioStyle(
+        req.file.buffer,
+        req.file.mimetype
+      );
+
+      if (!analysisResult.success) {
+        console.warn('⚠️ 분석 실패, 폴백 태그 사용');
+        return res.json({
+          success: true,
+          tags: analysisResult.fallbackTags || 'Contemporary music, diverse instrumentation',
+          analysis: null,
+          fallback: true,
+          message: '⚠️ OpenAI를 사용할 수 없어 기본 분석을 제공합니다. 나중에 다시 시도해주세요.'
+        });
+      }
+
+      console.log('✅ 초정밀 오디오 분석 완료!');
+      console.log('🎨 생성된 태그:', analysisResult.tags.substring(0, 150) + '...');
+
+      res.json({
         success: true,
-        tags: analysisResult.fallbackTags || 'Contemporary music, diverse instrumentation',
-        analysis: null,
-        fallback: true,
-        message: 'Audio analyzed with fallback (OpenAI unavailable)'
+        tags: analysisResult.tags,
+        analysis: analysisResult.analysis,
+        message: '✅ 오디오를 성공적으로 분석했습니다! Suno AI가 이 분석을 사용해 유사한 음악을 생성합니다.'
+      });
+
+    } catch (error) {
+      console.error('❌ Upload-audio error:', error);
+      res.status(500).json({
+        success: false,
+        error: error.message || '오디오 분석 중 오류가 발생했습니다.'
       });
     }
-
-    console.log('✅ Audio analysis complete!');
-    console.log('🎨 Generated tags:', analysisResult.tags);
-
-    res.json({
-      success: true,
-      tags: analysisResult.tags,
-      analysis: analysisResult.analysis,
-      message: 'Audio analyzed successfully'
-    });
-
-  } catch (error) {
-    console.error('❌ Upload-audio error:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message || 'Audio analysis failed'
-    });
-  }
+  });
 });
 
 
