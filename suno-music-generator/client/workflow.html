@@ -6527,6 +6527,17 @@ ${analysis.lyrics.substring(0, 300)}${analysis.lyrics.length > 300 ? '...' : ''}
                         updateStyleCharCount();
                     }
                 }
+                
+                // 🎯 3단계 스타일 프롬프트 텍스트영역에도 자동 입력 (음악 생성 시 사용됨!)
+                const styleTextarea = document.getElementById('stylePromptTextarea');
+                if (styleTextarea && result.tags) {
+                    styleTextarea.value = result.tags;
+                    console.log('✅ 스타일 프롬프트 텍스트영역에 자동 입력:', result.tags);
+                }
+                
+                // 🎯 window.generationPrompt에도 저장 (YouTube 스타일처럼)
+                window.generationPrompt = result.tags;
+                console.log('✅ window.generationPrompt에 저장:', result.tags);
 
                 // 결과 표시
                 setTimeout(() => {
