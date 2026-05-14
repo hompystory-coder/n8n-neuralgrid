@@ -2758,7 +2758,10 @@
                         prompt: stylePrompt,  // 🔥 스타일은 prompt 필드에!
                         style: stylePrompt,
                         title: lyric.title || `곡 ${i+1}`,
-                        instrumental: false
+                        instrumental: false,
+                        // 🎯 스타일 적용 강도 추가 (높을수록 스타일에 충실)
+                        styleWeight: 0.8,  // 0-1, 기본값보다 높게 설정
+                        weirdnessConstraint: 0.3  // 0-1, 창의성 제한 (낮을수록 스타일 준수)
                     };
                     
                     // 🎤 페르소나 ID 추가 (있는 경우)
