@@ -159,12 +159,6 @@ EXAMPLE:
 
 ⚠️ REMEMBER: The technicalDescription is your PRIMARY output - make it detailed and flowing like professional studio notes!`
             },
-
-EXAMPLE:
-"neo-soul, contemporary R&B, 90 BPM, G major, chorus-heavy electric guitar, syncopated jazz chords, deep bass following kick, tight dry snare, punchy kick, crisp sixteenth-note hi-hats, Rhodes piano, minor 9th chords, vinyl crackle, low-pass filter sweeps, warm production"
-
-⚠️ REMEMBER: The technicalDescription is your PRIMARY output - make it detailed and flowing like professional studio notes!`
-            },
             {
               role: 'user',
               content: [
