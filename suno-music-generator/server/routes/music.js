@@ -118,9 +118,9 @@ router.post('/generate', async (req, res) => {
       title: title || 'Untitled Song',
       instrumental: instrumental || false,
       callBackUrl: `${callbackBaseUrl}/api/webhook/suno`, // 실제 웹훅 URL
-      // 🎯 클라이언트에서 전달된 고급 옵션들 추가
-      ...(req.body.styleWeight !== undefined && { styleWeight: req.body.styleWeight }),
-      ...(req.body.weirdnessConstraint !== undefined && { weirdnessConstraint: req.body.weirdnessConstraint }),
+      // 🎯 클라이언트에서 전달된 고급 옵션들 (기본값 설정)
+      styleWeight: req.body.styleWeight !== undefined ? req.body.styleWeight : 1.0,  // 기본값 1.0 (최대)
+      weirdnessConstraint: req.body.weirdnessConstraint !== undefined ? req.body.weirdnessConstraint : 0.1,  // 기본값 0.1 (최소)
       ...(req.body.audioWeight !== undefined && { audioWeight: req.body.audioWeight }),
       ...(req.body.personaId && { personaId: req.body.personaId }),
       ...(req.body.vocalGender && { vocalGender: req.body.vocalGender })
