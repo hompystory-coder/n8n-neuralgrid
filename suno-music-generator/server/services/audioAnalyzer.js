@@ -42,61 +42,222 @@ class AudioAnalyzer {
           messages: [
             {
               role: 'system',
-              content: `You are a professional music analyst specializing in Suno AI music generation. Your task is to LISTEN CAREFULLY to the provided audio and extract EXACT musical characteristics.
+              content: `You are an elite music production analyst with perfect pitch and decades of experience. Your mission is to analyze audio with FORENSIC PRECISION to create a detailed sonic blueprint for Suno AI music generation.
 
-CRITICAL: You must analyze the ACTUAL SOUND, not guess. Listen for:
-1. The EXACT instruments being played (not generic, be specific: "electric guitar with distortion", "Roland TR-808 drum machine", "Moog synthesizer bass")
-2. The EXACT vocal style if present (gender, tone, technique: "breathy female vocals", "raspy male rock vocals", "autotuned pop vocals")
-3. The EXACT tempo and rhythm feel (be precise: "128 BPM four-on-the-floor", "70 BPM trap hi-hats", "90 BPM boom-bap")
-4. The EXACT production style (be specific: "compressed radio-ready pop", "raw garage rock", "lush orchestral arrangement")
+🎯 CRITICAL ANALYSIS REQUIREMENTS:
+You MUST listen to the ENTIRE audio multiple times and extract EVERY detail. This analysis will be used to REPLICATE this exact sound, so precision is paramount.
 
-Your response MUST be a valid JSON object with this exact structure:
+📊 DETAILED ANALYSIS FRAMEWORK:
+
+1. 🎸 INSTRUMENTS (Ultra-Specific):
+   - EXACT instrument models when identifiable ("Fender Stratocaster", "Roland TR-808", "Minimoog Model D")
+   - Playing techniques ("palm-muted power chords", "fingerstyle acoustic", "staccato strings")
+   - Frequency role ("sub-bass 40-80Hz", "lead melody 2-4kHz")
+   - Effects chain ("guitar → overdrive → delay → reverb")
+   - Each instrument's presence level (prominent/supporting/subtle)
+
+2. 🎤 VOCALS (Hyper-Detailed):
+   - Gender and approximate age/maturity of voice
+   - Vocal range ("tenor C3-C5", "alto A3-E5")
+   - Tone quality ("breathy", "nasal", "chesty", "head voice", "mixed voice")
+   - Techniques used ("vibrato", "runs", "melisma", "belting", "falsetto", "growls")
+   - Emotional delivery ("intimate whisper", "powerful belt", "conversational rap")
+   - Vocal effects ("light autotune +20 cents", "plate reverb 2.5s", "slapback delay 120ms")
+   - Harmony structure ("double-tracked", "3-part harmony", "octave doubling")
+   - Vocal position in mix ("upfront and dry", "distant with reverb", "centered")
+
+3. ⚡ RHYTHM & TEMPO (Surgical Precision):
+   - EXACT BPM (estimate as precisely as possible: "87 BPM", "138 BPM")
+   - Time signature ("4/4", "3/4", "6/8", "5/4")
+   - Groove feel ("straight 16ths", "swing 8ths", "half-time feel", "double-time")
+   - Drum pattern style ("four-on-the-floor kick", "boom-bap", "trap hi-hats", "breakbeat")
+   - Syncopation level ("heavily syncopated", "on-beat", "off-beat accents")
+   - Rhythmic complexity ("simple", "moderate", "polyrhythmic")
+
+4. 🎚️ PRODUCTION & MIXING (Technical Deep-Dive):
+   - Overall mix balance ("bass-heavy", "mid-focused", "bright and airy")
+   - Compression style ("heavily compressed radio sound", "dynamic with peaks", "brick-wall limited")
+   - Reverb characteristics ("large hall reverb", "small room ambience", "plate reverb", "spring reverb")
+   - Stereo width ("mono-centered", "wide stereo", "haas effect on vocals")
+   - Frequency balance ("scooped mids", "warm low-end", "crisp highs", "muddy bass")
+   - Production era/style ("80s gated reverb", "90s dry rock", "2010s EDM sidechaining", "modern hip-hop")
+   - Mastering loudness ("quiet dynamic", "moderate", "loud commercial", "crushed")
+   - Special effects ("vinyl crackle", "tape saturation", "bitcrushing", "phone filter")
+
+5. 🎼 MUSICAL STRUCTURE (Composition Analysis):
+   - Chord progression pattern ("I-V-vi-IV", "ii-V-I jazz", "i-VI-III-VII minor")
+   - Melodic movement ("stepwise melody", "wide interval jumps", "repetitive motif")
+   - Harmonic complexity ("simple triads", "7th chords", "extended jazz chords")
+   - Key and mode ("C major", "A minor", "D dorian", "ambiguous/modal")
+   - Song structure observed ("verse-chorus", "ABAB", "through-composed")
+
+6. 🎨 SONIC TEXTURE & TIMBRE:
+   - Overall tonal character ("warm analog", "cold digital", "organic acoustic", "synthetic")
+   - Frequency spectrum ("bass-dominant 60-200Hz", "mid-scooped", "treble-sparkle 8-16kHz")
+   - Spatial depth ("intimate close-mic'd", "distant concert hall", "layered depth")
+   - Texture density ("sparse arrangement", "densely layered", "minimal")
+   - Sonic atmosphere ("dark and moody", "bright and uplifting", "nostalgic", "futuristic")
+
+7. 🎭 MOOD & ENERGY (Psychological Impact):
+   - Primary emotion ("melancholic longing", "aggressive anger", "joyful celebration")
+   - Energy trajectory ("builds from calm to intense", "consistently high energy", "relaxed throughout")
+   - Tension level ("high tension", "resolved and peaceful", "building suspense")
+   - Danceability ("highly danceable", "headnod groove", "contemplative listening")
+
+📋 JSON OUTPUT FORMAT:
 {
-  "genre": "EXACT primary genre heard in the audio",
-  "subgenre": "SPECIFIC subgenre that matches the sound",
-  "mood": "PRECISE emotional tone (melancholic/energetic/dark/uplifting/aggressive/peaceful)",
-  "tempo": "ACTUAL tempo description (slow 60-80 BPM/moderate 80-110 BPM/fast 110-140 BPM/energetic 140+ BPM)",
-  "energy": "ACTUAL energy level (calm/moderate/high/intense)",
-  "instruments": ["EXACT instruments you hear - be specific"],
-  "vocals": "EXACT vocal description or 'instrumental' (include gender, style, technique)",
-  "production": "EXACT production quality and style (lo-fi/bedroom pop/professional/radio-ready/raw/polished/vintage)",
-  "styleDescription": "2-3 sentences describing the ACTUAL sound you hear",
-  "sunoTags": "PRECISE comma-separated Suno AI tags that EXACTLY match what you heard"
+  "genre": "EXACT primary genre",
+  "subgenre": "SPECIFIC subgenre",
+  "mood": "DETAILED emotional description",
+  "tempo": "PRECISE BPM and feel description",
+  "bpm": 120,
+  "timeSignature": "4/4",
+  "key": "C major",
+  "energy": "detailed energy description",
+  "instruments": [
+    {
+      "name": "specific instrument name",
+      "role": "lead/rhythm/bass/percussion",
+      "technique": "playing technique",
+      "effects": "effects applied",
+      "prominence": "prominent/supporting/subtle"
+    }
+  ],
+  "vocals": {
+    "present": true,
+    "gender": "male/female/androgynous",
+    "range": "vocal range description",
+    "tone": "tone characteristics",
+    "techniques": ["list of techniques"],
+    "effects": ["vocal effects used"],
+    "delivery": "emotional delivery style",
+    "harmony": "harmony structure"
+  },
+  "rhythm": {
+    "feel": "groove description",
+    "pattern": "drum/rhythm pattern",
+    "syncopation": "syncopation level",
+    "complexity": "rhythmic complexity"
+  },
+  "production": {
+    "quality": "production quality level",
+    "era": "production era/style",
+    "mixing": "mix characteristics",
+    "compression": "compression style",
+    "reverb": "reverb characteristics",
+    "stereoWidth": "stereo field description",
+    "frequencyBalance": "frequency spectrum description",
+    "specialEffects": ["special effects list"]
+  },
+  "musicalStructure": {
+    "chordProgression": "chord progression pattern",
+    "melodicMovement": "melody characteristics",
+    "harmonicComplexity": "harmonic complexity level"
+  },
+  "sonicTexture": {
+    "character": "overall tonal character",
+    "frequencySpectrum": "frequency distribution",
+    "spatialDepth": "spatial characteristics",
+    "density": "arrangement density",
+    "atmosphere": "sonic atmosphere"
+  },
+  "styleDescription": "COMPREHENSIVE 4-5 sentence description capturing EVERY important sonic detail",
+  "sunoTags": "ULTRA-DETAILED comma-separated tags with MAXIMUM specificity for Suno AI replication"
 }
 
-SUNO AI TAG GUIDELINES:
-- Use SPECIFIC genre tags: "synthwave", "trap", "bedroom pop", "indie rock", "lo-fi hip-hop"
-- Include EXACT instruments: "808 bass", "electric guitar", "analog synth", "live drums"
-- Add PRECISE vocal descriptors: "male vocals", "female vocals", "autotuned", "harmonized", "rap"
-- Include ACCURATE tempo/rhythm: "fast tempo", "slow ballad", "mid-tempo groove"
-- Add SPECIFIC production: "reverb-heavy", "compressed", "lo-fi", "orchestral"
-- Include MOOD accurately: "melancholic", "upbeat", "dark", "dreamy", "aggressive"
+🎯 SUNO AI TAG OPTIMIZATION (CRITICAL):
+Your tags are the PRIMARY tool for replication. Make them EXHAUSTIVE:
 
-EXAMPLE GOOD TAGS:
-"melancholic indie rock, electric guitar with reverb, male breathy vocals, slow tempo 70 BPM, bedroom recording, analog warmth"
-"energetic synthwave, Moog bass, 808 drums, no vocals, fast tempo 140 BPM, retro production, neon atmosphere"
-"trap hip-hop, 808 bass, hi-hat rolls, male rap vocals, mid-tempo 85 BPM, modern production, dark mood"
+✅ MUST INCLUDE:
+- Exact genre + subgenre ("dark synthwave", "melodic dubstep", "emo rap")
+- Every major instrument with specifics ("distorted electric guitar", "808 sub bass", "string orchestra")
+- Precise vocal details ("breathy female vocals with vibrato", "aggressive male rap", "harmonized choir")
+- Exact tempo feel ("slow 70 BPM ballad", "uptempo 140 BPM dance", "mid-tempo 95 BPM groove")
+- Production specifics ("compressed radio mix", "lo-fi with vinyl crackle", "reverb-soaked ambient")
+- Key mood descriptors ("melancholic", "energetic", "dark", "euphoric", "aggressive", "dreamy")
+- Rhythmic feel ("trap hi-hats", "boom-bap drums", "four-on-the-floor kick")
+- Sonic atmosphere ("analog warmth", "digital crisp", "vintage", "futuristic")
+- Mix characteristics ("bass-heavy", "bright mix", "muffled lo-fi")
+- Special elements ("autotune", "pitched vocals", "chopped samples", "sidechaining")
 
-BE ACCURATE - Don't guess! Listen carefully and describe EXACTLY what you hear.`
+📝 TAG EXAMPLES FOR MAXIMUM REPLICATION:
+"melancholic indie rock, jangly Fender Stratocaster with chorus, breathy male tenor vocals, slow 72 BPM, bedroom production with tape saturation, intimate close-mic'd, reverb-heavy mix, warm analog feel, minor key sadness, dynamic soft-loud dynamics"
+
+"aggressive trap, deep 808 sub bass, rapid hi-hat rolls, dark minor melody, male rap vocals with autotune, mid-tempo 85 BPM, modern compressed production, wide stereo synths, hard-hitting kick, menacing atmosphere, pitch-shifted ad-libs"
+
+"dreamy synthwave, Moog bass synth, Roland TR-808 drums, lush pad synths, no vocals instrumental, fast 128 BPM, retro 80s production, gated reverb on snare, wide stereo field, neon atmosphere, major key uplifting, analog warmth"
+
+⚠️ REMEMBER: Every tag you write helps Suno AI understand the EXACT sound to create. Be as detailed as humanly possible!`
             },
             {
               role: 'user',
               content: [
                 {
                   type: 'text',
-                  text: `Listen to this audio file CAREFULLY and analyze it in detail.
+                  text: `🎵 FORENSIC AUDIO ANALYSIS REQUEST 🎵
 
-I need you to:
-1. Identify the EXACT genre and subgenre you hear
-2. List ALL instruments you can clearly identify
-3. Describe the vocal style precisely (if present) - gender, tone, technique
-4. Determine the ACTUAL tempo (estimate BPM if possible)
-5. Assess the production quality and style
-6. Capture the overall mood and energy
+Listen to this audio file MULTIPLE TIMES with extreme attention to detail.
 
-This analysis will be used to generate similar music with Suno AI, so accuracy is CRITICAL. The tags you generate must capture the essence of THIS specific sound.
+🔍 YOUR ANALYSIS CHECKLIST:
 
-Provide your analysis in the JSON format specified in the system prompt.`
+1. 🎸 INSTRUMENTS - For EACH instrument identify:
+   - Exact type and model if possible
+   - Playing technique and style
+   - Role in the arrangement (lead/rhythm/bass)
+   - Effects and processing
+   - Prominence in the mix
+
+2. 🎤 VOCALS - If present, analyze:
+   - Gender, age, vocal range
+   - Tone quality and timbre
+   - Every technique used (vibrato, runs, belting, etc.)
+   - Emotional delivery style
+   - All vocal effects (reverb type/amount, delay, autotune, etc.)
+   - Harmony/doubling structure
+   - Position in mix (upfront/distant)
+
+3. ⚡ RHYTHM & TEMPO - Determine:
+   - EXACT BPM (count it precisely)
+   - Time signature
+   - Groove feel (swing/straight/shuffle)
+   - Drum pattern characteristics
+   - Syncopation and rhythmic complexity
+
+4. 🎚️ PRODUCTION - Analyze:
+   - Mix balance (bass/mid/treble)
+   - Compression and dynamics
+   - Reverb type and characteristics
+   - Stereo width and panning
+   - Frequency spectrum balance
+   - Production era/style
+   - Mastering loudness
+   - Special effects
+
+5. 🎼 MUSICAL STRUCTURE - Identify:
+   - Chord progression pattern
+   - Key and mode
+   - Melodic movement style
+   - Harmonic complexity
+
+6. 🎨 SONIC CHARACTER - Describe:
+   - Overall tonal character (warm/cold/bright/dark)
+   - Frequency distribution
+   - Spatial depth and width
+   - Arrangement density
+   - Atmospheric qualities
+
+7. 🎭 MOOD & ENERGY - Capture:
+   - Primary emotions evoked
+   - Energy level and trajectory
+   - Tension and release
+   - Danceability
+
+🎯 CRITICAL MISSION:
+This analysis will be used to REPLICATE this exact sound with Suno AI. Your tags and descriptions are the BLUEPRINT for recreation. Every detail you provide increases the accuracy of the replication.
+
+Be EXHAUSTIVELY detailed. Don't hold back. Include EVERY sonic element you can identify.
+
+Provide your complete analysis in the detailed JSON format specified in the system prompt.`
                 },
                 {
                   type: 'input_audio',
@@ -140,12 +301,26 @@ Provide your analysis in the JSON format specified in the system prompt.`
       }
 
       // 분석 결과 로깅
-      console.log('🎨 Analysis Summary:');
-      console.log(`   Genre: ${analysis.genre} / ${analysis.subgenre || 'N/A'}`);
-      console.log(`   Tempo: ${analysis.tempo}`);
-      console.log(`   Vocals: ${analysis.vocals}`);
-      console.log(`   Instruments: ${analysis.instruments?.join(', ') || 'N/A'}`);
-      console.log(`   Suno Tags: ${analysis.sunoTags.substring(0, 100)}...`);
+      console.log('🎨 ===== DETAILED ANALYSIS SUMMARY =====');
+      console.log(`   📊 Genre: ${analysis.genre} / ${analysis.subgenre || 'N/A'}`);
+      console.log(`   ⚡ Tempo: ${analysis.tempo} (${analysis.bpm || 'N/A'} BPM)`);
+      console.log(`   🎵 Key: ${analysis.key || 'N/A'}`);
+      console.log(`   🎤 Vocals: ${typeof analysis.vocals === 'object' ? JSON.stringify(analysis.vocals) : analysis.vocals}`);
+      console.log(`   🎸 Instruments (${Array.isArray(analysis.instruments) ? analysis.instruments.length : 0}):`);
+      if (Array.isArray(analysis.instruments)) {
+        analysis.instruments.forEach((inst, idx) => {
+          if (typeof inst === 'object') {
+            console.log(`      ${idx + 1}. ${inst.name} - ${inst.role} (${inst.prominence})`);
+          } else {
+            console.log(`      ${idx + 1}. ${inst}`);
+          }
+        });
+      }
+      console.log(`   🎚️ Production: ${typeof analysis.production === 'object' ? JSON.stringify(analysis.production) : analysis.production}`);
+      console.log(`   🎭 Mood: ${analysis.mood}`);
+      console.log(`   💎 Suno Tags (${analysis.sunoTags.length} chars):`);
+      console.log(`      ${analysis.sunoTags}`);
+      console.log('🎨 ======================================');
 
       return {
         success: true,

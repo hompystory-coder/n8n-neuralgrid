@@ -6462,6 +6462,13 @@ ${analysis.lyrics.substring(0, 300)}${analysis.lyrics.length > 300 ? '...' : ''}
                 return;
             }
 
+            // 파일 크기 체크 (25MB)
+            const maxSize = 25 * 1024 * 1024; // 25MB
+            if (file.size > maxSize) {
+                alert(`❌ 파일 크기가 너무 큽니다!\n\n파일 크기: ${(file.size / 1024 / 1024).toFixed(2)} MB\n최대 크기: 25 MB\n\n더 작은 파일을 선택해주세요.`);
+                return;
+            }
+
             // UI 업데이트
             const progressDiv = document.getElementById('styleAudioProgress');
             const resultDiv = document.getElementById('styleAudioResult');
@@ -6470,7 +6477,7 @@ ${analysis.lyrics.substring(0, 300)}${analysis.lyrics.length > 300 ? '...' : ''}
             
             progressDiv.style.display = 'block';
             resultDiv.style.display = 'none';
-            statusText.textContent = '오디오 업로드 중...';
+            statusText.textContent = `📤 오디오 업로드 중... (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
             progressBar.style.width = '10%';
 
             try {
@@ -6478,7 +6485,7 @@ ${analysis.lyrics.substring(0, 300)}${analysis.lyrics.length > 300 ? '...' : ''}
                 const formData = new FormData();
                 formData.append('audio', file);
 
-                statusText.textContent = 'OpenAI로 분석 중...';
+                statusText.textContent = '🎵 OpenAI로 초정밀 분석 중... (최대 2분 소요)';
                 progressBar.style.width = '50%';
                 
                 // 오디오 분석 요청 (즉시 완료!)
@@ -6489,15 +6496,23 @@ ${analysis.lyrics.substring(0, 300)}${analysis.lyrics.length > 300 ? '...' : ''}
 
                 const result = await response.json();
 
+                if (!response.ok) {
+                    // HTTP 에러 처리
+                    if (response.status === 413) {
+                        throw new Error(`파일이 너무 큽니다! (${(file.size / 1024 / 1024).toFixed(2)} MB)\n\n최대 25MB까지 업로드 가능합니다.`);
+                    }
+                    throw new Error(result.error || `서버 오류 (${response.status})`);
+                }
+
                 if (!result.success) {
                     throw new Error(result.error || '분석 실패');
                 }
 
                 // 분석 완료!
                 progressBar.style.width = '100%';
-                statusText.textContent = '✅ 분석 완료!';
+                statusText.textContent = '✅ 초정밀 분석 완료!';
                 
-                console.log('✅ Analysis result:', result);
+                console.log('✅ Detailed Analysis result:', result);
                 
                 // 스타일 태그를 입력란에 자동 입력
                 const styleInput = document.getElementById('simpleStyleInput');
@@ -6519,7 +6534,7 @@ ${analysis.lyrics.substring(0, 300)}${analysis.lyrics.length > 300 ? '...' : ''}
                     const warningIcon = isFallback ? '⚠️' : '✅';
                     const statusMessage = isFallback 
                         ? 'OpenAI 분석 실패 (Fallback 태그 사용)'
-                        : 'OpenAI 분석 완료!';
+                        : '🎯 OpenAI 초정밀 분석 완료!';
                     
                     // 분석 결과 표시
                     let analysisHtml = `
@@ -6528,23 +6543,54 @@ ${analysis.lyrics.substring(0, 300)}${analysis.lyrics.length > 300 ? '...' : ''}
                     `;
                     
                     if (!isFallback && result.analysis) {
+                        const analysis = result.analysis;
                         analysisHtml += `
                             <div style="color: rgba(255,255,255,0.9); font-size: 0.9em; margin-bottom: 12px;">
-                                <div><strong>🎵 장르:</strong> ${result.analysis.genre || 'N/A'}</div>
-                                <div><strong>🎭 무드:</strong> ${result.analysis.mood || 'N/A'}</div>
-                                <div><strong>⏱️ 템포:</strong> ${result.analysis.tempo || 'N/A'}</div>
-                                <div><strong>⚡ 에너지:</strong> ${result.analysis.energy || 'N/A'}</div>
-                                ${result.analysis.instruments ? `<div><strong>🎸 악기:</strong> ${result.analysis.instruments.join(', ')}</div>` : ''}
-                            </div>
+                                <div><strong>🎵 장르:</strong> ${analysis.genre || 'N/A'} / ${analysis.subgenre || 'N/A'}</div>
+                                <div><strong>🎭 무드:</strong> ${analysis.mood || 'N/A'}</div>
+                                <div><strong>⏱️ 템포:</strong> ${analysis.tempo || 'N/A'} ${analysis.bpm ? `(${analysis.bpm} BPM)` : ''}</div>
+                                <div><strong>🎹 키:</strong> ${analysis.key || 'N/A'}</div>
+                                <div><strong>⚡ 에너지:</strong> ${analysis.energy || 'N/A'}</div>
                         `;
+                        
+                        // 악기 상세 정보
+                        if (analysis.instruments && analysis.instruments.length > 0) {
+                            analysisHtml += `<div style="margin-top: 8px;"><strong>🎸 악기:</strong></div>`;
+                            analysis.instruments.forEach((inst, idx) => {
+                                if (typeof inst === 'object') {
+                                    analysisHtml += `<div style="margin-left: 16px; font-size: 0.85em;">• ${inst.name} (${inst.role}${inst.prominence ? ', ' + inst.prominence : ''})</div>`;
+                                } else {
+                                    analysisHtml += `<div style="margin-left: 16px; font-size: 0.85em;">• ${inst}</div>`;
+                                }
+                            });
+                        }
+                        
+                        // 보컬 상세 정보
+                        if (analysis.vocals && typeof analysis.vocals === 'object') {
+                            analysisHtml += `
+                                <div style="margin-top: 8px;"><strong>🎤 보컬:</strong></div>
+                                <div style="margin-left: 16px; font-size: 0.85em;">
+                                    • ${analysis.vocals.gender || 'N/A'} (${analysis.vocals.range || 'N/A'})
+                                    ${analysis.vocals.tone ? `<br>• 톤: ${analysis.vocals.tone}` : ''}
+                                    ${analysis.vocals.delivery ? `<br>• 전달: ${analysis.vocals.delivery}` : ''}
+                                </div>
+                            `;
+                        } else if (analysis.vocals) {
+                            analysisHtml += `<div><strong>🎤 보컬:</strong> ${analysis.vocals}</div>`;
+                        }
+                        
+                        analysisHtml += `</div>`;
                     }
                     
                     analysisHtml += `
-                            <div style="color: rgba(255,255,255,0.9); font-size: 0.95em; margin-bottom: 8px;">
-                                📝 추출된 스타일: <strong style="color: #48d1cc;">${result.tags}</strong>
+                            <div style="color: rgba(255,255,255,0.9); font-size: 0.95em; margin-bottom: 8px; margin-top: 12px;">
+                                📝 <strong>추출된 Suno 스타일 태그:</strong>
+                            </div>
+                            <div style="color: #48d1cc; font-size: 0.9em; font-family: monospace; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 4px; margin-bottom: 8px;">
+                                ${result.tags}
                             </div>
                             <div style="color: rgba(255,255,255,0.7); font-size: 0.85em;">
-                                💡 아래 스타일 입력란에 자동으로 입력되었습니다!
+                                💡 아래 스타일 입력란에 자동으로 입력되었습니다! Suno AI가 이 분석을 기반으로 유사한 음악을 생성합니다.
                             </div>
                         </div>
                     `;
