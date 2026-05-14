@@ -117,7 +117,13 @@ router.post('/generate', async (req, res) => {
       style: style || prompt || 'pop',  // 🔥 스타일 설정
       title: title || 'Untitled Song',
       instrumental: instrumental || false,
-      callBackUrl: `${callbackBaseUrl}/api/webhook/suno` // 실제 웹훅 URL
+      callBackUrl: `${callbackBaseUrl}/api/webhook/suno`, // 실제 웹훅 URL
+      // 🎯 클라이언트에서 전달된 고급 옵션들 추가
+      ...(req.body.styleWeight !== undefined && { styleWeight: req.body.styleWeight }),
+      ...(req.body.weirdnessConstraint !== undefined && { weirdnessConstraint: req.body.weirdnessConstraint }),
+      ...(req.body.audioWeight !== undefined && { audioWeight: req.body.audioWeight }),
+      ...(req.body.personaId && { personaId: req.body.personaId }),
+      ...(req.body.vocalGender && { vocalGender: req.body.vocalGender })
     };
 
     const result = await sunoClient.generateMusic(sunoParams);
