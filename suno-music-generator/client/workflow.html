@@ -6600,6 +6600,44 @@ ${analysis.lyrics.substring(0, 300)}${analysis.lyrics.length > 300 ? '...' : ''}
                         ? 'OpenAI 분석 실패 (Fallback 태그 사용)'
                         : '🎯 OpenAI 초정밀 분석 완료!';
                     
+                    // 썸네일 이미지 표시
+                    const thumbnails = result.thumbnails || {};
+                    let thumbnailsHtml = '';
+                    
+                    if (thumbnails.images && thumbnails.images.length > 0) {
+                        thumbnailsHtml = `
+                            <div style="margin-top: 16px; padding: 16px; background: rgba(59,130,246,0.1); border-radius: 8px;">
+                                <div style="color: #3b82f6; font-weight: 600; margin-bottom: 12px;">
+                                    🖼️ 생성된 썸네일 (${thumbnails.images.length}개)
+                                </div>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px;">
+                                    ${thumbnails.images.map((img, idx) => `
+                                        <div style="position: relative; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+                                            <img src="${img.url}" 
+                                                 alt="Thumbnail ${idx + 1}"
+                                                 style="width: 100%; height: auto; display: block; cursor: pointer;"
+                                                 onclick="window.open('${img.url}', '_blank')">
+                                            <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); padding: 8px; font-size: 0.75em; color: rgba(255,255,255,0.9);">
+                                                썸네일 ${idx + 1}
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                <div style="margin-top: 12px; color: rgba(255,255,255,0.7); font-size: 0.85em;">
+                                    💡 이미지를 클릭하면 새 탭에서 확인할 수 있습니다
+                                </div>
+                            </div>
+                        `;
+                    } else if (thumbnails.error) {
+                        thumbnailsHtml = `
+                            <div style="margin-top: 16px; padding: 12px; background: rgba(239,68,68,0.1); border-radius: 8px;">
+                                <div style="color: #ef4444; font-size: 0.9em;">
+                                    ⚠️ 썸네일 생성 실패: ${thumbnails.error}
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
                     // 분석 결과 표시
                     let analysisHtml = `
                         <div style="padding: 16px; background: rgba(72,209,204,0.2); border-radius: 8px; border-left: 4px solid #48d1cc;">
@@ -6657,6 +6695,7 @@ ${analysis.lyrics.substring(0, 300)}${analysis.lyrics.length > 300 ? '...' : ''}
                                 💡 아래 스타일 입력란에 자동으로 입력되었습니다! Suno AI가 이 분석을 기반으로 유사한 음악을 생성합니다.
                             </div>
                         </div>
+                        ${thumbnailsHtml}
                     `;
                     
                     resultDiv.innerHTML = analysisHtml;
