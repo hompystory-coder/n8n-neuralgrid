@@ -137,7 +137,9 @@ class YouTubeMetadataGenerator {
       mood,            // 무드
       bpm,             // BPM
       artist = 'Various Artists',
-      year = new Date().getFullYear()
+      year = new Date().getFullYear(),
+      tracks = [],     // 🆕 앨범 트랙 리스트 (수천 곡 대응)
+      totalDuration = 0 // 🆕 총 재생 시간 (초)
     } = songData;
 
     // 스타일 문자열 파싱
@@ -169,13 +171,15 @@ class YouTubeMetadataGenerator {
       year
     );
 
-    // 유튜브 설명 생성
+    // 유튜브 설명 생성 (트랙 리스트 포함)
     const youtubeDescription = this._generateDescription(
       title,
       lyrics,
       styleInfo,
       this.descriptionStyles[descStyleIndex],
-      year
+      year,
+      tracks,
+      totalDuration
     );
 
     // 태그 생성 (스타일 분석 기반)
@@ -248,7 +252,7 @@ class YouTubeMetadataGenerator {
   /**
    * 유튜브 설명 생성 (🎲 매번 다른 버전 랜덤 선택)
    */
-  _generateDescription(title, lyrics, styleInfo, descStyle, year) {
+  _generateDescription(title, lyrics, styleInfo, descStyle, year, tracks = [], totalDuration = 0) {
     const emoji = this._getRandomEmoji('mood');
     const musicEmoji = this._getRandomEmoji('music');
     
@@ -444,8 +448,13 @@ ${musicEmoji} 언제 어디서나 함께하세요`
 
     const description = styleVariations[Math.floor(Math.random() * styleVariations.length)];
 
+    // Tracklist 추가 (tracks가 있을 경우)
+    const finalDescription = tracks && tracks.length > 0 
+      ? this._appendTracklist(description, tracks, totalDuration)
+      : description;
+
     // 공통 푸터 추가
-    description += `
+    const footer = `
 
 ━━━━━━━━━━━━━━━━━━━
 ${musicEmoji} More Playlists
@@ -454,7 +463,7 @@ ${musicEmoji} More Playlists
 
 #${styleInfo.genre} #${styleInfo.mood} #playlist #music${year}`;
 
-    return description;
+    return this._fixTypos(finalDescription + footer);
   }
 
   /**
@@ -645,6 +654,132 @@ ${musicEmoji} More Playlists
 
     const lower = genre.toLowerCase();
     return specialCases[lower] || this._capitalize(genre);
+  }
+  /**
+   * 🎵 Tracklist 자동 생성 (수천 곡 대응)
+   * @param {Array} tracks - [{ title, duration }]
+   * @returns {string} 포맷된 Tracklist
+   */
+  _generateTracklist(tracks) {
+    if (!tracks || tracks.length === 0) {
+      return '';
+    }
+    
+    let currentTime = 0;
+    const tracklistLines = tracks.map((track, index) => {
+      const timestamp = this._formatTimestamp(currentTime);
+      currentTime += track.duration || 0;
+      
+      // 제목 오타 수정
+      const cleanTitle = this._fixTypos(track.title || `Track ${index + 1}`);
+      
+      return `${timestamp} - ${cleanTitle}`;
+    });
+    
+    const totalDuration = this._formatTimestamp(currentTime);
+    const trackCount = tracks.length;
+    
+    return `
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+■ Tracklist
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${tracklistLines.join('\n')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+● Total Duration: ${totalDuration} (${trackCount} track${trackCount > 1 ? 's' : ''})
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+`;
+  }
+
+  /**
+   * 🕐 타임스탬프 포맷 (초 → MM:SS)
+   * @param {number} seconds - 초
+   * @returns {string} "MM:SS" 형식
+   */
+  _formatTimestamp(seconds) {
+    if (!seconds || seconds < 0) return '0:00';
+    
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    
+    // 60초 초과 방지 (1:60 → 2:00)
+    if (secs >= 60) {
+      return this._formatTimestamp(mins * 60 + 60);
+    }
+    
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  }
+
+  /**
+   * 🔧 오타 자동 수정
+   * @param {string} text - 원본 텍스트
+   * @returns {string} 수정된 텍스트
+   */
+  _fixTypos(text) {
+    if (!text) return '';
+    
+    return text
+      // 일반적인 오타 패턴
+      .replace(/synesy/gi, 'synth')
+      .replace(/xelody/gi, 'melody')
+      .replace(/c#ar/gi, 'clear')
+      .replace(/acoustlc/gi, 'acoustic')
+      .replace(/pellow/gi, 'mellow')
+      .replace(/xavfonal/gi, 'emotional')
+      .replace(/exatlonal/gi, 'emotional')
+      .replace(/Strenby/gi, 'Trendy')
+      .replace(/stuby/gi, 'study')
+      .replace(/relaxmusic/gi, 'relax music')
+      // 한글 띄어쓰기 수정
+      .replace(/\s+/g, ' ')
+      // 불필요한 문자 제거
+      .replace(/\.\.\./g, '')
+      .replace(/\u00a0/g, ' ') // non-breaking space
+      .trim();
+  }
+
+  /**
+   * 📝 해시태그 자동 정리 및 유효성 검증
+   * @param {string} text - 해시태그 텍스트
+   * @returns {string} 정리된 해시태그
+   */
+  _cleanHashtags(text) {
+    if (!text) return '';
+    
+    return text
+      // 의미 없는 해시태그 제거
+      .replace(/#1도전/g, '#도전')
+      .replace(/#1ddct/g, '')
+      .replace(/#1ddot/g, '')
+      // 띄어쓰기 있는 해시태그 수정
+      .replace(/#(\w+)\s+(\w+)/g, '#$1$2')
+      // 다중 공백 제거
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  /**
+   * 🎨 설명에 Tracklist 추가
+   */
+  _appendTracklist(description, tracks, totalDuration) {
+    if (!tracks || tracks.length === 0) {
+      return description;
+    }
+    
+    const tracklist = this._generateTracklist(tracks);
+    
+    // 해시태그 정리
+    const cleanDescription = this._cleanHashtags(description);
+    
+    return `${cleanDescription}
+
+${tracklist}
+
+🎵 이 플레이리스트는 ${tracks.length}곡으로 구성되어 있으며,
+총 재생시간은 ${this._formatTimestamp(totalDuration)}입니다.
+
+완벽한 BGM으로 즐거운 시간 되세요! 🎧`;
   }
 }
 
