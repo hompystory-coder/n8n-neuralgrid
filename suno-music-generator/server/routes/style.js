@@ -2910,36 +2910,114 @@ router.post('/upscale-image-base64', async (req, res) => {
     
     console.log(`✅ 앨범 커버 생성 완료 (${(albumBuffer.length / 1024).toFixed(2)} KB)`);
     
-    // 🔥 프리미엄 4K (3840x2160) 생성 - Sharp로 극적이고 화려하게 변환!
-    console.log('✨ 프리미엄 4K - 원본을 극적이고 화려하게 변환!');
-    console.log('   - 매우 밝고 화사하게');
-    console.log('   - 색상 매우 풍부하고 선명하게');
-    console.log('   - 강한 대비와 극적인 효과');
-    console.log('   - 고급스러운 색조');
+    // 🔥 프리미엄 4K (3840x2160) 생성 - Real-ESRGAN + Sharp 극적 효과!
+    console.log('✨ 프리미엄 4K - AI 업스케일 + 극적 효과!');
+    console.log('   Step 1: Real-ESRGAN 4x 업스케일 (디테일 추가)');
+    console.log('   Step 2: Sharp 극적 효과 (색상, 밝기, 대비)');
     
-    // Sharp로 극적이고 화려한 프리미엄 4K 생성
-    const premiumBuffer = await sharp(imageBuffer)
-      .resize(3840, 2160, {
-        fit: 'cover',
-        position: 'center',
-        kernel: sharp.kernel.lanczos3
-      })
-      .modulate({
-        brightness: 1.25,  // 매우 밝고 화사하게 (25% UP!)
-        saturation: 1.6,   // 색상 매우 풍부하고 선명하게 (60% UP!)
-        hue: 12           // 색조 변화 (더 따뜻하거나 차갑게)
-      })
-      .sharpen(3.5, 1.5, 0.9)  // 극도로 강력한 샤프닝
-      .linear(1.3, -(128 * 0.3))  // 대비 30% 증가 (매우 극적!)
-      .gamma(1.15)      // 감마 보정 강화
-      .normalise()      // 히스토그램 정규화 (더 극적인 효과)
-      .jpeg({ 
-        quality: 98,
-        chromaSubsampling: '4:4:4'
-      })
-      .toBuffer();
+    let premiumBuffer;
     
-    console.log(`✅ 프리미엄 4K 극적 변환 완료 (${(premiumBuffer.length / 1024).toFixed(0)}KB)`)
+    try {
+      // 🔥 Step 1: Real-ESRGAN으로 먼저 업스케일 (디테일 추가)
+      const Replicate = require('replicate');
+      const replicate = new Replicate({
+        auth: process.env.REPLICATE_API_TOKEN,
+      });
+      const axios = require('axios');
+      
+      console.log('🎨 Real-ESRGAN 4x 업스케일 시작...');
+      
+      // 원본 이미지를 base64로 변환
+      const imageBase64Str = imageBuffer.toString('base64');
+      const imageDataUrl = `data:image/jpeg;base64,${imageBase64Str}`;
+      
+      const output = await replicate.run(
+        "nightmareai/real-esrgan",
+        {
+          input: {
+            image: imageDataUrl,
+            scale: 4,
+            face_enhance: true
+          }
+        }
+      );
+      
+      // Real-ESRGAN 출력 다운로드
+      let esrganImageUrl;
+      if (typeof output === 'string') {
+        esrganImageUrl = output;
+      } else if (typeof output.url === 'function') {
+        esrganImageUrl = await output.url();
+      } else if (output.url) {
+        esrganImageUrl = output.url;
+      } else if (Array.isArray(output) && output.length > 0) {
+        esrganImageUrl = output[0];
+      } else {
+        throw new Error('Real-ESRGAN 출력 형식을 인식할 수 없습니다');
+      }
+      
+      console.log(`✅ Real-ESRGAN 완료: ${esrganImageUrl}`);
+      
+      const esrganResponse = await axios.get(esrganImageUrl, {
+        responseType: 'arraybuffer',
+        timeout: 30000
+      });
+      
+      const esrganBuffer = Buffer.from(esrganResponse.data);
+      console.log(`✅ 업스케일된 이미지 다운로드 완료 (${(esrganBuffer.length / 1024).toFixed(0)}KB)`);
+      
+      // 🔥 Step 2: Sharp로 극적 효과 적용
+      console.log('🎨 Sharp 극적 효과 적용 중...');
+      premiumBuffer = await sharp(esrganBuffer)
+        .resize(3840, 2160, {
+          fit: 'cover',
+          position: 'center',
+          kernel: sharp.kernel.lanczos3
+        })
+        .modulate({
+          brightness: 1.25,  // 매우 밝고 화사하게 (25% UP!)
+          saturation: 1.6,   // 색상 매우 풍부하고 선명하게 (60% UP!)
+          hue: 12           // 색조 변화
+        })
+        .sharpen(2.0, 1.0, 0.5)  // 적당한 샤프닝 (Real-ESRGAN이 이미 선명함)
+        .linear(1.3, -(128 * 0.3))  // 대비 30% 증가
+        .gamma(1.15)      // 감마 보정 강화
+        .normalise()      // 히스토그램 정규화
+        .jpeg({ 
+          quality: 98,
+          chromaSubsampling: '4:4:4'
+        })
+        .toBuffer();
+      
+      console.log(`✅ 프리미엄 4K 극적 변환 완료 (${(premiumBuffer.length / 1024).toFixed(0)}KB)`);
+      
+    } catch (error) {
+      console.error('❌ Real-ESRGAN 실패, Sharp 폴백 사용:', error.message);
+      
+      // 폴백: Sharp만 사용
+      premiumBuffer = await sharp(imageBuffer)
+        .resize(3840, 2160, {
+          fit: 'cover',
+          position: 'center',
+          kernel: sharp.kernel.lanczos3
+        })
+        .modulate({
+          brightness: 1.25,
+          saturation: 1.6,
+          hue: 12
+        })
+        .sharpen(3.5, 1.5, 0.9)
+        .linear(1.3, -(128 * 0.3))
+        .gamma(1.15)
+        .normalise()
+        .jpeg({ 
+          quality: 98,
+          chromaSubsampling: '4:4:4'
+        })
+        .toBuffer();
+      
+      console.log(`✅ 폴백 프리미엄 4K 생성 완료 (${(premiumBuffer.length / 1024).toFixed(0)}KB)`);
+    }
     
     // 임시 파일로 저장
     const uploadDir = path.join(__dirname, '..', 'temp', 'uploads');
@@ -3458,15 +3536,62 @@ router.post('/premium-upscale', async (req, res) => {
     const host = req.get('host');
     const baseUrl = `${protocol === 'http' ? 'https' : protocol}://${host}`;
     
-    console.log('✨ 프리미엄 4K - 원본을 극적이고 화려하게 변환!');
-    console.log('   - 매우 밝고 화사하게');
-    console.log('   - 색상 매우 풍부하고 선명하게');
-    console.log('   - 강한 대비와 극적인 효과');
-    console.log('   - 고급스러운 색조');
+    console.log('✨ 프리미엄 4K - AI 업스케일 + 극적 효과!');
+    console.log('   Step 1: Real-ESRGAN 4x 업스케일 (디테일 추가)');
+    console.log('   Step 2: Sharp 극적 효과 (색상, 밝기, 대비)');
     
     try {
-      // 🔥 Sharp로 극적이고 화려한 프리미엄 4K 생성
-      premiumBuffer = await sharp(imageBuffer)
+      // 🔥 Step 1: Real-ESRGAN으로 먼저 업스케일 (디테일 추가)
+      const Replicate = require('replicate');
+      const replicate = new Replicate({
+        auth: process.env.REPLICATE_API_TOKEN,
+      });
+      const axios = require('axios');
+      
+      console.log('🎨 Real-ESRGAN 4x 업스케일 시작...');
+      
+      // 원본 이미지를 base64로 변환
+      const imageBase64 = imageBuffer.toString('base64');
+      const imageDataUrl = `data:image/jpeg;base64,${imageBase64}`;
+      
+      const output = await replicate.run(
+        "nightmareai/real-esrgan",
+        {
+          input: {
+            image: imageDataUrl,
+            scale: 4,
+            face_enhance: true
+          }
+        }
+      );
+      
+      // Real-ESRGAN 출력 다운로드
+      let esrganImageUrl;
+      if (typeof output === 'string') {
+        esrganImageUrl = output;
+      } else if (typeof output.url === 'function') {
+        esrganImageUrl = await output.url();
+      } else if (output.url) {
+        esrganImageUrl = output.url;
+      } else if (Array.isArray(output) && output.length > 0) {
+        esrganImageUrl = output[0];
+      } else {
+        throw new Error('Real-ESRGAN 출력 형식을 인식할 수 없습니다');
+      }
+      
+      console.log(`✅ Real-ESRGAN 완료: ${esrganImageUrl}`);
+      
+      const esrganResponse = await axios.get(esrganImageUrl, {
+        responseType: 'arraybuffer',
+        timeout: 30000
+      });
+      
+      const esrganBuffer = Buffer.from(esrganResponse.data);
+      console.log(`✅ 업스케일된 이미지 다운로드 완료 (${(esrganBuffer.length / 1024).toFixed(0)}KB)`);
+      
+      // 🔥 Step 2: Sharp로 극적 효과 적용
+      console.log('🎨 Sharp 극적 효과 적용 중...');
+      premiumBuffer = await sharp(esrganBuffer)
         .resize(3840, 2160, {
           fit: 'cover',
           position: 'center',
@@ -3477,7 +3602,7 @@ router.post('/premium-upscale', async (req, res) => {
           saturation: 1.6,   // 색상 매우 풍부하고 선명하게 (60% UP!)
           hue: 12           // 색조 변화 (더 따뜻하거나 차갑게)
         })
-        .sharpen(3.5, 1.5, 0.9)  // 극도로 강력한 샤프닝
+        .sharpen(2.0, 1.0, 0.5)  // 적당한 샤프닝 (Real-ESRGAN이 이미 선명함)
         .linear(1.3, -(128 * 0.3))  // 대비 30% 증가 (매우 극적!)
         .gamma(1.15)      // 감마 보정 강화
         .normalise()      // 히스토그램 정규화 (더 극적인 효과)
@@ -3487,7 +3612,9 @@ router.post('/premium-upscale', async (req, res) => {
         })
         .toBuffer();
       
-      console.log(`✅ 프리미엄 4K 극적 변환 완료 (${(premiumBuffer.length / 1024).toFixed(0)}KB)`);
+      console.log(`✅ 프리미엄 4K 완성 (${(premiumBuffer.length / 1024).toFixed(0)}KB)`);
+      console.log(`   - Real-ESRGAN: 디테일 추가 ✅`);
+      console.log(`   - Sharp 효과: 극적 변환 ✅`);
       
       // 프리미엄 이미지 저장
       const premiumFilename = `${timestamp}_${safeTitle}_premium_4k.jpg`;
@@ -3501,7 +3628,34 @@ router.post('/premium-upscale', async (req, res) => {
       
     } catch (error) {
       console.error('❌ 프리미엄 4K 생성 오류:', error);
-      throw error;  // 에러를 상위로 전달
+      console.log('⚠️  폴백: Sharp만 사용');
+      
+      // 폴백: Sharp만 사용
+      premiumBuffer = await sharp(imageBuffer)
+        .resize(3840, 2160, {
+          fit: 'cover',
+          position: 'center',
+          kernel: sharp.kernel.lanczos3
+        })
+        .modulate({
+          brightness: 1.25,
+          saturation: 1.6,
+          hue: 12
+        })
+        .sharpen(3.5, 1.5, 0.9)
+        .linear(1.3, -(128 * 0.3))
+        .gamma(1.15)
+        .normalise()
+        .jpeg({ 
+          quality: 98,
+          chromaSubsampling: '4:4:4'
+        })
+        .toBuffer();
+      
+      const premiumFilename = `${timestamp}_${safeTitle}_premium_4k.jpg`;
+      const premiumPath = path.join(uploadDir, premiumFilename);
+      await fs.writeFile(premiumPath, premiumBuffer);
+      premiumUrl = `${baseUrl}/temp/uploads/${premiumFilename}`;
     }
     
     // Step 3: 모든 파일 저장 및 URL 생성
