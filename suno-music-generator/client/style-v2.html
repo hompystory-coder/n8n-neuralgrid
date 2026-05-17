@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎵 스타일로 생성 V2 - YouTube 최적화</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 30px;
+      color: white;
+      text-align: center;
+    }
+    
+    .header h1 {
+      font-size: 2.5em;
+      margin-bottom: 15px;
+    }
+    
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .feature {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+    }
+    
+    .feature-icon {
+      font-size: 2em;
+      margin-bottom: 8px;
+    }
+    
+    .main-panel {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    
+    .form-group {
+      margin-bottom: 25px;
+    }
+    
+    .form-group label {
+      display: block;
+      font-size: 1.1em;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 15px;
+      font-size: 1em;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      transition: all 0.3s;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .form-group textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+    
+    .btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 18px 40px;
+      font-size: 1.2em;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      width: 100%;
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .status {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f5f5f5;
+      border-radius: 12px;
+      display: none;
+    }
+    
+    .status.show {
+      display: block;
+    }
+    
+    .status.success {
+      background: #d4edda;
+      color: #155724;
+      border: 2px solid #c3e6cb;
+    }
+    
+    .status.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 2px solid #f5c6cb;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>🎵 스타일로 생성 V2</h1>
+      <p style="font-size: 1.2em; opacity: 0.9;">YouTube 최적화 버전 - 수익 극대화!</p>
+      
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">⏱️</div>
+          <div>곡 길이 최적화</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🎨</div>
+          <div>썸네일 브랜드 통일</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🔍</div>
+          <div>SEO 최적화</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🎯</div>
+          <div>Temperature 제어</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Main Panel -->
+    <div class="main-panel">
+      <form id="generateForm">
+        <!-- 스타일 입력 -->
+        <div class="form-group">
+          <label for="styleInput">🎵 음악 스타일 설명</label>
+          <textarea 
+            id="styleInput" 
+            placeholder="예: 차분한 로파이 힙합, 공부할 때 듣기 좋은 음악"
+            required></textarea>
+        </div>
+        
+        <!-- 언어 선택 -->
+        <div class="form-group">
+          <label for="language">🌐 가사 언어</label>
+          <select id="language">
+            <option value="korean">한국어</option>
+            <option value="english">영어</option>
+          </select>
+        </div>
+        
+        <!-- 목표 곡 길이 (NEW!) -->
+        <div class="form-group">
+          <label for="targetDuration">⏱️ 목표 곡 길이 (YouTube 최적화)</label>
+          <select id="targetDuration">
+            <option value="short">짧게 (3분) - 개별 곡</option>
+            <option value="medium" selected>중간 (10분) - 플레이리스트용 ⭐</option>
+            <option value="long">길게 (1시간) - 24/7 스트림용</option>
+          </select>
+        </div>
+        
+        <!-- 생성 개수 -->
+        <div class="form-group">
+          <label for="count">🔢 생성 개수</label>
+          <input type="number" id="count" value="1" min="1" max="10">
+        </div>
+        
+        <!-- 생성 버튼 -->
+        <button type="submit" class="btn" id="generateBtn">
+          ✨ 최적화된 곡 생성하기
+        </button>
+      </form>
+      
+      <!-- 상태 메시지 -->
+      <div id="status" class="status"></div>
+    </div>
+  </div>
+  
+  <script>
+    const form = document.getElementById('generateForm');
+    const btn = document.getElementById('generateBtn');
+    const status = document.getElementById('status');
+    
+    // 테스트: API 연결 확인
+    async function testConnection() {
+      try {
+        const response = await fetch('/api/style-v2/test');
+        const data = await response.json();
+        console.log('✅ API 연결 성공:', data);
+      } catch (error) {
+        console.error('❌ API 연결 실패:', error);
+      }
+    }
+    
+    // 페이지 로드 시 테스트
+    testConnection();
+    
+    // 폼 제출
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const styleInput = document.getElementById('styleInput').value;
+      const language = document.getElementById('language').value;
+      const targetDuration = document.getElementById('targetDuration').value;
+      const count = parseInt(document.getElementById('count').value);
+      
+      btn.disabled = true;
+      btn.textContent = '⏳ 생성 중...';
+      status.className = 'status';
+      status.style.display = 'none';
+      
+      try {
+        const response = await fetch('/api/style-v2/generate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            styleInput,
+            language,
+            targetDuration,
+            count
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          status.className = 'status success show';
+          status.innerHTML = `
+            <h3>✅ 요청 성공!</h3>
+            <pre>${JSON.stringify(data, null, 2)}</pre>
+          `;
+        } else {
+          throw new Error(data.error || '생성 실패');
+        }
+        
+      } catch (error) {
+        status.className = 'status error show';
+        status.innerHTML = `
+          <h3>❌ 오류 발생</h3>
+          <p>${error.message}</p>
+        `;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '✨ 최적화된 곡 생성하기';
+      }
+    });
+  </script>
+</body>
+</html>

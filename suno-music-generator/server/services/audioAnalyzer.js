@@ -251,11 +251,15 @@ Respond ONLY with valid JSON in the format specified in the system prompt.`
       console.log(`   ${analysis.sunoTags}`);
       console.log('🎨 ======================================');
 
+      // Generate thumbnail prompts
+      const thumbnailPrompts = this.generateThumbnailPrompts(analysis);
+
       return {
         success: true,
         analysis: analysis,
         tags: analysis.sunoTags,
-        rawResponse: content
+        rawResponse: content,
+        thumbnailPrompts: thumbnailPrompts
       };
 
     } catch (error) {

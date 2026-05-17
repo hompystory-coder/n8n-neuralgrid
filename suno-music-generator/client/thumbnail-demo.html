@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>썸네일 프롬프트 데모</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            color: white;
+            padding: 40px;
+            margin: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            color: #fb923c;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 30px;
+        }
+        .demo-section {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .demo-button {
+            background: linear-gradient(135deg, #fb923c, #f97316);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(251, 146, 60, 0.5);
+        }
+        #thumbnailPreview {
+            margin-top: 20px;
+            display: none;
+        }
+        .thumbnail-box {
+            background: rgba(251, 146, 60, 0.1);
+            border: 2px solid #fb923c;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .thumbnail-box h3 {
+            color: #fb923c;
+            margin: 0 0 15px 0;
+        }
+        .info-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+        .info-box strong {
+            color: #e2e8f0;
+        }
+        details {
+            margin-top: 10px;
+        }
+        summary {
+            color: #fb923c;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 8px;
+            background: rgba(251, 146, 60, 0.1);
+            border-radius: 6px;
+        }
+        pre {
+            background: rgba(0, 0, 0, 0.3);
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 12px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .usage-box {
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 3px solid #3b82f6;
+            border-radius: 6px;
+            color: #60a5fa;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .step {
+            background: rgba(139, 92, 246, 0.1);
+            border-left: 3px solid #8b5cf6;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        .step-number {
+            color: #a78bfa;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        .highlight {
+            background: rgba(251, 146, 60, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #fb923c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 썸네일 프롬프트 데모</h1>
+        <p class="subtitle">실제 웹사이트에서 어떻게 나타나는지 확인하세요</p>
+
+        <!-- 단계 설명 -->
+        <div class="step">
+            <div class="step-number">📍 현재 위치</div>
+            <div>
+                이 썸네일 프롬프트는 <span class="highlight">"앨범 생성"</span> 버튼을 클릭한 후<br>
+                앨범 메타데이터 하단에 <span class="highlight">자동으로 추가</span>됩니다!
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">🔄 작동 순서</div>
+            <div>
+                1️⃣ 음악 생성 (스타일 입력)<br>
+                2️⃣ 곡 선택 (체크박스 클릭)<br>
+                3️⃣ <span class="highlight">"앨범 생성"</span> 버튼 클릭<br>
+                4️⃣ YouTube 제목, 설명, 태그 표시<br>
+                5️⃣ <span class="highlight">👈 이 위치에 썸네일 프롬프트 자동 추가!</span>
+            </div>
+        </div>
+
+        <!-- 데모 버튼 -->
+        <div class="demo-section">
+            <button class="demo-button" onclick="showThumbnailDemo()">
+                🎨 썸네일 프롬프트 미리보기
+            </button>
+        </div>
+
+        <!-- 썸네일 프롬프트 미리보기 -->
+        <div id="thumbnailPreview"></div>
+    </div>
+
+    <script>
+        async function showThumbnailDemo() {
+            const preview = document.getElementById('thumbnailPreview');
+            
+            // 로딩 표시
+            preview.innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <div style="font-size: 3em; animation: spin 1s linear infinite;">🎨</div>
+                    <p style="margin-top: 16px; color: rgba(255,255,255,0.7);">썸네일 프롬프트 생성 중...</p>
+                </div>
+            `;
+            preview.style.display = 'block';
+
+            try {
+                // 실제 API 호출
+                const response = await fetch('/api/style/generate-thumbnail', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: '듣는 순간 집중되는 음악📚 완벽한 공부 플레이리스트',
+                        style: 'Lo-Fi Hip Hop, study music, focus, 90 BPM',
+                        language: 'korean',
+                        generateImage: true
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // 썸네일 프롬프트 표시
+                    preview.innerHTML = `
+                        <div class="thumbnail-box">
+                            <h3>🎨 YouTube 썸네일 프롬프트</h3>
+                            
+                            <div class="info-box">
+                                <div style="margin-bottom: 8px;">
+                                    <strong>분위기:</strong> ${data.config.mood}
+                                </div>
+                                <div style="margin-bottom: 8px;">
+                                    <strong>색상:</strong> ${data.config.colorScheme}
+                                </div>
+                                <div>
+                                    <strong>주요 요소:</strong> ${data.config.visualElements}
+                                </div>
+                            </div>
+                            
+                            <details>
+                                <summary>📝 이미지 생성 프롬프트 보기</summary>
+                                <pre>${data.prompt}</pre>
+                            </details>
+                            
+                            <div class="usage-box">
+                                💡 <strong>사용 방법:</strong><br>
+                                위 프롬프트를 GenSpark image_generation 툴에 전달하여<br>
+                                고품질 YouTube 썸네일을 생성할 수 있습니다.<br>
+                                <br>
+                                <strong>설정:</strong> aspect_ratio: "16:9", model: "${data.config.model}"
+                            </div>
+
+                            <div style="margin-top: 20px; padding: 15px; background: rgba(34, 197, 94, 0.1); border-left: 3px solid #22c55e; border-radius: 6px; color: #4ade80;">
+                                ✅ <strong>이것이 실제 웹사이트에서 보이는 모습입니다!</strong><br>
+                                <br>
+                                📍 <strong>표시 위치:</strong> 앨범 메타데이터 하단<br>
+                                🔄 <strong>생성 시점:</strong> "앨범 생성" 버튼 클릭 시 자동
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    throw new Error(data.error || '생성 실패');
+                }
+            } catch (error) {
+                preview.innerHTML = `
+                    <div class="thumbnail-box" style="border-color: #ef4444;">
+                        <h3 style="color: #fca5a5;">⚠️ 오류</h3>
+                        <p style="color: rgba(255, 255, 255, 0.7);">${error.message}</p>
+                        <p style="color: rgba(255, 255, 255, 0.5); font-size: 14px; margin-top: 10px;">
+                            서버가 실행 중인지 확인해주세요.
+                        </p>
+                    </div>
+                `;
+            }
+        }
+
+        // CSS 애니메이션 추가
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

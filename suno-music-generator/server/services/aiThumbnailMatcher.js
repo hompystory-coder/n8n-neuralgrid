@@ -279,11 +279,25 @@ function analyzeGenreForThumbnail(genreInfo) {
     if (bpm >= 130) {
       constraints.energy = 'HIGH, intense, fast-paced';
       constraints.mustHave.push('motion blur', 'dynamic', 'speed');
+      constraints.mustAvoid.push('studying', 'desk', 'books', 'laptop', 'office', 'reading');
+    } else if (bpm >= 100) {
+      constraints.energy = 'MODERATE-HIGH, energetic, upbeat';
+      constraints.mustAvoid.push('studying', 'desk', 'books', 'laptop', 'work', 'office');
     } else if (bpm <= 80) {
       constraints.energy = 'LOW, slow, relaxed';
       constraints.mustHave.push('calm', 'slow motion', 'peaceful');
     } else {
       constraints.energy = 'MEDIUM, balanced, moderate';
+    }
+  }
+  
+  // 2.5. Upbeat/Energetic mood가 있으면 study 장면 절대 금지
+  if (genreInfo.mood && genreInfo.mood.length > 0) {
+    const hasEnergeticMood = genreInfo.mood.some(mood => 
+      ['energetic', 'upbeat', 'powerful', 'aggressive'].includes(mood.toLowerCase())
+    );
+    if (hasEnergeticMood) {
+      constraints.mustAvoid.push('studying', 'desk', 'books', 'laptop', 'office', 'library', 'reading', 'work');
     }
   }
 

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>클릭 테스트</title>
+    <style>
+        .method-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            margin: 10px;
+            display: inline-block;
+        }
+        .method-card:hover {
+            border-color: rgba(168, 85, 247, 0.4);
+            background: rgba(168, 85, 247, 0.05);
+        }
+    </style>
+</head>
+<body style="background: #000; color: #fff; padding: 50px;">
+    <h1>클릭 테스트</h1>
+    
+    <div class="method-card" data-method="style">
+        <div class="method-icon">🎨</div>
+        <div class="method-title">스타일로 생성</div>
+        <div class="method-description">음악 파일에서 스타일 추출 → 자동 생성</div>
+    </div>
+    
+    <div id="result" style="margin-top: 30px; padding: 20px; border: 1px solid #fff;">
+        클릭 결과가 여기에 표시됩니다
+    </div>
+    
+    <script>
+        console.log('스크립트 로드됨');
+        
+        const card = document.querySelector('.method-card');
+        console.log('카드 찾음:', card);
+        
+        card.addEventListener('click', function() {
+            console.log('카드 클릭됨!');
+            document.getElementById('result').innerHTML = '✅ 클릭 성공! method = ' + this.dataset.method;
+        });
+    </script>
+</body>
+</html>

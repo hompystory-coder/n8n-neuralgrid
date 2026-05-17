@@ -31,9 +31,11 @@ const chartsRoutes = require('./routes/charts'); // 🔥 추가
 const statsRoutes = require('./routes/stats'); // 🔥 통계 라우트 추가
 const genresRoutes = require('./routes/genres'); // 🔥 장르 라우트 추가
 const youtubeRoutes = require('./routes/youtube'); // 🎬 유튜브 분석 라우트 추가
+const youtubeMetadataRoutes = require('./routes/youtube-metadata'); // 🎬 유튜브 메타데이터 생성 라우트 추가
 const webhookRoutes = require('./routes/webhook'); // 📥 웹훅 라우트 추가
 const personaRoutes = require('./routes/persona'); // 🎤 페르소나 라우트 추가
 const styleRoutes = require('./routes/style'); // 🎨 스타일 기반 생성 라우트 추가
+const styleV2Routes = require('./routes/style-v2'); // 🎵 스타일 V2 - YouTube 최적화 버전 추가
 const rankerRoutes = require('./routes/ranker'); // 🎵 AI 음악 순위 추천 라우트 추가
 const textOverlayRoutes = require('./routes/textOverlay'); // 🎨 텍스트 오버레이 라우트 추가
 
@@ -85,6 +87,7 @@ app.set('io', io);
 // Routes
 app.use('/api/music', musicRoutes);
 app.use('/api/music', youtubeRoutes); // 🎬 유튜브 분석 (/api/music/analyze-youtube)
+app.use('/api/youtube', youtubeMetadataRoutes); // 🎬 유튜브 메타데이터 생성 (/api/youtube/generate-metadata)
 app.use('/api/queue', queueRoutes);
 app.use('/api/status', statusRoutes);
 app.use('/api/lyrics', lyricsRoutes);
@@ -94,6 +97,7 @@ app.use('/api/genres', genresRoutes); // 🔥 장르 API 추가
 app.use('/api/webhook', webhookRoutes); // 📥 웹훅 API 추가
 app.use('/api/persona', personaRoutes); // 🎤 페르소나 API 추가
 app.use('/api/style', styleRoutes); // 🎨 스타일 기반 생성 API 추가
+app.use('/api/style-v2', styleV2Routes); // 🎵 스타일 V2 - YouTube 최적화 API 추가
 app.use('/api/ranker', rankerRoutes); // 🎵 AI 음악 순위 추천 API 추가
 app.use('/api/text-overlay', textOverlayRoutes); // 🎨 텍스트 오버레이 API 추가
 

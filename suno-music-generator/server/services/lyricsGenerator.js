@@ -4123,7 +4123,7 @@ ${previousLyricsSample}
 (2-4줄)`
         }
       ],
-      temperature: 0.98, // 최대 창의성
+      temperature: 0.85, // 최적 창의성 (안정성 + 품질)
       max_tokens: 2000, // 더 긴 가사 생성
       presence_penalty: 1.2, // 더 강력한 반복 억제
       frequency_penalty: 1.0 // 단어 반복 억제
@@ -7037,7 +7037,7 @@ JSON만 출력하세요 (다른 설명 불필요):`;
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
       ],
-      temperature: 0.95, // 창의성 최대화
+      temperature: 0.85, // 최적 창의성 (안정성 + 품질)
       max_tokens: 2500,
       presence_penalty: 0.8,
       frequency_penalty: 0.6

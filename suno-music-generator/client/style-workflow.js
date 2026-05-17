@@ -31,6 +31,7 @@ let currentGenerationTaskId = null;
 let currentPlayingAudio = null;
 let selectedSongs = new Map(); // songId -> {song, order}
 let currentGeneratedStyle = ''; // 현재 생성 중인 스타일 저장
+let currentGeneratedLanguage = 'korean'; // 현재 생성 중인 언어 저장 (기본값: korean)
 let selectedImages = new Map(); // songIndex -> {imageUrl, isUpgraded, upgradedUrl}
 let selectionOrder = []; // 선택한 순서대로 songIndex 배열 (Time Track용)
 let trackOrder = new Map(); // songIndex -> trackNumber (1~20) - 앨범 트랙 순서 관리
@@ -132,8 +133,9 @@ async function generateSimpleStyleMusic() {
 
     console.log('📝 최종 스타일:', finalStyle);
     
-    // 스타일 저장 (메타데이터용 - 원본 입력값만 저장)
+    // 스타일과 언어 저장 (메타데이터용 - 원본 입력값만 저장)
     currentGeneratedStyle = styleInput;
+    currentGeneratedLanguage = language;
 
     // 6. 서버에 간단 생성 요청
     const response = await fetch('/api/style/generate-simple', {
@@ -1750,7 +1752,7 @@ async function showFinalSummary(autoMode = false) {
       const thumbnailData = await generateThumbnail(
         data.youtubeTitle || data.youtubeTitleKo || '음악 플레이리스트',
         currentStyle || 'Lo-Fi Hip Hop',
-        'korean'
+        currentGeneratedLanguage
       );
       
       // 썸네일 프롬프트 표시
@@ -1858,11 +1860,11 @@ async function generateAlbumMetadata() {
     
     console.log('🎯 AI 메타데이터 생성 요청:', { trackCount: tracks.length, style });
     
-    // AI 메타데이터 생성 요청
+    // AI 메타데이터 생성 요청 (저장된 언어 사용)
     const response = await fetch('/api/style/generate-album-metadata', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tracks, style, language: 'korean' })
+      body: JSON.stringify({ tracks, style, language: currentGeneratedLanguage })
     });
     
     const data = await response.json();
@@ -2615,7 +2617,7 @@ async function upgradeSelectedImages() {
 }
 
 /**
- * 🖼️ 이미지 클릭 시 업스케일 처리
+ * 🖼️ 이미지 클릭 시 업스케일 옵션 모달 표시
  */
 async function handleImageClick(element) {
   const imageUrl = element.dataset.imageUrl;
@@ -2624,22 +2626,219 @@ async function handleImageClick(element) {
   const style = element.dataset.songStyle;
   const lyrics = element.dataset.songLyrics;
   
-  // 상태 표시 엘리먼트
-  const statusDiv = element.querySelector('.upscale-status');
+  // 업스케일 옵션 선택 모달 표시
+  showUpscaleOptionModal({
+    imageUrl,
+    songIndex,
+    title,
+    style,
+    lyrics,
+    statusElement: element
+  });
+}
+
+/**
+ * ✨ 업스케일 옵션 선택 모달
+ */
+function showUpscaleOptionModal(data) {
+  const modal = document.createElement('div');
+  modal.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.92);
+    backdrop-filter: blur(15px);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+  `;
+  
+  modal.innerHTML = `
+    <div style="
+      background: linear-gradient(135deg, rgba(30,30,30,0.95) 0%, rgba(20,20,20,0.98) 100%);
+      border: 2px solid rgba(139,92,246,0.3);
+      border-radius: 24px;
+      padding: 40px;
+      max-width: 600px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    ">
+      <h2 style="
+        color: white;
+        font-size: 1.8em;
+        margin-bottom: 15px;
+        text-align: center;
+        background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      ">
+        🎨 업스케일 옵션 선택
+      </h2>
+      
+      <p style="
+        color: #999;
+        text-align: center;
+        margin-bottom: 35px;
+        font-size: 0.95em;
+      ">
+        "${data.title}" 이미지를 업스케일할 방식을 선택하세요
+      </p>
+      
+      <div style="display: flex; gap: 20px; margin-bottom: 25px;">
+        <!-- 일반 업스케일 옵션 -->
+        <div onclick="selectUpscaleOption('standard', this)" class="upscale-option" style="
+          flex: 1;
+          background: linear-gradient(135deg, rgba(59,130,246,0.15) 0%, rgba(37,99,235,0.15) 100%);
+          border: 2px solid rgba(59,130,246,0.4);
+          border-radius: 16px;
+          padding: 25px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          position: relative;
+        " onmouseover="this.style.borderColor='rgba(59,130,246,0.8)'; this.style.transform='translateY(-5px)'" onmouseout="this.style.borderColor='rgba(59,130,246,0.4)'; this.style.transform='translateY(0)'">
+          <div style="
+            font-size: 3em;
+            text-align: center;
+            margin-bottom: 15px;
+          ">⚡</div>
+          <h3 style="
+            color: white;
+            font-size: 1.3em;
+            text-align: center;
+            margin-bottom: 12px;
+          ">일반 업스케일</h3>
+          <div style="
+            color: #94a3b8;
+            font-size: 0.85em;
+            line-height: 1.6;
+            text-align: center;
+          ">
+            • 빠른 처리 속도 (5-10초)<br>
+            • 해상도 향상<br>
+            • YouTube & Album 사이즈<br>
+            • <span style="color: #22c55e; font-weight: 600;">무료</span>
+          </div>
+        </div>
+        
+        <!-- 프리미엄 업스케일 옵션 -->
+        <div onclick="selectUpscaleOption('premium', this)" class="upscale-option" style="
+          flex: 1;
+          background: linear-gradient(135deg, rgba(168,85,247,0.15) 0%, rgba(139,92,246,0.15) 100%);
+          border: 2px solid rgba(168,85,247,0.4);
+          border-radius: 16px;
+          padding: 25px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          position: relative;
+        " onmouseover="this.style.borderColor='rgba(168,85,247,0.8)'; this.style.transform='translateY(-5px)'" onmouseout="this.style.borderColor='rgba(168,85,247,0.4)'; this.style.transform='translateY(0)'">
+          <div style="
+            position: absolute;
+            top: -12px;
+            right: 15px;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: black;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 700;
+          ">NEW</div>
+          <div style="
+            font-size: 3em;
+            text-align: center;
+            margin-bottom: 15px;
+          ">✨</div>
+          <h3 style="
+            color: white;
+            font-size: 1.3em;
+            text-align: center;
+            margin-bottom: 12px;
+          ">프리미엄 AI 업스케일</h3>
+          <div style="
+            color: #94a3b8;
+            font-size: 0.85em;
+            line-height: 1.6;
+            text-align: center;
+          ">
+            • AI 기반 초고화질 변환<br>
+            • 디테일 복원 & 노이즈 제거<br>
+            • 최대 4K 해상도 지원<br>
+            • <span style="color: #a855f7; font-weight: 600;">고급 옵션</span>
+          </div>
+        </div>
+      </div>
+      
+      <div style="
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+      ">
+        <button onclick="closeUpscaleModal()" style="
+          background: rgba(255,255,255,0.1);
+          color: white;
+          border: 2px solid rgba(255,255,255,0.2);
+          padding: 14px 30px;
+          border-radius: 12px;
+          font-size: 1em;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        " onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+          취소
+        </button>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  
+  // 전역 변수로 데이터 저장
+  window.currentUpscaleData = data;
+  
+  // 모달 닫기 함수
+  window.closeUpscaleModal = () => {
+    document.body.removeChild(modal);
+    delete window.currentUpscaleData;
+  };
+  
+  // 옵션 선택 함수
+  window.selectUpscaleOption = async (type, element) => {
+    // 모달 닫기
+    document.body.removeChild(modal);
+    
+    // 선택된 옵션에 따라 업스케일 실행
+    if (type === 'standard') {
+      await performStandardUpscale(window.currentUpscaleData);
+    } else if (type === 'premium') {
+      await performPremiumUpscale(window.currentUpscaleData);
+    }
+    
+    delete window.currentUpscaleData;
+  };
+}
+
+/**
+ * ⚡ 일반 업스케일 실행
+ */
+async function performStandardUpscale(data) {
+  const statusDiv = data.statusElement.querySelector('.upscale-status');
   const originalHTML = statusDiv.innerHTML;
   
   // 업스케일 시작
   statusDiv.innerHTML = `
-    <span style="font-size: 1.5em; animation: spin 1s linear infinite;">✨</span>
-    <span style="color: white; font-size: 0.85em; font-weight: 600;">업스케일 중...</span>
+    <span style="font-size: 1.5em; animation: spin 1s linear infinite;">⚡</span>
+    <span style="color: white; font-size: 0.85em; font-weight: 600;">일반 업스케일 중...</span>
   `;
   
   try {
-    console.log(`🖼️ 이미지 업스케일 시작: ${title}`);
+    console.log(`⚡ 일반 업스케일 시작: ${data.title}`);
     
     // Step 1: 이미지를 Base64로 변환 (CORS 우회)
     console.log('📥 이미지 다운로드 중...');
-    const base64Image = await imageToBase64(imageUrl);
+    const base64Image = await imageToBase64(data.imageUrl);
     console.log('✅ 이미지 Base64 변환 완료');
     
     // Step 2: 서버에 업스케일 요청 (Base64)
@@ -2648,9 +2847,9 @@ async function handleImageClick(element) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         imageBase64: base64Image,
-        title: title,
-        style: style,
-        lyrics: lyrics
+        title: data.title,
+        style: data.style,
+        lyrics: data.lyrics
       })
     });
     
@@ -2659,8 +2858,8 @@ async function handleImageClick(element) {
       throw new Error(error.error || '업스케일 실패');
     }
     
-    const data = await response.json();
-    console.log(`✅ 업스케일 완료:`, data);
+    const result = await response.json();
+    console.log(`✅ 일반 업스케일 완료:`, result);
     
     // 업스케일 완료 표시
     statusDiv.innerHTML = `
@@ -2670,11 +2869,12 @@ async function handleImageClick(element) {
     
     // 업스케일된 이미지 미리보기 및 다운로드 모달 표시
     showUpscaledImageModal({
-      title: title,
-      youtubeUrl: data.youtubeUrl,
-      albumUrl: data.albumUrl,
-      originalUrl: imageUrl,
-      metadata: data.metadata
+      title: data.title,
+      youtubeUrl: result.youtubeUrl,
+      albumUrl: result.albumUrl,
+      originalUrl: data.imageUrl,
+      metadata: result.metadata,
+      upscaleType: 'standard'
     });
     
     // 3초 후 원래 상태로
@@ -2683,7 +2883,7 @@ async function handleImageClick(element) {
     }, 3000);
     
   } catch (error) {
-    console.error(`❌ 업스케일 실패 (${title}):`, error);
+    console.error(`❌ 일반 업스케일 실패 (${data.title}):`, error);
     
     // 에러 표시
     statusDiv.innerHTML = `
@@ -2691,7 +2891,88 @@ async function handleImageClick(element) {
       <span style="color: #ef4444; font-size: 0.85em; font-weight: 600;">실패</span>
     `;
     
-    alert(`❌ 업스케일 실패: ${error.message}`);
+    alert(`❌ 일반 업스케일 실패: ${error.message}`);
+    
+    // 3초 후 원래 상태로
+    setTimeout(() => {
+      statusDiv.innerHTML = originalHTML;
+    }, 3000);
+  }
+}
+
+/**
+ * ✨ 프리미엄 AI 업스케일 실행
+ */
+async function performPremiumUpscale(data) {
+  const statusDiv = data.statusElement.querySelector('.upscale-status');
+  const originalHTML = statusDiv.innerHTML;
+  
+  // 프리미엄 업스케일 시작
+  statusDiv.innerHTML = `
+    <span style="font-size: 1.5em; animation: spin 1s linear infinite;">✨</span>
+    <span style="color: white; font-size: 0.85em; font-weight: 600;">AI 업스케일 중...</span>
+  `;
+  
+  try {
+    console.log(`✨ 프리미엄 AI 업스케일 시작: ${data.title}`);
+    
+    // Step 1: 이미지를 Base64로 변환
+    console.log('📥 이미지 다운로드 중...');
+    const base64Image = await imageToBase64(data.imageUrl);
+    console.log('✅ 이미지 Base64 변환 완료');
+    
+    // Step 2: 서버에 프리미엄 업스케일 요청
+    const response = await fetch('/api/style/premium-upscale', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        imageBase64: base64Image,
+        title: data.title,
+        style: data.style,
+        lyrics: data.lyrics
+      })
+    });
+    
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'AI 업스케일 실패');
+    }
+    
+    const result = await response.json();
+    console.log(`✅ 프리미엄 AI 업스케일 완료:`, result);
+    
+    // 업스케일 완료 표시
+    statusDiv.innerHTML = `
+      <span style="font-size: 1.5em;">✨</span>
+      <span style="color: #a855f7; font-size: 0.85em; font-weight: 600;">AI 업스케일 완료!</span>
+    `;
+    
+    // 업스케일된 이미지 미리보기 및 다운로드 모달 표시
+    showUpscaledImageModal({
+      title: data.title,
+      youtubeUrl: result.youtubeUrl,
+      albumUrl: result.albumUrl,
+      premiumUrl: result.premiumUrl,
+      originalUrl: data.imageUrl,
+      metadata: result.metadata,
+      upscaleType: 'premium'
+    });
+    
+    // 3초 후 원래 상태로
+    setTimeout(() => {
+      statusDiv.innerHTML = originalHTML;
+    }, 3000);
+    
+  } catch (error) {
+    console.error(`❌ 프리미엄 AI 업스케일 실패 (${data.title}):`, error);
+    
+    // 에러 표시
+    statusDiv.innerHTML = `
+      <span style="font-size: 1.5em;">❌</span>
+      <span style="color: #ef4444; font-size: 0.85em; font-weight: 600;">실패</span>
+    `;
+    
+    alert(`❌ 프리미엄 AI 업스케일 실패: ${error.message}`);
     
     // 3초 후 원래 상태로
     setTimeout(() => {
@@ -2748,12 +3029,16 @@ function showUpscaledImageModal(data) {
   // HTTP를 HTTPS로 자동 변환 (Mixed Content 방지)
   data.youtubeUrl = data.youtubeUrl.replace(/^http:\/\//i, 'https://');
   data.albumUrl = data.albumUrl.replace(/^http:\/\//i, 'https://');
-  console.log('🔒 HTTPS URLs:', { youtubeUrl: data.youtubeUrl, albumUrl: data.albumUrl });
+  if (data.premiumUrl) {
+    data.premiumUrl = data.premiumUrl.replace(/^http:\/\//i, 'https://');
+  }
+  console.log('🔒 HTTPS URLs:', { youtubeUrl: data.youtubeUrl, albumUrl: data.albumUrl, premiumUrl: data.premiumUrl });
   
   // 안전한 파일명 생성
   const safeTitle = data.title.replace(/[^a-zA-Z0-9가-힣\s]/g, '_').substring(0, 50);
   const youtubeFilename = `${safeTitle}_youtube.jpg`;
   const albumFilename = `${safeTitle}_album.jpg`;
+  const premiumFilename = data.premiumUrl ? `${safeTitle}_premium_4k.jpg` : null;
   
   const modal = document.createElement('div');
   modal.style.cssText = `
@@ -2797,14 +3082,14 @@ function showUpscaledImageModal(data) {
     
     <!-- 타이틀 -->
     <h2 style="margin: 0 0 24px 0; color: #8b5cf6; font-size: 1.8em; font-weight: 700; display: flex; align-items: center; gap: 12px;">
-      <span style="font-size: 1.2em;">✨</span>
-      업스케일 완료: ${data.title}
+      <span style="font-size: 1.2em;">${data.upscaleType === 'premium' ? '✨' : '⚡'}</span>
+      ${data.upscaleType === 'premium' ? 'AI 업스케일' : '일반 업스케일'} 완료: ${data.title}
     </h2>
     
     <!-- 메타데이터 정보 -->
     ${data.metadata ? `
     <div style="background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.3); border-radius: 12px; padding: 16px; margin-bottom: 24px;">
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; color: rgba(255,255,255,0.8); font-size: 0.9em;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; color: rgba(255,255,255,0.8); font-size: 0.9em;">
         <div>
           <span style="color: rgba(255,255,255,0.5);">📐 원본:</span> 
           <strong>${data.metadata.original.width}×${data.metadata.original.height}</strong>
@@ -2819,12 +3104,52 @@ function showUpscaledImageModal(data) {
           <strong>${data.metadata.album.width}×${data.metadata.album.height}</strong>
           <span style="color: rgba(255,255,255,0.5);">(${(data.metadata.album.size / 1024).toFixed(0)} KB)</span>
         </div>
+        ${data.metadata.premium ? `
+        <div>
+          <span style="color: rgba(255,255,255,0.5);">✨ AI Premium:</span> 
+          <strong>${data.metadata.premium.width}×${data.metadata.premium.height}</strong>
+          <span style="color: rgba(255,255,255,0.5);">(${(data.metadata.premium.size / 1024).toFixed(0)} KB)</span>
+        </div>
+        ` : ''}
       </div>
     </div>
     ` : ''}
     
     <!-- 이미지 그리드 -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 24px;">
+      
+      ${data.premiumUrl ? `
+      <!-- 프리미엄 AI 업스케일 (4K) -->
+      <div style="background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(139,92,246,0.15)); border-radius: 16px; padding: 16px; border: 2px solid rgba(168,85,247,0.5); position: relative;">
+        <div style="position: absolute; top: -10px; right: 15px; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: black; padding: 4px 12px; border-radius: 12px; font-size: 0.75em; font-weight: 700;">PREMIUM</div>
+        <h3 style="margin: 0 0 12px 0; color: #a855f7; font-size: 1.1em; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+          <span>✨</span>
+          AI 프리미엄 (4K 초고화질)
+        </h3>
+        <div style="position: relative; background: rgba(0,0,0,0.3); border-radius: 12px; overflow: hidden; margin-bottom: 12px;">
+          <img src="${data.premiumUrl}" 
+               onload="this.style.opacity='1'; if(this.previousElementSibling) this.previousElementSibling.style.display='none'"
+               onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex'"
+               style="width: 100%; display: block; opacity: 0; transition: opacity 0.3s;"
+               alt="Premium AI Upscale">
+          <!-- 로딩 -->
+          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: rgba(255,255,255,0.5); font-size: 2em;">
+            ⏳
+          </div>
+          <!-- 에러 -->
+          <div style="display: none; align-items: center; justify-content: center; height: 300px; color: #ef4444;">
+            ❌ 로드 실패
+          </div>
+        </div>
+        <button id="downloadPremiumBtn"
+                style="width: 100%; background: linear-gradient(135deg, #a855f7, #7c3aed); border: none; color: white; padding: 12px; border-radius: 12px; cursor: pointer; font-size: 1em; font-weight: 600; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;"
+                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(168,85,247,0.4)'"
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+          <span style="font-size: 1.2em;">📥</span>
+          <span>다운로드</span>
+        </button>
+      </div>
+      ` : ''}
       
       <!-- YouTube 썸네일 (1280x720) -->
       <div style="background: rgba(255,255,255,0.05); border-radius: 16px; padding: 16px; border: 2px solid rgba(139,92,246,0.3);">
@@ -2834,8 +3159,8 @@ function showUpscaledImageModal(data) {
         </h3>
         <div style="position: relative; background: rgba(0,0,0,0.3); border-radius: 12px; overflow: hidden; margin-bottom: 12px;">
           <img src="${data.youtubeUrl}" 
-               onload="this.style.opacity='1'; this.previousElementSibling.style.display='none'"
-               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+               onload="this.style.opacity='1'; if(this.previousElementSibling) this.previousElementSibling.style.display='none'"
+               onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex'"
                style="width: 100%; display: block; opacity: 0; transition: opacity 0.3s;"
                alt="YouTube Thumbnail">
           <!-- 로딩 -->
@@ -2864,8 +3189,8 @@ function showUpscaledImageModal(data) {
         </h3>
         <div style="position: relative; background: rgba(0,0,0,0.3); border-radius: 12px; overflow: hidden; margin-bottom: 12px;">
           <img src="${data.albumUrl}" 
-               onload="this.style.opacity='1'; this.previousElementSibling.style.display='none'"
-               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+               onload="this.style.opacity='1'; if(this.previousElementSibling) this.previousElementSibling.style.display='none'"
+               onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex'"
                style="width: 100%; display: block; opacity: 0; transition: opacity 0.3s;"
                alt="Album Cover">
           <!-- 로딩 -->
@@ -2914,6 +3239,13 @@ function showUpscaledImageModal(data) {
   document.getElementById('downloadAlbumBtn').addEventListener('click', () => {
     downloadImage(data.albumUrl, albumFilename);
   });
+  
+  // 프리미엄 다운로드 버튼 (있을 경우에만)
+  if (data.premiumUrl) {
+    document.getElementById('downloadPremiumBtn').addEventListener('click', () => {
+      downloadImage(data.premiumUrl, premiumFilename);
+    });
+  }
   
   console.log('✅ 모달 표시 완료');
 }
@@ -4221,7 +4553,7 @@ async function generateYouTubeThumbnail() {
       body: JSON.stringify({
         title: window.albumMetadata.youtubeTitle || window.albumMetadata.albumTitle,
         style: window.albumMetadata.style || 'Music Playlist',
-        language: 'korean',
+        language: currentGeneratedLanguage,
         aiModel: aiModel  // 'openai' (자동) 또는 'genspark' (수동)
       })
     });

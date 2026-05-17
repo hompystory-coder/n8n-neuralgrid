@@ -1,0 +1,38 @@
+{
+  "songGeneration": {
+    "status": "success",
+    "data": {
+      "success": true,
+      "taskId": "cacebd6bdc98c2295686c1edf6e7353e",
+      "allTaskIds": [
+        "cacebd6bdc98c2295686c1edf6e7353e",
+        "270a58ea24932dd88051d1d17a9a41a1"
+      ],
+      "style": "cozy-lofi acoustic emotional",
+      "count": 2,
+      "message": "2곡의 음악 생성이 시작되었습니다. AI가 스타일에 맞는 고유한 가사와 제목을 생성했습니다. 약 4-6분 소요됩니다."
+    },
+    "error": null
+  },
+  "lyricsAnalysis": {
+    "status": "pending",
+    "duplicates": [],
+    "uniqueCount": 0,
+    "totalCount": 0
+  },
+  "imageUpscale": {
+    "status": "pending",
+    "images": [],
+    "error": null
+  },
+  "albumMetadata": {
+    "status": "pending",
+    "data": null,
+    "error": null
+  },
+  "download": {
+    "status": "pending",
+    "downloaded": [],
+    "error": null
+  }
+}
