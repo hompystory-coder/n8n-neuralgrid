@@ -10,6 +10,7 @@ const sharp = require('sharp');
 const { generateLyrics, generateTitle } = require('../services/lyricsGenerator');
 const { generateInfiniteLyrics } = require('../services/infiniteLyricsGenerator');
 const { generateSimpleLyrics } = require('../services/simpleLyricsGenerator');
+const styleParser = require('../services/styleParser');
 
 /**
  * 📊 YouTube 알고리즘 최적화: 재생목록 곡 순서 최적화
@@ -2291,8 +2292,8 @@ ${uniqueTitles}
         const totalDuration = uniqueSongs.reduce((sum, song) => sum + (song.duration || 0), 0);
         
         const metadata = await youtubeMetadataGenerator.generate({
-          title: aiMetadata.albumTitle || '음악 모음집',
-          lyrics: uniqueSongs.map(s => s.title).join(', '),
+          title: uniqueSongs[0]?.title || 'New Music',
+          lyrics: uniqueSongs.map(s => s.lyrics || '').join('\n'),
           style: musicStyle,
           genre: parsedStyle.genreCategory || 'pop',
           mood: (parsedStyle.moods && parsedStyle.moods[0]) || 'chill',
@@ -2306,7 +2307,7 @@ ${uniqueTitles}
         
         // AI 생성 앨범명 + youtubeMetadataGenerator 제목/설명/태그 조합
         const finalMetadata = {
-          albumName: aiMetadata.albumTitle || (lang === 'korean' ? '음악 모음집' : 'Music Collection'),
+          albumName: aiMetadata.albumTitle || metadata.tags[0] || 'Music Playlist',
           youtubeTitle: metadata.title,
           description: metadata.description,
           tags: metadata.tags.join(', ')
@@ -2333,8 +2334,8 @@ ${uniqueTitles}
       const totalDuration = uniqueSongs.reduce((sum, song) => sum + (song.duration || 0), 0);
       
       const metadata = await youtubeMetadataGenerator.generate({
-        title: lang === 'korean' ? '음악 모음집' : 'Music Collection',
-        lyrics: uniqueSongs.map(s => s.title).join(', '),
+        title: uniqueSongs[0]?.title || 'New Music',
+        lyrics: uniqueSongs.map(s => s.lyrics || '').join('\n'),
         style: musicStyle,
         genre: parsedStyle.genreCategory || 'pop',
         mood: (parsedStyle.moods && parsedStyle.moods[0]) || 'chill',
@@ -2347,7 +2348,7 @@ ${uniqueTitles}
       });
       
       const fallbackMetadata = {
-        albumName: lang === 'korean' ? '음악 모음집' : 'Music Collection',
+        albumName: metadata.tags[0] || 'Music Playlist',
         youtubeTitle: metadata.title,
         description: metadata.description,
         tags: metadata.tags.join(', ')
@@ -2370,8 +2371,8 @@ ${uniqueTitles}
       const totalDuration = uniqueSongs.reduce((sum, song) => sum + (song.duration || 0), 0);
       
       const metadata = await youtubeMetadataGenerator.generate({
-        title: lang === 'korean' ? `음악 모음집 ${uniqueSongs.length}곡` : `Music Collection ${uniqueSongs.length} tracks`,
-        lyrics: uniqueSongs.map(s => s.title).join(', '),
+        title: uniqueSongs[0]?.title || 'New Music',
+        lyrics: uniqueSongs.map(s => s.lyrics || '').join('\n'),
         style: musicStyle,
         genre: parsedStyle.genreCategory || 'pop',
         mood: (parsedStyle.moods && parsedStyle.moods[0]) || 'chill',
@@ -2634,242 +2635,6 @@ router.post('/upgrade-image', async (req, res) => {
 });
 
 // 📊 앨범 메타데이터 생성 API
-router.post('/generate-album-metadata', async (req, res) => {
-  try {
-    const { songs, style } = req.body;
-    
-    if (!songs || songs.length === 0) {
-      return res.status(400).json({ error: '선택된 곡이 없습니다' });
-    }
-    
-    console.log(`📊 메타데이터 생성 시작: ${songs.length}곡, 스타일: ${style}`);
-    
-    // 모든 가사 수집
-    const allLyrics = songs.map((song, i) => `곡 ${i + 1}: ${song.title}\n${song.lyrics || ''}`).join('\n\n');
-    const allTitles = songs.map(s => s.title).join(', ');
-    
-    // LLM으로 메타데이터 생성
-    const response = await axios.post(
-      'https://api.genspark.ai/v1/llm/openai/chat/completions',
-      {
-        model: 'gpt-5-turbo',
-        messages: [
-          {
-            role: 'system',
-            content: '당신은 전문 음악 마케팅 전문가입니다. 앨범 메타데이터를 생성할 때, 주어진 "스타일" 정보는 참고용 기술 정보이며, 이를 그대로 제목에 사용하지 않습니다. 대신 곡 제목과 가사를 분석하여 감성적이고 매력적인 앨범명과 유튜브 제목을 만듭니다.'
-          },
-          {
-            role: 'user',
-            content: `🎯 **OOOffi 스타일 YouTube 최적화 메타데이터 생성**
-
-다음 ${songs.length}곡으로 구성된 앨범의 메타데이터를 생성해주세요:
-
-**곡 목록**: ${allTitles}
-**음악 스타일**: ${style || '다양한 장르'}
-
-**가사 샘플**:
-${allLyrics.substring(0, 1000)}...
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-📊 **OOOffi 채널 성공 분석 (18.1K 구독자, 최고 793K 조회수)**
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-### 🔥 **히트 제목 패턴 (필수 적용!)**
-
-**패턴 1: 즉각 감정 유도형** (최고 793K 조회수)
-"듣는 순간 [감정/효과]하게 만드는 노래 [이모지] [용도/분위기] [이모지]"
-
-예시:
-✅ "듣는 순간 봄이 느껴지는 노래🌸 완벽한 카페 플레이리스트☕"
-✅ "듣는 순간 집중되는 음악💚 공부할 때 듣기 좋은 로파이🎧"
-✅ "듣는 순간 기분이 좋아지는 노래☀ 아침에 듣기 좋은 팝🌿"
-
-**패턴 2: 시간/상황 공감형** (650K 조회수)
-"[시간/계절] [감정] [용도] [이모지] [장르] [이모지]"
-
-예시:
-✅ "봄날 아침 카페 분위기🌸 기분 좋아지는 로파이☕"
-✅ "집중력 UP 공부할 때 듣기 좋은 음악📚 로파이 힙합🎧"
-✅ "운동할 때 에너지 폭발💪 헬스장 필수 플레이리스트🔥"
-
-**패턴 3: 감탄/공감형** (344K 조회수)
-"[감탄] [공감 표현] [이모지] [효과/결과] [이모지]"
-
-예시:
-✅ "와 이 노래 진짜 좋은데...🥹 마법같은 플레이리스트✨"
-✅ "첫 소절부터 소름...🥹 오늘 꼭 들어야 할 노래🎵"
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-📝 **제목 생성 규칙 (필수!)**
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-1. **감정 동사 사용** (매우 중요!)
-   - ✅ "듣는 순간", "지금 바로", "오늘 꼭"
-   - ✅ "~하게 만드는", "~해지는", "~UP"
-   - ❌ "~모음", "~컬렉션", "~외 N곡" (이런 단어 절대 금지!)
-
-2. **이모지 필수 3-5개**
-   - 감정: 🥹 😭 💚 🩵 ✨ 💫
-   - 계절/자연: 🌸 🌷 🌿 ☀ 🌳
-   - 용도: 🎧 📚 💪 ☕ 🚲
-   - 장소: 🗽 🇫🇷 🌃
-
-3. **구체적 상황/효과 명시**
-   - ✅ "집중력 UP", "기분 좋아지는", "에너지 폭발"
-   - ✅ "완벽한 카페 플레이리스트", "공부할 때 듣기 좋은"
-   - ❌ 추상적 표현 금지
-
-4. **제목 길이**: 40-70자 (한글 기준)
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-📋 **생성 요구사항**
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-1. **앨범명**:
-   - 영어: 감성적 영어 제목 (예: "Whispers of Spring", "Morning Energy")
-   - 한글: 간결한 한국어 제목 (예: "봄날의 속삭임", "아침의 에너지")
-
-2. **YouTube 제목** (🔥 가장 중요!):
-   - **한글**: OOOffi 패턴 중 하나를 **창의적으로 변형** 사용! (40-70자)
-     * 패턴 1: "듣는 순간 [감정]하게 만드는 노래 [이모지] [용도] [이모지]"
-     * 패턴 2: "[시간/계절] [감정] [용도] [이모지] [장르] [이모지]"
-     * 패턴 3: "[감탄] [공감] [이모지] [효과] [이모지]"
-     * 패턴 4-10: 위 패턴들을 자유롭게 조합하고 변형하여 매번 새로운 제목 생성
-   - **영어**: 동일한 패턴을 영어로 (Vary the pattern each time)
-
-3. **YouTube 설명**:
-   - 감성적 소개 (2-3줄)
-   - 수록곡 목록 (타임스탬프 형식 권장)
-   - 용도/상황 설명
-   - 태그 라인
-
-4. **태그**: SEO 최적화된 한글 태그 10개
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎯 **응답 형식** (JSON)
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-{
-  "albumNameEn": "Spring Whispers",
-  "albumNameKo": "봄날의 속삭임",
-  "youtubeTitleKo": "듣는 순간 봄이 느껴지는 노래🌸 완벽한 카페 플레이리스트☕ 로파이 ${songs.length}곡 🎧",
-  "youtubeTitleEn": "Songs that make you feel spring instantly🌸 Perfect cafe playlist☕ ${songs.length} lofi tracks🎧",
-  "youtubeDescription": "[감성적 소개 2-3줄]\n\n수록곡:\n00:00 ${songs[0]?.title || '첫곡'}\n[시간] 곡제목2\n...\n\n[용도/상황 설명]\n\n#로파이 #카페음악 #집중음악",
-  "tags": "로파이, 카페음악, 집중음악, 공부할때듣는노래, 봄노래, 감성음악, 힐링음악, 플레이리스트, 작업음악, 배경음악"
-}
-
-⚠️ **중요**: YouTube 제목은 OOOffi 3가지 패턴을 **기반으로 하되 매번 다르게 변형**하고, 이모지 3-5개 포함, 감정 동사 사용!
-🎲 **창의성 필수**: 같은 가사/스타일이라도 매번 완전히 다른 표현과 조합으로 생성하세요!`
-          }
-        ],
-        temperature: 0.95,  // 0.8 → 0.95로 증가 (더 다양한 메타데이터 생성)
-        max_tokens: 1000
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.GENSPARK_API_KEY || ''}`
-        }
-      }
-    );
-    
-    const content = response.data.choices[0].message.content.trim();
-    console.log('🤖 LLM 응답 (원본):', content.substring(0, 500) + '...');
-    
-    // JSON 파싱
-    let metadata;
-    try {
-      // JSON 블록 추출
-      const jsonMatch = content.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        metadata = JSON.parse(jsonMatch[0]);
-        
-        // 🔍 SEO 최적화: 제목 앞에 장르 키워드 추가
-        const seoKeywords = {
-          'Lo-fi': 'Lofi Hip Hop',
-          'Lofi': 'Lofi Hip Hop',
-          'Study': 'Study Music',
-          'R&B': 'R&B',
-          'Pop': 'Pop Music',
-          'Jazz': 'Jazz Music',
-          'Cafe': 'Cafe Music',
-          'Workout': 'Workout Music',
-          'Chill': 'Chill Music',
-          'Relax': 'Relaxing Music'
-        };
-        
-        // 스타일에서 키워드 추출
-        let seoKeyword = '';
-        for (const [key, value] of Object.entries(seoKeywords)) {
-          if (style?.includes(key)) {
-            seoKeyword = value;
-            break;
-          }
-        }
-        
-        // SEO 키워드가 없으면 기본값
-        if (!seoKeyword) seoKeyword = 'Music';
-        
-        // 제목 앞에 SEO 키워드 추가 (아직 없으면)
-        if (metadata.youtubeTitleKo && !metadata.youtubeTitleKo.includes(seoKeyword)) {
-          metadata.youtubeTitleKo = `${seoKeyword} - ${metadata.youtubeTitleKo}`;
-        }
-        if (metadata.youtubeTitleEn && !metadata.youtubeTitleEn.toLowerCase().includes(seoKeyword.toLowerCase())) {
-          metadata.youtubeTitleEn = `${seoKeyword} - ${metadata.youtubeTitleEn}`;
-        }
-        
-        console.log('✅ JSON 파싱 성공 + SEO 최적화:', {
-          seoKeyword,
-          albumNameKo: metadata.albumNameKo,
-          albumNameEn: metadata.albumNameEn,
-          youtubeTitleKo: metadata.youtubeTitleKo,
-          youtubeTitleEn: metadata.youtubeTitleEn
-        });
-      } else {
-        throw new Error('JSON 형식이 아님');
-      }
-    } catch (parseError) {
-      console.warn('⚠️  LLM 응답 파싱 실패, 폴백 사용:', parseError);
-      // 🔥 OOOffi 스타일 폴백 메타데이터
-      const styleKeyword = style?.includes('Lo-Fi') ? '로파이' : 
-                          style?.includes('R&B') ? 'R&B' : 
-                          style?.includes('Pop') ? '팝' : '감성 음악';
-      
-      metadata = {
-        albumNameEn: `Feel Good Instantly Collection`,
-        albumNameKo: `듣는 순간 시리즈`,
-        // 🎯 OOOffi 패턴 1: 즉각 감정 유도형
-        youtubeTitleKo: `듣는 순간 기분이 좋아지는 노래✨ 완벽한 플레이리스트🎧 ${styleKeyword} ${songs.length}곡💚`,
-        youtubeTitleEn: `Songs that make you feel good instantly✨ Perfect playlist🎧 ${songs.length} ${styleKeyword} tracks💚`,
-        youtubeDescription: `듣는 순간 기분이 좋아지는 특별한 플레이리스트입니다.\n매일의 일상이 특별해지는 음악과 함께하세요! 🎵\n\n수록곡:\n${songs.map((s, i) => `${i + 1}. ${s.title}`).join('\n')}\n\n☕ 카페에서, 📚 공부할 때, 💪 운동할 때\n언제 어디서나 당신의 순간을 더 특별하게 만들어줍니다.\n\n#${styleKeyword} #플레이리스트 #감성음악 #힐링`,
-        tags: `${styleKeyword}, 듣기좋은노래, 감성음악, 플레이리스트, 힐링음악, 카페음악, 집중음악, 공부할때듣는노래, 작업음악, 배경음악`
-      };
-    }
-    
-    console.log('✅ 메타데이터 생성 완료:', metadata);
-    res.json(metadata);
-    
-  } catch (error) {
-    console.error('❌ 메타데이터 생성 오류:', error);
-    // 에러 시 폴백 메타데이터
-    const songs = req.body.songs || [];
-    const style = req.body.style || '음악';
-    // 🔥 OOOffi 스타일 에러 폴백
-    const styleKeyword = style?.includes('Lo-Fi') ? '로파이' : 
-                        style?.includes('R&B') ? 'R&B' : 
-                        style?.includes('Pop') ? '팝' : '음악';
-    
-    res.json({
-      albumNameEn: `Feel Good Music Collection`,
-      albumNameKo: `기분 좋은 플레이리스트`,
-      // 🎯 OOOffi 패턴 2: 시간/상황형
-      youtubeTitleKo: `지금 바로 듣고 싶은 노래🎧 ${songs.length}곡 플레이리스트💚 ${styleKeyword}✨`,
-      youtubeTitleEn: `Songs you want to listen to right now🎧 ${songs.length} tracks playlist💚 ${styleKeyword}✨`,
-      youtubeDescription: `지금 이 순간에 딱 맞는 특별한 플레이리스트입니다.\n\n수록곡:\n${songs.map((s, i) => `${i + 1}. ${s.title}`).join('\n')}\n\n🎵 언제 어디서나 당신의 순간을 더 특별하게!\n\n#${styleKeyword} #플레이리스트 #감성음악`,
-      tags: `${styleKeyword}, 플레이리스트, 듣기좋은노래, 감성음악, 힐링, 카페음악, 작업음악, 배경음악, 공부음악, 집중음악`
-    });
-  }
-});
 
 /**
  * 🎨 이미지 업스케일 API

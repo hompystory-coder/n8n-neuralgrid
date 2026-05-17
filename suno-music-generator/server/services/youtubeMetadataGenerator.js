@@ -673,23 +673,19 @@ ${musicEmoji} More Playlists
       // 제목 오타 수정
       const cleanTitle = this._fixTypos(track.title || `Track ${index + 1}`);
       
-      return `${timestamp} - ${cleanTitle}`;
+      return `${timestamp} ${cleanTitle}`;
     });
     
     const totalDuration = this._formatTimestamp(currentTime);
     const trackCount = tracks.length;
     
-    return `
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-■ Tracklist
+    return `━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 Tracklist (${trackCount} track${trackCount > 1 ? 's' : ''} • ${totalDuration})
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ${tracklistLines.join('\n')}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-● Total Duration: ${totalDuration} (${trackCount} track${trackCount > 1 ? 's' : ''})
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-`;
+━━━━━━━━━━━━━━━━━━━━━━━━━━`;
   }
 
   /**
@@ -772,14 +768,12 @@ ${tracklistLines.join('\n')}
     // 해시태그 정리
     const cleanDescription = this._cleanHashtags(description);
     
+    // 간결하게 트랙리스트만 추가
     return `${cleanDescription}
 
 ${tracklist}
 
-🎵 이 플레이리스트는 ${tracks.length}곡으로 구성되어 있으며,
-총 재생시간은 ${this._formatTimestamp(totalDuration)}입니다.
-
-완벽한 BGM으로 즐거운 시간 되세요! 🎧`;
+🎧 구독하고 매주 새로운 음악을 만나보세요!`;
   }
 }
 
