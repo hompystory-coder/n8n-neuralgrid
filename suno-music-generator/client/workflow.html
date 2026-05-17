@@ -2021,6 +2021,10 @@
                                 <span>💾</span>
                                 <span>다운로드</span>
                             </button>
+                            <button class="btn-action" onclick="generateThumbnail()">
+                                <span>🦔</span>
+                                <span>썸네일 생성</span>
+                            </button>
                             <button class="btn-action" onclick="shareMusic()">
                                 <span>🔗</span>
                                 <span>공유하기</span>
@@ -2033,6 +2037,17 @@
                                 <span>🎬</span>
                                 <span>다음 단계</span>
                             </button>
+                        </div>
+                        
+                        <!-- 🦔 썸네일 결과 (썸네일 생성 후 표시) -->
+                        <div id="thumbnailResult" style="display: none; margin-top: 24px; padding: 20px; background: rgba(72, 209, 204, 0.05); border-radius: 12px; border: 1px solid rgba(72, 209, 204, 0.2);">
+                            <h4 style="color: #48d1cc; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                                <span>🦔</span>
+                                <span>생성된 썸네일</span>
+                            </h4>
+                            <div id="thumbnailGallery" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+                                <!-- 썸네일 이미지들이 여기에 표시됩니다 -->
+                            </div>
                         </div>
                     </div>
 
@@ -4415,6 +4430,153 @@ ${lyrics}
                 
                 // 진행률 리셋
                 updateGenerationStatus('queue', '준비 중...', 0);
+            }
+        }
+        
+        // 🦔 썸네일 생성
+        async function generateThumbnail() {
+            try {
+                // 현재 음악 데이터 확인
+                if (!generatedMusicData) {
+                    showNotification('❌ 생성된 음악이 없습니다', 'error');
+                    return;
+                }
+                
+                // 로딩 표시
+                const btn = event.target.closest('button');
+                const originalContent = btn.innerHTML;
+                btn.innerHTML = '<span>⏳</span><span>생성 중...</span>';
+                btn.disabled = true;
+                
+                // 장르 추출 (스타일에서)
+                let genre = 'lofi'; // 기본값
+                if (window.styleData && window.styleData.style) {
+                    const style = window.styleData.style.toLowerCase();
+                    if (style.includes('hip hop') || style.includes('hiphop')) {
+                        genre = 'hip hop';
+                    } else if (style.includes('jazz')) {
+                        genre = 'jazz';
+                    } else if (style.includes('chill')) {
+                        genre = 'chill';
+                    } else if (style.includes('lofi') || style.includes('lo-fi')) {
+                        genre = 'lofi';
+                    }
+                }
+                
+                console.log('🦔 썸네일 생성 시작:', { genre });
+                
+                // API 호출
+                const response = await fetch('/api/music/generate-thumbnail', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        genre: genre,
+                        mood: 'calm',
+                        count: 3  // 3개 변형 생성
+                    })
+                });
+                
+                const result = await response.json();
+                
+                // 버튼 복원
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+                
+                if (!result.success) {
+                    throw new Error(result.error || '썸네일 생성 실패');
+                }
+                
+                console.log('✅ 썸네일 생성 완료:', result.thumbnails.length);
+                
+                // 썸네일 결과 표시
+                const thumbnailResult = document.getElementById('thumbnailResult');
+                const thumbnailGallery = document.getElementById('thumbnailGallery');
+                
+                // 갤러리 내용 생성
+                thumbnailGallery.innerHTML = result.thumbnails.map((thumb, index) => `
+                    <div style="
+                        background: rgba(0,0,0,0.3);
+                        border-radius: 12px;
+                        overflow: hidden;
+                        border: 1px solid rgba(72, 209, 204, 0.3);
+                        transition: all 0.3s;
+                        cursor: pointer;
+                    " 
+                    onmouseover="this.style.transform='translateY(-4px)'; this.style.borderColor='rgba(72, 209, 204, 0.6)';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(72, 209, 204, 0.3)';"
+                    onclick="window.open('${thumb.url}', '_blank')">
+                        <img src="${thumb.url}" alt="${thumb.name}" style="width: 100%; height: auto; display: block;">
+                        <div style="padding: 12px;">
+                            <h5 style="margin: 0 0 8px 0; color: #48d1cc; font-size: 0.9em;">
+                                ${thumb.name || `썸네일 ${index + 1}`}
+                            </h5>
+                            <p style="margin: 0; color: rgba(255,255,255,0.6); font-size: 0.8em;">
+                                ${thumb.scenario || ''}
+                            </p>
+                            <button onclick="event.stopPropagation(); downloadThumbnail('${thumb.url}', '${thumb.name || 'thumbnail'}')" 
+                                style="
+                                    margin-top: 8px;
+                                    width: 100%;
+                                    padding: 8px;
+                                    background: rgba(72, 209, 204, 0.2);
+                                    border: 1px solid rgba(72, 209, 204, 0.4);
+                                    color: #48d1cc;
+                                    border-radius: 6px;
+                                    cursor: pointer;
+                                    font-size: 0.85em;
+                                    transition: all 0.3s;
+                                "
+                                onmouseover="this.style.background='rgba(72, 209, 204, 0.3)'"
+                                onmouseout="this.style.background='rgba(72, 209, 204, 0.2)'">
+                                💾 다운로드
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // 결과 섹션 표시
+                thumbnailResult.style.display = 'block';
+                
+                // 성공 알림
+                showNotification(`✅ ${result.thumbnails.length}개의 썸네일이 생성되었습니다!`, 'success');
+                
+                // 썸네일 섹션으로 스크롤
+                thumbnailResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                
+            } catch (error) {
+                console.error('❌ 썸네일 생성 오류:', error);
+                showNotification('❌ 썸네일 생성 중 오류가 발생했습니다: ' + error.message, 'error');
+                
+                // 버튼 복원
+                const btn = event.target.closest('button');
+                if (btn) {
+                    btn.innerHTML = '<span>🦔</span><span>썸네일 생성</span>';
+                    btn.disabled = false;
+                }
+            }
+        }
+        
+        // 썸네일 다운로드
+        async function downloadThumbnail(url, name) {
+            try {
+                const response = await fetch(url);
+                const blob = await response.blob();
+                const downloadUrl = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = `${name.replace(/\s+/g, '_')}_thumbnail.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(downloadUrl);
+                
+                showNotification('✅ 썸네일 다운로드 완료!', 'success');
+            } catch (error) {
+                console.error('다운로드 오류:', error);
+                showNotification('❌ 다운로드 실패', 'error');
             }
         }
         
