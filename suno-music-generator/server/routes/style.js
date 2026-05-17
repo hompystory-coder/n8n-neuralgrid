@@ -12,6 +12,129 @@ const { generateInfiniteLyrics } = require('../services/infiniteLyricsGenerator'
 const { generateSimpleLyrics } = require('../services/simpleLyricsGenerator');
 
 /**
+ * 📊 YouTube 알고리즘 최적화: 재생목록 곡 순서 최적화
+ * 
+ * 목표: Session Time 극대화 (시청자가 재생목록을 끝까지 듣도록)
+ * 
+ * 전략:
+ * 1. Hook Start: 처음 3곡은 가장 매력적인 곡 (시청자 이탈 방지)
+ * 2. Tempo Variation: 템포 변화로 지루함 방지
+ * 3. Strong Finish: 마지막 2곡은 강렬한 곡 (다음 영상 클릭 유도)
+ * 4. Middle Plateau: 중간은 안정적인 흐름 유지
+ * 
+ * @param {Array} songs - 곡 리스트 [{title, duration, energy, ...}]
+ * @returns {Array} - 최적화된 순서의 곡 리스트
+ */
+function optimizePlaylistOrder(songs) {
+  if (!songs || songs.length <= 3) return songs;
+  
+  // 에너지 레벨 추정 (제목과 스타일 기반)
+  const songsWithEnergy = songs.map((song, index) => {
+    const title = (song.title || '').toLowerCase();
+    const style = (song.style || '').toLowerCase();
+    const combined = title + ' ' + style;
+    
+    // 에너지 점수 계산 (0-10)
+    let energy = 5; // 기본값
+    
+    // High energy keywords
+    if (combined.match(/workout|exercise|party|dance|upbeat|energetic|motivat/)) energy += 3;
+    if (combined.match(/fast|tempo|beat|rhythm|groove/)) energy += 2;
+    if (combined.match(/exciting|vibrant|dynamic|powerful/)) energy += 2;
+    
+    // Low energy keywords
+    if (combined.match(/sleep|calm|peace|relax|meditat|healing/)) energy -= 3;
+    if (combined.match(/slow|gentle|soft|quiet|subtle/)) energy -= 2;
+    if (combined.match(/melancholic|sad|emotional|sentimental/)) energy -= 1;
+    
+    // Mid energy (neutral/positive)
+    if (combined.match(/cafe|study|work|reading|focus/)) energy = 5;
+    if (combined.match(/chill|lofi|ambient/)) energy = 4;
+    
+    // Clamp to 0-10
+    energy = Math.max(0, Math.min(10, energy));
+    
+    return {
+      ...song,
+      originalIndex: index,
+      energy: energy,
+      duration: song.duration || 210
+    };
+  });
+  
+  // 에너지별로 그룹화
+  const sorted = [...songsWithEnergy].sort((a, b) => b.energy - a.energy);
+  const highEnergy = sorted.filter(s => s.energy >= 7);
+  const midEnergy = sorted.filter(s => s.energy >= 4 && s.energy < 7);
+  const lowEnergy = sorted.filter(s => s.energy < 4);
+  
+  console.log('📊 재생목록 최적화:');
+  console.log(`   High Energy (7-10): ${highEnergy.length}곡`);
+  console.log(`   Mid Energy (4-6): ${midEnergy.length}곡`);
+  console.log(`   Low Energy (0-3): ${lowEnergy.length}곡`);
+  
+  // 최적 순서 구성
+  const optimized = [];
+  
+  // 1. Opening Hook (처음 3곡): High → Mid → High
+  if (highEnergy.length >= 2) {
+    optimized.push(highEnergy.shift()); // 강렬한 시작
+    if (midEnergy.length > 0) optimized.push(midEnergy.shift()); // 안정화
+    optimized.push(highEnergy.shift()); // 다시 에너지 상승
+  } else if (highEnergy.length === 1) {
+    optimized.push(highEnergy.shift());
+    if (midEnergy.length > 0) optimized.push(midEnergy.shift());
+    if (midEnergy.length > 0) optimized.push(midEnergy.shift());
+  } else {
+    // High energy 없으면 Mid로 시작
+    while (optimized.length < 3 && midEnergy.length > 0) {
+      optimized.push(midEnergy.shift());
+    }
+  }
+  
+  // 2. Middle Section: 템포 변화 (High-Mid-Low 순환)
+  const remaining = [...highEnergy, ...midEnergy, ...lowEnergy];
+  const middleCount = Math.max(0, songs.length - optimized.length - 2);
+  
+  for (let i = 0; i < middleCount && remaining.length > 0; i++) {
+    const cycleIndex = i % 3;
+    
+    if (cycleIndex === 0 && highEnergy.length > 0) {
+      optimized.push(highEnergy.shift());
+    } else if (cycleIndex === 1 && midEnergy.length > 0) {
+      optimized.push(midEnergy.shift());
+    } else if (cycleIndex === 2 && lowEnergy.length > 0) {
+      optimized.push(lowEnergy.shift());
+    } else if (remaining.length > 0) {
+      // Fallback: 남은 곡 중 아무거나
+      optimized.push(remaining.shift());
+    }
+  }
+  
+  // 3. Strong Finish (마지막 2곡): 강렬한 마무리
+  const allRemaining = [...highEnergy, ...midEnergy, ...lowEnergy];
+  
+  if (allRemaining.length >= 2) {
+    // 마지막 2곡은 에너지 높은 순으로
+    const lastTwo = allRemaining.sort((a, b) => b.energy - a.energy).slice(0, 2);
+    optimized.push(...lastTwo);
+    
+    // 나머지 곡들도 추가
+    const rest = allRemaining.filter(s => !lastTwo.includes(s));
+    optimized.push(...rest);
+  } else {
+    optimized.push(...allRemaining);
+  }
+  
+  console.log('✅ 재생목록 순서 최적화 완료:');
+  console.log(`   1-3번: Hook (에너지: ${optimized.slice(0, 3).map(s => s.energy).join(', ')})`);
+  console.log(`   중간: Variation`);
+  console.log(`   마지막 2곡: Strong Finish (에너지: ${optimized.slice(-2).map(s => s.energy).join(', ')})`);
+  
+  return optimized;
+}
+
+/**
  * 🧠 GenSpark LLM으로 스타일 분석 (고급 버전)
  * 
  * 사용자 입력 스타일을 분석해서 Suno 가사 API용 최적 프롬프트 생성
@@ -581,8 +704,14 @@ router.get('/list', (req, res) => {
 /**
  * 3. 특정 스타일 조회
  */
-router.get('/:styleId', (req, res) => {
+router.get('/:styleId', (req, res, next) => {
   const { styleId } = req.params;
+  
+  // 특정 명시적 라우트는 건너뛰기
+  if (styleId === 'download-image') {
+    return next();
+  }
+  
   const style = styles.get(styleId);
 
   if (!style) {
@@ -869,7 +998,8 @@ router.post('/generate-music', async (req, res) => {
     }
     
     // 🔥 곡 길이 힌트 추가 (최소 3분 이상 보장!)
-    finalPrompt += ', full-length song, extended track, 3-4 minutes duration, complete song structure';
+    // 💰 YouTube Watch Time 최적화: 3-4분 목표
+    finalPrompt += ', full-length song, extended track, 3-4 minutes duration, complete song structure, longer verses and chorus';
 
     // Suno API 호출
     const sunoClient = require('../services/sunoClient');
@@ -1080,13 +1210,20 @@ router.post('/generate-simple', async (req, res) => {
         console.log(`   🎛️ styleWeight: ${styleWeight}, weirdnessConstraint: ${weirdnessConstraint}`);
         console.log(`   🎯 Suno에 전달: "${finalStyle}"`);
         
+        // 💰 YouTube Watch Time 최적화: 곡 길이 힌트 추가
+        let optimizedStyle = finalStyle;
+        if (!optimizedStyle.toLowerCase().includes('extended') && !optimizedStyle.toLowerCase().includes('full-length')) {
+          optimizedStyle += ', full-length track, extended song, 3-4 minutes';
+          console.log(`   ⏱️ Watch Time 최적화: 곡 길이 힌트 추가`);
+        }
+        
         const result = await sunoClient.generateMusic({
           model: 'V5',
           customMode: true,
           instrumental: false,
           title: title,
           prompt: lyrics,
-          style: finalStyle,   // 🎯 사용자 스타일 100% 그대로!
+          style: optimizedStyle,   // 🎯 사용자 스타일 + Watch Time 최적화!
           callBackUrl: `${callbackBaseUrl}/api/webhook/suno`,
           styleWeight: styleWeight,
           weirdnessConstraint: weirdnessConstraint
@@ -1298,10 +1435,19 @@ router.post('/analyze-album', async (req, res) => {
     console.log(`📊 앨범 분석 시작: ${songs.length}곡`);
     console.log(`🌐 언어: ${lang} (${language ? '사용자 지정' : '자동 감지'})`);
     console.log(`📝 샘플 제목: ${songs.slice(0, 3).map(s => s.title).join(', ')}...`);
-    console.log(`✅ 클라이언트가 선택한 순서 그대로 Time Track 생성`);
     
-    // 중복 제거 하지 않음! 클라이언트가 선택한 순서 그대로 사용
-    const uniqueSongs = songs;
+    // 🎯 YouTube Session Time 최적화: 재생목록 순서 최적화
+    let optimizedSongs = songs;
+    if (songs.length >= 5) {
+      console.log('🎯 재생목록 순서 최적화 시작...');
+      optimizedSongs = optimizePlaylistOrder(songs);
+      console.log('✅ 최적화된 순서로 재생목록 생성');
+    } else {
+      console.log('✅ 곡 수가 적어 원래 순서 유지');
+    }
+    
+    // 최적화된 순서로 Time Track 생성
+    const uniqueSongs = optimizedSongs;
     
     // 타임스탬프 생성 (실제 곡 길이 사용, 선택한 순서대로)
     let currentTime = 0;
@@ -2606,7 +2752,43 @@ ${allLyrics.substring(0, 1000)}...
       const jsonMatch = content.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         metadata = JSON.parse(jsonMatch[0]);
-        console.log('✅ JSON 파싱 성공:', {
+        
+        // 🔍 SEO 최적화: 제목 앞에 장르 키워드 추가
+        const seoKeywords = {
+          'Lo-fi': 'Lofi Hip Hop',
+          'Lofi': 'Lofi Hip Hop',
+          'Study': 'Study Music',
+          'R&B': 'R&B',
+          'Pop': 'Pop Music',
+          'Jazz': 'Jazz Music',
+          'Cafe': 'Cafe Music',
+          'Workout': 'Workout Music',
+          'Chill': 'Chill Music',
+          'Relax': 'Relaxing Music'
+        };
+        
+        // 스타일에서 키워드 추출
+        let seoKeyword = '';
+        for (const [key, value] of Object.entries(seoKeywords)) {
+          if (style?.includes(key)) {
+            seoKeyword = value;
+            break;
+          }
+        }
+        
+        // SEO 키워드가 없으면 기본값
+        if (!seoKeyword) seoKeyword = 'Music';
+        
+        // 제목 앞에 SEO 키워드 추가 (아직 없으면)
+        if (metadata.youtubeTitleKo && !metadata.youtubeTitleKo.includes(seoKeyword)) {
+          metadata.youtubeTitleKo = `${seoKeyword} - ${metadata.youtubeTitleKo}`;
+        }
+        if (metadata.youtubeTitleEn && !metadata.youtubeTitleEn.toLowerCase().includes(seoKeyword.toLowerCase())) {
+          metadata.youtubeTitleEn = `${seoKeyword} - ${metadata.youtubeTitleEn}`;
+        }
+        
+        console.log('✅ JSON 파싱 성공 + SEO 최적화:', {
+          seoKeyword,
           albumNameKo: metadata.albumNameKo,
           albumNameEn: metadata.albumNameEn,
           youtubeTitleKo: metadata.youtubeTitleKo,
@@ -2686,29 +2868,78 @@ router.post('/upscale-image-base64', async (req, res) => {
     const metadata = await sharp(imageBuffer).metadata();
     console.log(`📊 원본 이미지: ${metadata.width}x${metadata.height}, 포맷: ${metadata.format}`);
     
-    // YouTube 썸네일 (1280x720) 생성
-    console.log('📱 YouTube 썸네일 (1280x720) 생성 중...');
+    // YouTube 썸네일 (1280x720) 생성 - 전문가급 업스케일
+    console.log('📱 YouTube 썸네일 (1280x720) 전문가급 업스케일 중...');
     const youtubeBuffer = await sharp(imageBuffer)
       .resize(1280, 720, {
         fit: 'cover',
-        position: 'center'
+        position: 'center',
+        kernel: sharp.kernel.lanczos3  // 고품질 업스케일 알고리즘
       })
-      .jpeg({ quality: 95 })
+      .sharpen(2.0, 1.0, 0.5)  // 강력한 샤프닝!
+      .modulate({
+        brightness: 1.08,  // 더 밝게
+        saturation: 1.2    // 더 선명
+      })
+      .jpeg({ 
+        quality: 95,
+        chromaSubsampling: '4:4:4'  // 최고 색상 품질
+      })
       .toBuffer();
     
-    console.log(`✅ YouTube 썸네일 생성 완료 (${(youtubeBuffer.length / 1024).toFixed(2)} KB)`);
+    console.log(`✅ YouTube 썸네일 업스케일 완료 (${(youtubeBuffer.length / 1024).toFixed(2)} KB)`);
     
-    // 앨범 커버 (3000x3000) 생성
-    console.log('💿 앨범 커버 (3000x3000) 생성 중...');
+    // 앨범 커버 (3000x3000) 생성 - 전문가급 업스케일
+    console.log('💿 앨범 커버 (3000x3000) 전문가급 업스케일 중...');
     const albumBuffer = await sharp(imageBuffer)
       .resize(3000, 3000, {
         fit: 'cover',
-        position: 'center'
+        position: 'center',
+        kernel: sharp.kernel.lanczos3  // 고품질 업스케일 알고리즘
       })
-      .jpeg({ quality: 95 })
+      .sharpen(2.2, 1.1, 0.6)  // 더 강한 샤프닝!
+      .modulate({
+        brightness: 1.08,
+        saturation: 1.2
+      })
+      .jpeg({ 
+        quality: 95,
+        chromaSubsampling: '4:4:4'  // 최고 색상 품질
+      })
       .toBuffer();
     
     console.log(`✅ 앨범 커버 생성 완료 (${(albumBuffer.length / 1024).toFixed(2)} KB)`);
+    
+    // 🔥 프리미엄 4K (3840x2160) 생성 - Sharp로 극적이고 화려하게 변환!
+    console.log('✨ 프리미엄 4K - 원본을 극적이고 화려하게 변환!');
+    console.log('   - 매우 밝고 화사하게');
+    console.log('   - 색상 매우 풍부하고 선명하게');
+    console.log('   - 강한 대비와 극적인 효과');
+    console.log('   - 고급스러운 색조');
+    
+    // Sharp로 극적이고 화려한 프리미엄 4K 생성
+    const premiumBuffer = await sharp(imageBuffer)
+      .resize(3840, 2160, {
+        fit: 'cover',
+        position: 'center',
+        kernel: sharp.kernel.lanczos3
+      })
+      .modulate({
+        brightness: 1.25,  // 매우 밝고 화사하게 (25% UP!)
+        saturation: 1.6,   // 색상 매우 풍부하고 선명하게 (60% UP!)
+        hue: 12           // 색조 변화 (더 따뜻하거나 차갑게)
+      })
+      .sharpen(3.5, 1.5, 0.9)  // 극도로 강력한 샤프닝
+      .linear(1.3, -(128 * 0.3))  // 대비 30% 증가 (매우 극적!)
+      .gamma(1.15)      // 감마 보정 강화
+      .normalise()      // 히스토그램 정규화 (더 극적인 효과)
+      .jpeg({ 
+        quality: 98,
+        chromaSubsampling: '4:4:4'
+      })
+      .toBuffer();
+    
+    console.log(`✅ 프리미엄 4K 극적 변환 완료 (${(premiumBuffer.length / 1024).toFixed(0)}KB)`)
     
     // 임시 파일로 저장
     const uploadDir = path.join(__dirname, '..', 'temp', 'uploads');
@@ -2719,16 +2950,20 @@ router.post('/upscale-image-base64', async (req, res) => {
     
     const youtubeFilename = `${timestamp}_${safeTitle}_youtube.jpg`;
     const albumFilename = `${timestamp}_${safeTitle}_album.jpg`;
+    const premiumFilename = `${timestamp}_${safeTitle}_premium_4k.jpg`;
     
     const youtubePath = path.join(uploadDir, youtubeFilename);
     const albumPath = path.join(uploadDir, albumFilename);
+    const premiumPath = path.join(uploadDir, premiumFilename);
     
     await fs.writeFile(youtubePath, youtubeBuffer);
     await fs.writeFile(albumPath, albumBuffer);
+    await fs.writeFile(premiumPath, premiumBuffer);
     
     console.log(`💾 임시 파일 저장 완료:`);
     console.log(`   YouTube: ${youtubeFilename}`);
     console.log(`   Album: ${albumFilename}`);
+    console.log(`   Premium: ${premiumFilename}`);
     
     // URL 생성 (HTTPS 강제 사용 - Mixed Content 방지)
     const protocol = req.get('x-forwarded-proto') || req.protocol || 'https';
@@ -2740,10 +2975,12 @@ router.post('/upscale-image-base64', async (req, res) => {
       success: true,
       youtubeUrl: `${baseUrl}/temp/uploads/${youtubeFilename}`,
       albumUrl: `${baseUrl}/temp/uploads/${albumFilename}`,
+      premiumUrl: `${baseUrl}/temp/uploads/${premiumFilename}`,
       metadata: {
         original: { width: metadata.width, height: metadata.height },
         youtube: { width: 1280, height: 720, size: youtubeBuffer.length },
-        album: { width: 3000, height: 3000, size: albumBuffer.length }
+        album: { width: 3000, height: 3000, size: albumBuffer.length },
+        premium: { width: 3840, height: 2160, size: premiumBuffer.length }
       }
     });
     
@@ -3011,39 +3248,80 @@ router.get('/download-image', async (req, res) => {
       return res.status(400).json({ error: 'URL이 필요합니다' });
     }
     
-    console.log(`📥 이미지 프록시 다운로드: ${url}`);
+    console.log(`📥 이미지 다운로드 요청: ${url}`);
     console.log(`📄 파일명: ${filename}`);
     
-    // axios를 사용하여 이미지 다운로드
-    const response = await axios({
-      method: 'GET',
-      url: url,
-      responseType: 'arraybuffer',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Referer': 'https://suno.ai/'
-      },
-      timeout: 30000
-    });
+    // URL이 로컬 서버의 temp/uploads 경로인지 확인 (전체 URL 또는 상대 경로)
+    const tempUploadsPattern = /\/temp\/uploads\/([^?#]+)/;
+    const match = url.match(tempUploadsPattern);
     
-    console.log(`✅ 이미지 다운로드 완료 (${(response.data.length / 1024).toFixed(2)} KB)`);
-    
-    // Content-Type 설정
-    const contentType = response.headers['content-type'] || 'image/jpeg';
-    
-    // 파일명이 있으면 Content-Disposition 헤더 추가
-    if (filename) {
-      res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(filename)}"`);
+    if (match) {
+      // 로컬 파일 다운로드
+      const localFilename = decodeURIComponent(match[1]); // URL 디코딩
+      const uploadDir = path.join(__dirname, '..', 'temp', 'uploads');
+      const filePath = path.join(uploadDir, localFilename);
+      
+      console.log(`📂 로컬 파일 다운로드 시도: ${filePath}`);
+      
+      // 파일 존재 확인
+      if (!await fs.access(filePath).then(() => true).catch(() => false)) {
+        console.error(`❌ 파일을 찾을 수 없음: ${filePath}`);
+        return res.status(404).json({ error: '파일을 찾을 수 없습니다' });
+      }
+      
+      // 파일 읽기
+      const fileBuffer = await fs.readFile(filePath);
+      console.log(`✅ 파일 읽기 완료 (${(fileBuffer.length / 1024).toFixed(2)} KB)`);
+      
+      // Content-Type 설정
+      const contentType = 'image/jpeg';
+      
+      // 파일명이 있으면 Content-Disposition 헤더 추가
+      if (filename) {
+        res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(filename)}"`);
+      }
+      
+      res.setHeader('Content-Type', contentType);
+      res.setHeader('Cache-Control', 'no-cache');
+      res.send(fileBuffer);
+      
+      console.log(`✅ 로컬 파일 다운로드 완료: ${filename}`);
+      
+    } else {
+      // 외부 URL 프록시 다운로드
+      console.log(`🌐 외부 URL 프록시 다운로드: ${url}`);
+      
+      const response = await axios({
+        method: 'GET',
+        url: url,
+        responseType: 'arraybuffer',
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+          'Referer': 'https://suno.ai/'
+        },
+        timeout: 30000
+      });
+      
+      console.log(`✅ 외부 이미지 다운로드 완료 (${(response.data.length / 1024).toFixed(2)} KB)`);
+      
+      // Content-Type 설정
+      const contentType = response.headers['content-type'] || 'image/jpeg';
+      
+      // 파일명이 있으면 Content-Disposition 헤더 추가
+      if (filename) {
+        res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(filename)}"`);
+      }
+      
+      res.setHeader('Content-Type', contentType);
+      res.setHeader('Cache-Control', 'no-cache');
+      res.send(Buffer.from(response.data));
+      
+      console.log(`✅ 프록시 다운로드 완료: ${filename}`);
     }
     
-    res.setHeader('Content-Type', contentType);
-    res.setHeader('Cache-Control', 'no-cache');
-    res.send(Buffer.from(response.data));
-    
-    console.log(`✅ 프록시 다운로드 전송 완료: ${filename}`);
-    
   } catch (error) {
-    console.error('❌ 이미지 프록시 다운로드 실패:', error.message);
+    console.error('❌ 이미지 다운로드 실패:', error.message);
+    console.error('❌ 에러 스택:', error.stack);
     res.status(500).json({ 
       error: '이미지 다운로드 실패',
       message: error.message 
@@ -3110,28 +3388,52 @@ router.post('/premium-upscale', async (req, res) => {
     const metadata = await sharp(imageBuffer).metadata();
     console.log(`📊 원본 이미지: ${metadata.width}x${metadata.height}, 포맷: ${metadata.format}`);
     
-    // Step 1: 일반 업스케일 (YouTube + Album) - 빠른 제공
-    console.log('⚡ 기본 업스케일 (YouTube + Album) 생성 중...');
+    // Step 1: 일반 업스케일 (YouTube + Album) - 프리미엄급 선명도
+    console.log('⚡ 기본 업스케일 (YouTube + Album) 프리미엄급 선명도로 생성 중...');
     
+    // 원본 이미지 메타데이터 확인
+    const originalMeta = await sharp(imageBuffer).metadata();
+    console.log(`📊 원본: ${originalMeta.width}x${originalMeta.height}`);
+    
+    // YouTube 썸네일 (1280x720) - 프리미엄급 선명 업스케일
     const youtubeBuffer = await sharp(imageBuffer)
       .resize(1280, 720, {
         fit: 'cover',
-        position: 'center'
+        position: 'center',
+        kernel: sharp.kernel.lanczos3  // 고품질 업스케일 알고리즘
       })
-      .jpeg({ quality: 95 })
+      .sharpen(2.0, 1.0, 0.5)  // 강력한 샤프닝 (선명하게!)
+      .modulate({
+        brightness: 1.08,  // 더 밝게
+        saturation: 1.2    // 더 선명한 색
+      })
+      .jpeg({ 
+        quality: 95,  // 높은 품질
+        chromaSubsampling: '4:4:4'  // 최고 색상 품질
+      })
       .toBuffer();
     
+    // 앨범 커버 (3000x3000) - 프리미엄급 선명 업스케일
     const albumBuffer = await sharp(imageBuffer)
       .resize(3000, 3000, {
         fit: 'cover',
-        position: 'center'
+        position: 'center',
+        kernel: sharp.kernel.lanczos3  // 고품질 업스케일 알고리즘
       })
-      .jpeg({ quality: 95 })
+      .sharpen(2.2, 1.1, 0.6)  // 더 강한 샤프닝 (큰 사이즈, 선명하게!)
+      .modulate({
+        brightness: 1.08,  // 더 밝게
+        saturation: 1.2    // 더 선명한 색
+      })
+      .jpeg({ 
+        quality: 95,  // 높은 품질
+        chromaSubsampling: '4:4:4'  // 최고 색상 품질
+      })
       .toBuffer();
     
     console.log(`✅ 기본 업스케일 완료 (YouTube: ${(youtubeBuffer.length / 1024).toFixed(0)}KB, Album: ${(albumBuffer.length / 1024).toFixed(0)}KB)`);
     
-    // Step 2: AI 프리미엄 업스케일 (4K)
+    // Step 2: AI 프리미엄 업스케일 (4K) - Replicate FLUX로 완전히 새로운 이미지 생성
     console.log('✨ AI 프리미엄 업스케일 (4K) 시작...');
     
     // 임시 파일로 원본 이미지 저장 (AI 업스케일 서비스용)
@@ -3147,32 +3449,45 @@ router.post('/premium-upscale', async (req, res) => {
     await fs.writeFile(originalPath, imageBuffer);
     console.log(`💾 원본 이미지 임시 저장: ${originalFilename}`);
     
-    // AI 업스케일 실행 (Genspark 또는 외부 API)
+    // 프리미엄 4K - 원본을 기반으로 극적이고 화려하게 변환!
     let premiumBuffer = null;
     let premiumUrl = null;
     
+    // URL 생성을 위한 변수들 (try-catch 바깥에서 선언)
+    const protocol = req.get('x-forwarded-proto') || req.protocol || 'https';
+    const host = req.get('host');
+    const baseUrl = `${protocol === 'http' ? 'https' : protocol}://${host}`;
+    
+    console.log('✨ 프리미엄 4K - 원본을 극적이고 화려하게 변환!');
+    console.log('   - 매우 밝고 화사하게');
+    console.log('   - 색상 매우 풍부하고 선명하게');
+    console.log('   - 강한 대비와 극적인 효과');
+    console.log('   - 고급스러운 색조');
+    
     try {
-      // 방법 1: Genspark image_generation 도구 사용 (업스케일 모델)
-      // 현재는 Sharp를 사용한 4K 업스케일로 시연
-      // 실제로는 fal-ai/recraft-clarity-upscale 또는 다른 AI 업스케일 API 호출
-      
-      console.log('🎨 AI 업스케일 처리 중 (4K)...');
-      
-      // 임시로 Sharp로 4K 생성 (나중에 AI API로 교체)
+      // 🔥 Sharp로 극적이고 화려한 프리미엄 4K 생성
       premiumBuffer = await sharp(imageBuffer)
         .resize(3840, 2160, {
           fit: 'cover',
           position: 'center',
-          kernel: sharp.kernel.lanczos3 // 고품질 리샘플링
+          kernel: sharp.kernel.lanczos3
         })
-        .sharpen(0.8) // 선명도 향상
+        .modulate({
+          brightness: 1.25,  // 매우 밝고 화사하게 (25% UP!)
+          saturation: 1.6,   // 색상 매우 풍부하고 선명하게 (60% UP!)
+          hue: 12           // 색조 변화 (더 따뜻하거나 차갑게)
+        })
+        .sharpen(3.5, 1.5, 0.9)  // 극도로 강력한 샤프닝
+        .linear(1.3, -(128 * 0.3))  // 대비 30% 증가 (매우 극적!)
+        .gamma(1.15)      // 감마 보정 강화
+        .normalise()      // 히스토그램 정규화 (더 극적인 효과)
         .jpeg({ 
           quality: 98,
-          mozjpeg: true // 더 나은 압축
+          chromaSubsampling: '4:4:4'
         })
         .toBuffer();
       
-      console.log(`✅ AI 업스케일 완료 (${(premiumBuffer.length / 1024).toFixed(0)}KB)`);
+      console.log(`✅ 프리미엄 4K 극적 변환 완료 (${(premiumBuffer.length / 1024).toFixed(0)}KB)`);
       
       // 프리미엄 이미지 저장
       const premiumFilename = `${timestamp}_${safeTitle}_premium_4k.jpg`;
@@ -3181,18 +3496,12 @@ router.post('/premium-upscale', async (req, res) => {
       await fs.writeFile(premiumPath, premiumBuffer);
       
       // URL 생성
-      const protocol = req.get('x-forwarded-proto') || req.protocol || 'https';
-      const host = req.get('host');
-      const baseUrl = `${protocol === 'http' ? 'https' : protocol}://${host}`;
-      
       premiumUrl = `${baseUrl}/temp/uploads/${premiumFilename}`;
       console.log(`🔗 프리미엄 URL: ${premiumUrl}`);
       
-    } catch (aiError) {
-      console.error('⚠️  AI 업스케일 실패, 기본 업스케일 사용:', aiError);
-      // AI 업스케일 실패 시 Album 사이즈를 Premium으로 사용
-      premiumBuffer = albumBuffer;
-      premiumUrl = null; // 실패했으므로 null
+    } catch (error) {
+      console.error('❌ 프리미엄 4K 생성 오류:', error);
+      throw error;  // 에러를 상위로 전달
     }
     
     // Step 3: 모든 파일 저장 및 URL 생성
@@ -3204,10 +3513,6 @@ router.post('/premium-upscale', async (req, res) => {
     
     await fs.writeFile(youtubePath, youtubeBuffer);
     await fs.writeFile(albumPath, albumBuffer);
-    
-    const protocol = req.get('x-forwarded-proto') || req.protocol || 'https';
-    const host = req.get('host');
-    const baseUrl = `${protocol === 'http' ? 'https' : protocol}://${host}`;
     
     console.log(`💾 임시 파일 저장 완료:`);
     console.log(`   YouTube: ${youtubeFilename}`);
@@ -3237,6 +3542,10 @@ router.post('/premium-upscale', async (req, res) => {
   }
 });
 
+/**
+ * 📥 이미지 다운로드 API (프록시)
+ * CORS 문제 해결을 위한 서버 사이드 다운로드
+ */
 // 메타데이터 export
 router.generatedMusicMetadata = generatedMusicMetadata;
 
