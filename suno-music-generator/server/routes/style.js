@@ -2931,65 +2931,47 @@ router.post('/upscale-image-base64', async (req, res) => {
       const imageBase64Str = imageBuffer.toString('base64');
       const imageDataUrl = `data:image/jpeg;base64,${imageBase64Str}`;
       
-      // 음악 스타일에 따른 프롬프트
-      const styleHint = style || 'modern';
-      const stylePrompts = {
-        'ballad': 'emotional cinematic atmosphere, soft romantic glow, dreamy bokeh lights, elegant composition',
-        'hiphop': 'urban street style, neon lights, dynamic energy, vibrant city atmosphere, bold colors',
-        'jazz': 'sophisticated vintage aesthetic, warm golden lighting, elegant luxurious mood, refined details',
-        'rock': 'dramatic powerful atmosphere, intense lighting, high contrast, bold dynamic energy',
-        'pop': 'bright colorful atmosphere, trendy modern style, vibrant energy, eye-catching visuals',
-        'electronic': 'futuristic neon lights, cyberpunk atmosphere, glowing elements, high-tech aesthetic',
-        'classical': 'elegant refined atmosphere, sophisticated lighting, timeless beauty, artistic composition',
-        'default': 'premium luxurious atmosphere, cinematic lighting, highly detailed, vibrant colors, professional photography quality'
-      };
-      
-      const promptHint = stylePrompts[styleHint] || stylePrompts['default'];
-      const premiumPrompt = `Premium high-quality version, ${promptHint}, enhanced details, rich textures, atmospheric depth, sophisticated color grading, 4K quality, professional composition, visually stunning`;
-      
-      console.log(`📝 프롬프트: ${premiumPrompt.substring(0, 100)}...`);
+      console.log('🎨 Real-ESRGAN - 진짜 AI 업스케일 시작...');
+      console.log(`📏 목표: 360x360 → 3600x3600 (10배)`);
       
       const output = await replicate.run(
-        "black-forest-labs/flux-canny-pro",
+        "nightmareai/real-esrgan",
         {
           input: {
-            control_image: imageDataUrl,
-            prompt: premiumPrompt,
-            output_format: "jpg",
-            output_quality: 95,
-            guidance: 3.5,
-            steps: 30  // Flux Canny Pro uses 'steps' not 'num_inference_steps'
+            image: imageDataUrl,
+            scale: 10,  // 10배 업스케일
+            face_enhance: false  // 얼굴 보정 끄기
           }
         }
       );
       
-      // Flux Pro Canny 출력 다운로드
-      let fluxImageUrl;
+      // Real-ESRGAN 출력 다운로드
+      let esrganImageUrl;
       if (typeof output === 'string') {
-        fluxImageUrl = output;
+        esrganImageUrl = output;
       } else if (typeof output.url === 'function') {
-        fluxImageUrl = await output.url();
+        esrganImageUrl = await output.url();
       } else if (output.url) {
-        fluxImageUrl = output.url;
+        esrganImageUrl = output.url;
       } else if (Array.isArray(output) && output.length > 0) {
-        fluxImageUrl = output[0];
+        esrganImageUrl = output[0];
       } else {
-        throw new Error('Flux Pro Canny 출력 형식을 인식할 수 없습니다');
+        throw new Error('Real-ESRGAN 출력 형식을 인식할 수 없습니다');
       }
       
-      console.log(`✅ Flux Pro Canny 완료: ${fluxImageUrl}`);
+      console.log(`✅ Real-ESRGAN 완료: ${esrganImageUrl}`);
       
-      const fluxResponse = await axios.get(fluxImageUrl, {
+      const esrganResponse = await axios.get(esrganImageUrl, {
         responseType: 'arraybuffer',
         timeout: 60000
       });
       
-      const fluxBuffer = Buffer.from(fluxResponse.data);
-      console.log(`✅ AI 재해석 이미지 다운로드 완료 (${(fluxBuffer.length / 1024).toFixed(0)}KB)`);
+      const esrganBuffer = Buffer.from(esrganResponse.data);
+      console.log(`✅ Real-ESRGAN 이미지 다운로드 완료 (${(esrganBuffer.length / 1024).toFixed(0)}KB)`);
       
       // 🔥 Step 2: Sharp로 극적 효과 적용
       console.log('🎨 Sharp 극적 효과 적용 중...');
-      premiumBuffer = await sharp(fluxBuffer)
+      premiumBuffer = await sharp(esrganBuffer)
         .resize(3840, 2160, {
           fit: 'cover',
           position: 'center',
@@ -3012,7 +2994,7 @@ router.post('/upscale-image-base64', async (req, res) => {
       console.log(`✅ 프리미엄 4K 극적 변환 완료 (${(premiumBuffer.length / 1024).toFixed(0)}KB)`);
       
     } catch (error) {
-      console.error('❌ Flux Pro Canny 실패, Sharp 폴백 사용:', error.message);
+      console.error('❌ Real-ESRGAN 실패, Sharp 폴백 사용:', error.message);
       
       // 폴백: Sharp만 사용
       premiumBuffer = await sharp(imageBuffer)
@@ -3576,64 +3558,47 @@ router.post('/premium-upscale', async (req, res) => {
       
       // 음악 스타일에 따른 프롬프트
       const styleHint = style || 'modern';
-      const stylePrompts = {
-        'ballad': 'emotional cinematic atmosphere, soft romantic glow, dreamy bokeh lights, elegant composition',
-        'hiphop': 'urban street style, neon lights, dynamic energy, vibrant city atmosphere, bold colors',
-        'jazz': 'sophisticated vintage aesthetic, warm golden lighting, elegant luxurious mood, refined details',
-        'rock': 'dramatic powerful atmosphere, intense lighting, high contrast, bold dynamic energy',
-        'pop': 'bright colorful atmosphere, trendy modern style, vibrant energy, eye-catching visuals',
-        'electronic': 'futuristic neon lights, cyberpunk atmosphere, glowing elements, high-tech aesthetic',
-        'classical': 'elegant refined atmosphere, sophisticated lighting, timeless beauty, artistic composition',
-        'default': 'premium luxurious atmosphere, cinematic lighting, highly detailed, vibrant colors, professional photography quality'
-      };
-      
-      const promptHint = stylePrompts[styleHint] || stylePrompts['default'];
-      
-      const premiumPrompt = `Premium high-quality version, ${promptHint}, enhanced details, rich textures, atmospheric depth, sophisticated color grading, 4K quality, professional composition, visually stunning`;
-      
-      console.log(`📝 프롬프트: ${premiumPrompt.substring(0, 100)}...`);
+      console.log('🎨 Real-ESRGAN - 진짜 AI 업스케일 시작...');
+      console.log(`📏 목표: 360x360 → 3600x3600 (10배)`);
       
       const output = await replicate.run(
-        "black-forest-labs/flux-canny-pro",
+        "nightmareai/real-esrgan",
         {
           input: {
-            control_image: imageDataUrl,
-            prompt: premiumPrompt,
-            output_format: "jpg",
-            output_quality: 95,
-            guidance: 3.5,  // 구조 유지 정도 (낮을수록 원본 유지)
-            steps: 30  // Flux Canny Pro uses 'steps' not 'num_inference_steps'
+            image: imageDataUrl,
+            scale: 10,  // 10배 업스케일
+            face_enhance: false  // 얼굴 보정 끄기
           }
         }
       );
       
-      // Flux Pro Canny 출력 다운로드
-      let fluxImageUrl;
+      // Real-ESRGAN 출력 다운로드
+      let esrganImageUrl;
       if (typeof output === 'string') {
-        fluxImageUrl = output;
+        esrganImageUrl = output;
       } else if (typeof output.url === 'function') {
-        fluxImageUrl = await output.url();
+        esrganImageUrl = await output.url();
       } else if (output.url) {
-        fluxImageUrl = output.url;
+        esrganImageUrl = output.url;
       } else if (Array.isArray(output) && output.length > 0) {
-        fluxImageUrl = output[0];
+        esrganImageUrl = output[0];
       } else {
-        throw new Error('Flux Pro Canny 출력 형식을 인식할 수 없습니다');
+        throw new Error('Real-ESRGAN 출력 형식을 인식할 수 없습니다');
       }
       
-      console.log(`✅ Flux Pro Canny 완료: ${fluxImageUrl}`);
+      console.log(`✅ Real-ESRGAN 완료: ${esrganImageUrl}`);
       
-      const fluxResponse = await axios.get(fluxImageUrl, {
+      const esrganResponse = await axios.get(esrganImageUrl, {
         responseType: 'arraybuffer',
-        timeout: 60000  // Flux는 시간이 좀 걸림
+        timeout: 60000
       });
       
-      const fluxBuffer = Buffer.from(fluxResponse.data);
-      console.log(`✅ AI 재해석 이미지 다운로드 완료 (${(fluxBuffer.length / 1024).toFixed(0)}KB)`);
+      const esrganBuffer = Buffer.from(esrganResponse.data);
+      console.log(`✅ AI 업스케일 이미지 다운로드 완료 (${(esrganBuffer.length / 1024).toFixed(0)}KB)`);
       
-      // 🔥 Step 2: Sharp로 극적 효과 적용
-      console.log('🎨 Sharp 극적 효과 적용 중...');
-      premiumBuffer = await sharp(fluxBuffer)
+      // 🔥 Step 2: Sharp로 최종 크기 조정 및 색상 보정
+      console.log('🎨 Sharp 최종 처리 중...');
+      premiumBuffer = await sharp(esrganBuffer)
         .resize(3840, 2160, {
           fit: 'cover',
           position: 'center',
@@ -3654,8 +3619,8 @@ router.post('/premium-upscale', async (req, res) => {
         .toBuffer();
       
       console.log(`✅ 프리미엄 4K 완성 (${(premiumBuffer.length / 1024).toFixed(0)}KB)`);
-      console.log(`   - Flux Pro Canny: 풍성하고 고급스럽게 재해석 ✅`);
-      console.log(`   - Sharp 효과: 극적 변환 ✅`);
+      console.log(`   - Real-ESRGAN: 10배 AI 업스케일 ✅`);
+      console.log(`   - Sharp 효과: 4K 리사이징 + 색상 보정 ✅`);
       
       // 프리미엄 이미지 저장
       const premiumFilename = `${timestamp}_${safeTitle}_premium_4k.jpg`;

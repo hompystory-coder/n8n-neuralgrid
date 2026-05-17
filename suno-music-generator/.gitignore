@@ -29,3 +29,8 @@ test-*.js
 test_*.js
 test-*.py
 *.tar.gz
+server/temp/uploads/*.jpg
+server/temp/uploads/*.png
+*.md
+*.sh
+*.py
