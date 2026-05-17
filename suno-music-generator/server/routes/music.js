@@ -5,7 +5,7 @@ const MusicJob = require('../models/MusicJob');
 const sunoClient = require('../services/sunoClient');
 const AudioAnalyzer = require('../services/audioAnalyzer');
 const audioAnalyzer = new AudioAnalyzer();
-const openaiImageGenerator = require('../services/openaiImageGenerator'); // 썸네일 생성용
+const replicateImageGenerator = require('../services/replicateImageGenerator'); // 썸네일 생성용 (Replicate Flux)
 const thumbnailPromptGenerator = require('../services/thumbnailPromptGenerator'); // 🦔 고슴도치 썸네일
 
 // 스타일 라우터에서 생성된 메타데이터 가져오기
@@ -517,20 +517,20 @@ router.post('/upload-audio', (req, res) => {
       const thumbnailPrompts = analysisResult.thumbnailPrompts || [];
       console.log('🎨 썸네일 프롬프트:', thumbnailPrompts.length, '개');
 
-      // DALL-E 3로 이미지 생성
+      // Replicate Flux로 이미지 생성
       let thumbnailUrls = [];
       let generationError = null;
 
       if (thumbnailPrompts.length > 0) {
-        console.log('🖼️ DALL-E 3로 썸네일 생성 중...');
+        console.log('🖼️ Replicate Flux로 썸네일 생성 중...');
         try {
           // 최대 3개의 썸네일 생성 (비용 절약)
           const maxThumbnails = Math.min(thumbnailPrompts.length, 3);
           const imagePromises = thumbnailPrompts.slice(0, maxThumbnails).map((prompt, index) =>
-            openaiImageGenerator.generateSingleImage(prompt, {
-              size: '1792x1024',
-              quality: 'standard',
-              style: index % 2 === 0 ? 'vivid' : 'natural'
+            replicateImageGenerator.generateSingleImage(prompt, {
+              width: 1792,
+              height: 1024,
+              num_inference_steps: 28
             })
               .then(result => {
                 console.log(`   ✅ 이미지 ${index + 1}/${maxThumbnails} 완료`);
@@ -674,10 +674,10 @@ router.post('/generate-thumbnail', async (req, res) => {
       console.log(`🎨 ${prompts.length}개 썸네일 생성 중...`);
       
       const imagePromises = prompts.map((item, index) =>
-        openaiImageGenerator.generateSingleImage(item.prompt, {
-          size: '1792x1024',
-          quality: 'hd',
-          style: 'vivid'
+        replicateImageGenerator.generateSingleImage(item.prompt, {
+          width: 1792,
+          height: 1024,
+          num_inference_steps: 28
         })
           .then(result => {
             console.log(`   ✅ 썸네일 ${index + 1}/${prompts.length} 완료: ${item.name}`);
@@ -719,10 +719,10 @@ router.post('/generate-thumbnail', async (req, res) => {
       
       console.log('🎨 썸네일 생성 프롬프트:', prompt.substring(0, 100) + '...');
 
-      const result = await openaiImageGenerator.generateSingleImage(prompt, {
-        size: '1792x1024',
-        quality: 'hd',
-        style: 'vivid'
+      const result = await replicateImageGenerator.generateSingleImage(prompt, {
+        width: 1792,
+        height: 1024,
+        num_inference_steps: 28
       });
 
       console.log('✅ 썸네일 생성 완료!');

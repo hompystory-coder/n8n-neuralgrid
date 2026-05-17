@@ -387,32 +387,164 @@ function generateThumbnailPrompt(title, style, language = 'korean') {
   };
 }
 
-// 새 프롬프트 생성기 사용
-const promptGen = require('./thumbnailPromptGenerator');
-
 /**
  * 환경/분위기 중심 생성 (캐릭터 없음)
- * 하위 호환성을 위해 함수명 유지, 실제로는 환경 중심으로 생성
+ * Version 1: Character-Focused style adapted to environment-only
  */
 function generateCharacterFocused(title, template, language, includeText) {
-  // 이제 항상 환경 중심으로 생성 (캐릭터 없음)
-  return promptGen.generateCharacterFocused(title, template, language, includeText);
+  const colors = template.primaryColors;
+  
+  const textSection = includeText ? `
+TITLE TEXT (VERY IMPORTANT):
+- Text: "${title}"
+- Font: LARGE, BOLD, sans-serif (minimum 72px equivalent)
+- Position: Top center or bottom center
+- Color: White (#FFFFFF) with soft glow effect
+- Glow: ${colors.secondary} or ${colors.accent} color glow around text
+- Shadow: Soft drop shadow for depth and readability
+- Style: Clean, modern, highly readable
+- ${language === 'korean' ? 'Korean font: Pretendard Bold or Noto Sans KR Black' : 'English font: Montserrat Bold or Poppins Black'}
+- Make text POP and STAND OUT
+- Text should be LARGE enough to read on mobile phones (thumbnail size)
+` : `
+CRITICAL - NO TEXT AT ALL:
+- DO NOT include ANY text, titles, numbers, or letters in the image
+- This is a background-only version for later text overlay
+- Pure visual design without any typography
+- Leave clear space at top or bottom for text to be added later
+- Focus 100% on the visual elements and atmosphere
+`;
+
+  return `IMPORTANT: This is for ${template.name} music!
+
+Professional YouTube music playlist thumbnail - Environment-Focused Design (High CTR style)
+
+CRITICAL REQUIREMENTS - MUST FOLLOW:
+- Genre: ${template.name}
+- Keywords: ${template.keywords}
+- Mood: ${template.mood}
+${template.mustAvoid ? `- MUST AVOID: ${template.mustAvoid.join(', ')}` : ''}
+${template.mustHave ? `- MUST INCLUDE: ${template.mustHave.join(', ')}` : ''}
+
+MAIN SCENE (60% of composition):
+${template.visualElements}
+- Style: ${template.referenceStyle}
+- Atmosphere: ${template.mood}
+- Focus: Environment and setting that conveys the music's mood
+
+VISUAL ELEMENTS & DETAILS:
+${template.specificDetails}
+- Quality: Professional, high-quality rendering
+- Detail: Rich and immersive atmosphere
+- Composition: ${template.composition}
+
+COLOR PALETTE:
+- Primary: ${colors.main}
+- Secondary: ${colors.secondary}
+- Accent: ${colors.accent}
+- Background: ${colors.background}
+- Mood: ${template.atmosphere}
+
+${textSection}
+
+TECHNICAL SPECS:
+- Aspect ratio: 16:9 (YouTube standard)
+- Quality: High resolution, professional grade
+- Style: ${template.referenceStyle}
+- Target CTR: ${template.targetCTR}
+
+${includeText ? 
+  `Final output: Professional thumbnail with prominent title text combining beautiful environment with excellent typography.` : 
+  `Final output: Professional background design perfect for adding text overlay later.`}`;
 }
 
-/**
- * Version 1 (OLD): Character-Focused - 이전 버전 (백업용)
- */
 /**
  * Version 2: Mood-Landscape (분위기 풍경) - 높은 CTR
  */
 function generateMoodLandscape(title, template, language, includeText) {
-  // 새 생성기 사용
-  return promptGen.generateMoodLandscape(title, template, language, includeText);
-}
+  const colors = template.primaryColors;
+  
+  const textSection = includeText ? `
+TITLE TEXT (CENTER STAGE):
+- Text: "${title}"
+- Font: EXTRA LARGE, BOLD (minimum 80px equivalent)
+- Position: Center or top-center (text is the hero here)
+- Color: White (#FFFFFF) or ${colors.accent}
+- Effect: Strong glow effect in ${colors.secondary} or ${colors.main}
+- Shadow: Deep shadow for maximum contrast and readability
+- Style: Bold, impactful, modern typography
+- ${language === 'korean' ? 'Korean font: Pretendard Extra Bold' : 'English font: Bebas Neue or Oswald Bold'}
+- Text should be MASSIVE and DOMINANT - the main focus
+- Text takes 50-60% of the visual attention
+` : `
+NO TEXT VERSION:
+- Absolutely NO text, titles, or typography
+- Pure cinematic scene/landscape
+- Designed as a background for text overlay
+- Maximum visual impact without text distraction
+- Leave obvious space for title placement
+`;
 
-/**
- * Version 2 (OLD): Mood-Landscape - 이전 버전 (백업용)
- */
+  return `IMPORTANT: This is for ${template.name} music!
+
+Professional YouTube music playlist thumbnail - Mood-Landscape Design (Cinematic style)
+
+CRITICAL GENRE: ${template.name}
+Keywords: ${template.keywords}
+${template.mustAvoid ? `MUST AVOID: ${template.mustAvoid.join(', ')}` : ''}
+${template.mustHave ? `MUST INCLUDE: ${template.mustHave.join(', ')}` : ''}
+
+MAIN SCENE (PANORAMIC COMPOSITION):
+${template.visualElements}
+- Style: Cinematic, wide-angle, immersive scene
+- Composition: ${template.composition}
+- Perspective: ${template.referenceStyle}
+- Visual storytelling: Scene should immediately convey ${template.mood}
+- The entire scene creates the mood, not just one element
+
+VISUAL ELEMENTS & DETAILS:
+${template.specificDetails}
+- Quality: Photorealistic with artistic enhancement
+- Detail: Rich, immersive, but not cluttered
+- Depth: Strong sense of depth with foreground, midground, background
+
+COLOR PALETTE & GRADING:
+- Primary: ${colors.main} (dominant color, sets the mood)
+- Secondary: ${colors.secondary} (supporting color)
+- Accent: ${colors.accent} (highlights and points of interest)
+- Base: ${colors.background} (foundation color)
+- Mood: ${template.mood} color temperature
+- Saturation: Vibrant and eye-catching
+- Contrast: High contrast (70%+) for visual pop
+
+LIGHTING & EFFECTS:
+- Lighting style: ${template.atmosphere}
+- Atmosphere: ${template.atmosphere}
+- Mood lighting: Colors and lighting work together to create ${template.mood}
+
+${textSection}
+
+COMPOSITION & LAYOUT:
+- Layout: ${template.composition}
+- Balance: Visual balance with clear focal points
+- Negative space: ${includeText ? '30-40% for text placement' : '20-30% for breathing room'}
+
+MOOD & ATMOSPHERE:
+- Primary mood: ${template.mood}
+- Emotional impact: ${template.atmosphere}
+- Genre: ${template.keywords}
+- Reference: ${template.referenceStyle}
+
+TECHNICAL SPECS:
+- Aspect ratio: 16:9 (YouTube standard)
+- Quality: High resolution, professional grade
+- Style: ${template.referenceStyle}
+- Target CTR: ${template.targetCTR}
+
+${includeText ? 
+  `Final output: Cinematic scene with powerful central typography that dominates the composition.` : 
+  `Final output: Cinematic background scene ready for text overlay, with clear composition and visual hierarchy.`}`;
+}
 module.exports = {
   thumbnailTemplates,
   selectTemplate,
