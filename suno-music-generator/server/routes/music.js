@@ -3,8 +3,9 @@ const router = express.Router();
 const { addJob, addBatchJobs } = require('../services/queueService');
 const MusicJob = require('../models/MusicJob');
 const sunoClient = require('../services/sunoClient');
-const AudioAnalyzer = require('../services/audioAnalyzer'); // 🆕 추가
-const audioAnalyzer = new AudioAnalyzer(); // 🆕 추가
+const AudioAnalyzer = require('../services/audioAnalyzer');
+const audioAnalyzer = new AudioAnalyzer();
+const openaiImageGenerator = require('../services/openaiImageGenerator'); // 썸네일 생성용
 
 // 스타일 라우터에서 생성된 메타데이터 가져오기
 let generatedMusicMetadata = null;
@@ -515,21 +516,23 @@ router.post('/upload-audio', (req, res) => {
       const thumbnailPrompts = analysisResult.thumbnailPrompts || [];
       console.log('🎨 썸네일 프롬프트:', thumbnailPrompts.length, '개');
 
-      // DALL-E 3로 이미지 생성 (옵션)
+      // DALL-E 3로 이미지 생성
       let thumbnailUrls = [];
       let generationError = null;
 
       if (thumbnailPrompts.length > 0) {
         console.log('🖼️ DALL-E 3로 썸네일 생성 중...');
         try {
-          const imagePromises = thumbnailPrompts.map((prompt, index) =>
+          // 최대 3개의 썸네일 생성 (비용 절약)
+          const maxThumbnails = Math.min(thumbnailPrompts.length, 3);
+          const imagePromises = thumbnailPrompts.slice(0, maxThumbnails).map((prompt, index) =>
             openaiImageGenerator.generateSingleImage(prompt, {
               size: '1792x1024',
               quality: 'standard',
               style: index % 2 === 0 ? 'vivid' : 'natural'
             })
               .then(result => {
-                console.log(`   ✅ 이미지 ${index + 1}/${thumbnailPrompts.length} 완료`);
+                console.log(`   ✅ 이미지 ${index + 1}/${maxThumbnails} 완료`);
                 return { index, url: result.imageUrl, prompt, success: true };
               })
               .catch(err => {
@@ -543,7 +546,7 @@ router.post('/upload-audio', (req, res) => {
             .filter(r => r.success && r.url)
             .map(r => ({ url: r.url, prompt: r.prompt, index: r.index }));
 
-          console.log(`✅ ${thumbnailUrls.length}/${thumbnailPrompts.length} 이미지 생성 완료`);
+          console.log(`✅ ${thumbnailUrls.length}/${maxThumbnails} 이미지 생성 완료`);
         } catch (err) {
           generationError = err.message;
           console.error('❌ 썸네일 생성 오류:', err.message);
@@ -557,6 +560,7 @@ router.post('/upload-audio', (req, res) => {
         thumbnails: {
           count: thumbnailUrls.length,
           images: thumbnailUrls,
+          prompts: thumbnailPrompts, // 클라이언트에서 추가 생성 가능하도록
           error: generationError
         },
         message: '✅ 오디오를 성공적으로 분석했습니다! Suno AI가 이 분석을 사용해 유사한 음악을 생성합니다.'
