@@ -1285,107 +1285,63 @@ router.post('/generate-simple', async (req, res) => {
 });
 
 /**
- * 🔥 OOOffi 스타일 YouTube 제목 생성 함수
+ * 🎵 YouTube 메타데이터 생성 (youtubeMetadataGenerator 사용)
  * 
- * 성공 공식: 즉각 감정 + 구체적 상황 + 이모지 + 장르/용도
+ * 수천 곡에 대해 고유한 메타데이터 생성
  */
+const youtubeMetadataGenerator = require('../services/youtubeMetadataGenerator');
+
 async function generateViralYouTubeTitle(tracks, style, language = 'korean') {
   try {
-    console.log(`🔥 Playlist 스타일 YouTube 제목 생성 중...`);
+    console.log(`🎵 YouTube 메타데이터 생성 중...`);
     console.log(`   곡 수: ${tracks.length}곡`);
     console.log(`   스타일: ${style}`);
     console.log(`   언어: ${language}`);
     
-    // 1️⃣ 스타일과 곡 제목에서 주요 테마 추출
+    // youtubeMetadataGenerator로 메타데이터 생성
+    const parsedStyle = styleParser.parseStyle(style);
+    const totalDuration = tracks.reduce((sum, track) => sum + (track.duration || 0), 0);
+    
+    const metadata = await youtubeMetadataGenerator.generate({
+      title: tracks[0]?.title || '음악 모음집',
+      lyrics: tracks.map(t => t.title).join(', '),
+      style: style,
+      genre: parsedStyle.genreCategory || 'pop',
+      mood: (parsedStyle.moods && parsedStyle.moods[0]) || 'chill',
+      bpm: parsedStyle.bpm || 120,
+      tracks: tracks,
+      totalDuration: totalDuration
+    });
+    
+    console.log(`✅ YouTube 메타데이터 생성 완료:`);
+    console.log(`   제목: "${metadata.title}"`);
+    console.log(`   태그: ${metadata.tags.length}개`);
+    
+    // 기존 형식과 호환을 위해 간단한 정보 추출
+    let situations = ['공부', '작업', '휴식'];
+    let genres = ['MUSIC'];
+    let hashtags = ['플레이리스트', '음악', 'music'];
+    
+    // 스타일 분석하여 상황/장르/해시태그 추출
     const styleLower = style.toLowerCase();
-    const trackTitles = tracks.map(t => t.title).join(' ').toLowerCase();
-    const combined = styleLower + ' ' + trackTitles;
-    
-    let catchPhrase = '틀자마자상쾌해짐..';
-    let emotion = '가볍게기분업!!';
-    let ready = '준비됐지?';
-    let emoji = '🌿';
-    let situations = ['카페', '드라이브', '일할때'];
-    let genres = ['POP', 'GROOVE'];
-    let hashtags = ['플레이리스트', 'goodvibesonly', '카페플리'];
-    
-    // 🎯 공부/집중
-    if (combined.includes('study') || combined.includes('focus') || combined.includes('concentration') || 
-        combined.includes('공부') || combined.includes('집중')) {
-      catchPhrase = '틀자마자집중각!!';
-      emotion = '몰입타임!!';
-      ready = '공부모드ON';
-      emoji = '📚';
+    if (styleLower.includes('study') || styleLower.includes('focus') || styleLower.includes('공부')) {
       situations = ['공부', '독서', '작업'];
       genres = ['LO-FI', 'STUDY'];
       hashtags = ['플레이리스트', 'studymusic', '공부음악'];
-    }
-    // 🎯 카페/휴식
-    else if (combined.includes('cafe') || combined.includes('coffee') || combined.includes('chill') || 
-             combined.includes('카페') || combined.includes('커피') || combined.includes('휴식')) {
-      catchPhrase = '틀자마자상쾌해짐..';
-      emotion = '가볍게기분업!!';
-      ready = '준비됐지?';
-      emoji = '🌿';
-      situations = ['카페', '드라이브', '일할때'];
-      genres = ['POP', 'GROOVE'];
-      hashtags = ['플레이리스트', 'goodvibesonly', '카페플리'];
-    }
-    // 🎯 운동/헬스
-    else if (combined.includes('workout') || combined.includes('gym') || combined.includes('exercise') || 
-             combined.includes('운동') || combined.includes('헬스') || combined.includes('트레이닝')) {
-      catchPhrase = '틀자마자텐션폭발!!';
-      emotion = '운동각!!';
-      ready = '준비됐지?';
-      emoji = '💪';
+    } else if (styleLower.includes('workout') || styleLower.includes('운동')) {
       situations = ['헬스장', '홈트', '러닝'];
       genres = ['WORKOUT', 'HIP-HOP'];
       hashtags = ['플레이리스트', 'motivationmusic', '운동음악'];
-    }
-    // 🎯 수면/힐링
-    else if (combined.includes('sleep') || combined.includes('healing') || combined.includes('meditation') ||
-             combined.includes('힐링') || combined.includes('명상') || combined.includes('수면')) {
-      catchPhrase = '틀자마자힐링타임..';
-      emotion = '마음이편안!!';
-      ready = '힐링모드ON';
-      emoji = '🌿';
+    } else if (styleLower.includes('sleep') || styleLower.includes('힐링')) {
       situations = ['명상', '수면', '휴식'];
       genres = ['HEALING', 'AMBIENT'];
       hashtags = ['플레이리스트', 'healingmusic', '힐링음악'];
     }
-    // 🎯 드라이브
-    else if (combined.includes('drive') || combined.includes('driving') || combined.includes('드라이브')) {
-      catchPhrase = '틀자마자드라이브각!!';
-      emotion = '기분최고!!';
-      ready = '출발준비!!';
-      emoji = '🚗';
-      situations = ['드라이브', '여행', '카페'];
-      genres = ['POP', 'INDIE'];
-      hashtags = ['플레이리스트', 'drivemusic', '드라이브플리'];
-    }
     
-    // 2️⃣ Playlist 스타일 제목 생성 (사용자 예시 형식)
-    let youtubeTitle = '';
+    // youtubeMetadataGenerator에서 생성한 제목 사용
+    const youtubeTitle = metadata.title;
     
-    if (language === 'korean') {
-      // 한국어: "Playlist | [캐치프레이즈] [감정] [준비] [이모지]"
-      youtubeTitle = `Playlist | ${catchPhrase} ${emotion} ${ready} ${emoji}`;
-    } else {
-      // 영어: Similar short and catchy format
-      const engCatch = catchPhrase.includes('상쾌') ? 'Instant vibes..' :
-                      catchPhrase.includes('집중') ? 'Focus mode ON!!' :
-                      catchPhrase.includes('텐션') ? 'Energy boost!!' :
-                      catchPhrase.includes('힐링') ? 'Healing time..' :
-                      'Feel it now!!';
-      const engEmotion = emotion.includes('기분업') ? 'Good vibes!!' :
-                         emotion.includes('몰입') ? 'Deep focus!!' :
-                         emotion.includes('운동') ? 'Workout ready!!' :
-                         'Relax mode!!';
-      youtubeTitle = `Playlist | ${engCatch} ${engEmotion} ${emoji}`;
-    }
-    
-    console.log(`✅ YouTube 제목 생성 완료:`);
-    console.log(`   "${youtubeTitle}"`);
+    console.log(`✅ YouTube 제목: "${youtubeTitle}"`);
     console.log(`   길이: ${youtubeTitle.length}자`);
     console.log(`   상황: ${situations.join(' · ')}`);
     console.log(`   장르: ${genres.join(' · ')}`);
@@ -2327,16 +2283,40 @@ ${uniqueTitles}
       // JSON 추출
       const jsonMatch = content.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
-        const metadata = JSON.parse(jsonMatch[0]);
+        const aiMetadata = JSON.parse(jsonMatch[0]);
         
-        // 🔥 YouTube 제목을 Playlist 스타일로 교체
-        console.log(`📝 기존 YouTube 제목: "${metadata.youtubeTitle}"`);
-        const viralTitle = await generateViralYouTubeTitle(uniqueSongs, musicStyle, lang);
-        metadata.youtubeTitle = viralTitle;
-        console.log(`🔥 Playlist 스타일 적용: "${metadata.youtubeTitle}"`);
+        // 🎵 youtubeMetadataGenerator로 완전한 메타데이터 생성
+        console.log(`🎵 YouTube 메타데이터 생성 중...`);
+        const parsedStyle = styleParser.parseStyle(musicStyle);
+        const totalDuration = uniqueSongs.reduce((sum, song) => sum + (song.duration || 0), 0);
         
-        console.log('✅ 앨범 메타데이터 생성 완료');
-        return res.json({ success: true, metadata });
+        const metadata = await youtubeMetadataGenerator.generate({
+          title: aiMetadata.albumTitle || '음악 모음집',
+          lyrics: uniqueSongs.map(s => s.title).join(', '),
+          style: musicStyle,
+          genre: parsedStyle.genreCategory || 'pop',
+          mood: (parsedStyle.moods && parsedStyle.moods[0]) || 'chill',
+          bpm: parsedStyle.bpm || 120,
+          tracks: uniqueSongs.map(song => ({
+            title: song.title,
+            duration: song.duration || 180
+          })),
+          totalDuration: totalDuration
+        });
+        
+        // AI 생성 앨범명 + youtubeMetadataGenerator 제목/설명/태그 조합
+        const finalMetadata = {
+          albumName: aiMetadata.albumTitle || (lang === 'korean' ? '음악 모음집' : 'Music Collection'),
+          youtubeTitle: metadata.title,
+          description: metadata.description,
+          tags: metadata.tags.join(', ')
+        };
+        
+        console.log('✅ 완전한 메타데이터 생성 완료');
+        console.log(`   제목: "${finalMetadata.youtubeTitle}"`);
+        console.log(`   태그: ${metadata.tags.length}개`);
+        
+        return res.json({ success: true, metadata: finalMetadata });
       }
       
       throw new Error('JSON 파싱 실패');
@@ -2347,33 +2327,84 @@ ${uniqueTitles}
       // 폴백: Playlist 스타일 제목 생성
       const viralTitle = await generateViralYouTubeTitle(uniqueSongs, musicStyle, lang);
       
-      const metadata = {
-        albumName: lang === 'korean' ? `음악 모음집` : 'Music Collection',
-        youtubeTitle: viralTitle,
-        description: lang === 'korean' ?
-          `음악 플레이리스트 middot 공부 middot 작업 middot 휴식 middot MUSIC\n#플레이리스트 #음악 #music sparkles` :
-          `Music Playlist middot Study middot Work middot Relax middot MUSIC\n#playlist #music #goodvibes sparkles`,
-        tags: lang === 'korean' ?
-          '플레이리스트, 음악, 공부음악, 휴식음악, playlist, music, studymusic, relaxmusic' :
-          'playlist, music, study music, work music, relax music, chill music, background music'
+      // 폴백: youtubeMetadataGenerator 사용
+      console.log('⚠️  AI 응답 파싱 실패, youtubeMetadataGenerator 사용');
+      const parsedStyle = styleParser.parseStyle(musicStyle);
+      const totalDuration = uniqueSongs.reduce((sum, song) => sum + (song.duration || 0), 0);
+      
+      const metadata = await youtubeMetadataGenerator.generate({
+        title: lang === 'korean' ? '음악 모음집' : 'Music Collection',
+        lyrics: uniqueSongs.map(s => s.title).join(', '),
+        style: musicStyle,
+        genre: parsedStyle.genreCategory || 'pop',
+        mood: (parsedStyle.moods && parsedStyle.moods[0]) || 'chill',
+        bpm: parsedStyle.bpm || 120,
+        tracks: uniqueSongs.map(song => ({
+          title: song.title,
+          duration: song.duration || 180
+        })),
+        totalDuration: totalDuration
+      });
+      
+      const fallbackMetadata = {
+        albumName: lang === 'korean' ? '음악 모음집' : 'Music Collection',
+        youtubeTitle: metadata.title,
+        description: metadata.description,
+        tags: metadata.tags.join(', ')
       };
       
       console.log('✅ 폴백 메타데이터 생성 완료');
-      return res.json({ success: true, metadata });
+      return res.json({ success: true, metadata: fallbackMetadata });
     }
     
   } catch (error) {
     console.error('❌ AI 메타데이터 생성 오류:', error);
-    res.status(500).json({ 
-      success: false,
-      error: error.message,
-      metadata: {
-        albumName: `음악 모음집 ${req.body.tracks?.length || 0}곡`,
-        youtubeTitle: '[Playlist] Music Collection',
-        description: 'A curated music collection.',
-        tags: '감성음악, 플레이리스트, music'
-      }
-    });
+    
+    // 최종 폴백: youtubeMetadataGenerator
+    try {
+      const uniqueSongs = req.body.tracks || [];
+      const musicStyle = req.body.musicStyle || 'pop, chill';
+      const lang = req.body.language || 'korean';
+      
+      const parsedStyle = styleParser.parseStyle(musicStyle);
+      const totalDuration = uniqueSongs.reduce((sum, song) => sum + (song.duration || 0), 0);
+      
+      const metadata = await youtubeMetadataGenerator.generate({
+        title: lang === 'korean' ? `음악 모음집 ${uniqueSongs.length}곡` : `Music Collection ${uniqueSongs.length} tracks`,
+        lyrics: uniqueSongs.map(s => s.title).join(', '),
+        style: musicStyle,
+        genre: parsedStyle.genreCategory || 'pop',
+        mood: (parsedStyle.moods && parsedStyle.moods[0]) || 'chill',
+        bpm: parsedStyle.bpm || 120,
+        tracks: uniqueSongs.map(song => ({
+          title: song.title,
+          duration: song.duration || 180
+        })),
+        totalDuration: totalDuration
+      });
+      
+      return res.json({
+        success: true,
+        metadata: {
+          albumName: lang === 'korean' ? `음악 모음집 ${uniqueSongs.length}곡` : `Music Collection ${uniqueSongs.length} tracks`,
+          youtubeTitle: metadata.title,
+          description: metadata.description,
+          tags: metadata.tags.join(', ')
+        }
+      });
+    } catch (fallbackError) {
+      console.error('❌ 폴백 메타데이터 생성도 실패:', fallbackError);
+      res.status(500).json({ 
+        success: false,
+        error: error.message,
+        metadata: {
+          albumName: `음악 모음집`,
+          youtubeTitle: '[Playlist] Music Collection',
+          description: 'A curated music collection.',
+          tags: '감성음악, 플레이리스트, music'
+        }
+      });
+    }
   }
 });
 
