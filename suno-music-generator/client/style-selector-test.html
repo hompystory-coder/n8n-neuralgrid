@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Style Selector 테스트 - Suno Music Generator</title>
+    
+    <!-- Style Selector CSS -->
+    <link rel="stylesheet" href="/css/styleSelector.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+            background: #0a0a0a;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(138, 43, 226, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(72, 209, 204, 0.08) 0%, transparent 50%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        header h1 {
+            font-size: 3.5em;
+            margin-bottom: 16px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a855f7 0%, #48d1cc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 1.2em;
+            font-weight: 300;
+        }
+
+        .main-card {
+            background: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 32px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(168, 85, 247, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #48d1cc 0%, #38b2ac 100%);
+        }
+
+        .console-output {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #22c55e;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .console-output.active {
+            display: block;
+        }
+
+        .console-line {
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎵 Style Selector</h1>
+            <p class="subtitle">198개 장르 데이터베이스를 활용한 멋진 음악 만들기</p>
+        </header>
+
+        <div class="main-card">
+            <!-- Style Selector 컴포넌트가 여기에 렌더링됩니다 -->
+            <div id="styleSelector"></div>
+
+            <!-- 액션 버튼 -->
+            <div class="action-buttons">
+                <button class="btn" onclick="testGetSelectedStyle()">
+                    <span>🎯</span>
+                    선택된 스타일 확인
+                </button>
+                <button class="btn btn-secondary" onclick="testGetPrompt()">
+                    <span>📋</span>
+                    프롬프트 가져오기
+                </button>
+                <button class="btn btn-secondary" onclick="toggleConsole()">
+                    <span>💻</span>
+                    콘솔 토글
+                </button>
+            </div>
+
+            <!-- 콘솔 출력 -->
+            <div class="console-output" id="consoleOutput">
+                <div class="console-line">✅ Style Selector 초기화 완료</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Style Selector JS -->
+    <script src="/js/styleSelector.js"></script>
+
+    <script>
+        // Style Selector 인스턴스
+        let styleSelector;
+
+        // 페이지 로드 시 초기화
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('🎵 Style Selector 테스트 페이지 로드');
+            
+            try {
+                styleSelector = new StyleSelector();
+                addConsoleLog('✅ Style Selector 인스턴스 생성 완료');
+            } catch (error) {
+                console.error('❌ Style Selector 초기화 실패:', error);
+                addConsoleLog(`❌ 초기화 실패: ${error.message}`);
+            }
+        });
+
+        // 선택된 스타일 확인
+        function testGetSelectedStyle() {
+            if (!styleSelector) {
+                alert('Style Selector가 초기화되지 않았습니다.');
+                return;
+            }
+
+            const style = styleSelector.getSelectedStyle();
+            
+            console.log('🎯 선택된 스타일:', style);
+            addConsoleLog('🎯 선택된 스타일:');
+            addConsoleLog(JSON.stringify(style, null, 2));
+            
+            if (!style.genre && !style.prompt) {
+                alert('아직 스타일을 선택하지 않았습니다!');
+            } else {
+                alert(`선택된 스타일:\n${JSON.stringify(style, null, 2)}`);
+            }
+        }
+
+        // 프롬프트 가져오기
+        function testGetPrompt() {
+            if (!styleSelector) {
+                alert('Style Selector가 초기화되지 않았습니다.');
+                return;
+            }
+
+            const prompt = styleSelector.getSelectedPrompt();
+            
+            console.log('📋 생성된 프롬프트:', prompt);
+            addConsoleLog(`📋 프롬프트: ${prompt}`);
+            
+            if (!prompt) {
+                alert('먼저 스타일을 선택해주세요!');
+            } else {
+                alert(`Suno 프롬프트:\n\n${prompt}`);
+            }
+        }
+
+        // 콘솔 토글
+        function toggleConsole() {
+            const console = document.getElementById('consoleOutput');
+            console.classList.toggle('active');
+        }
+
+        // 콘솔 로그 추가
+        function addConsoleLog(message) {
+            const console = document.getElementById('consoleOutput');
+            const line = document.createElement('div');
+            line.className = 'console-line';
+            line.textContent = message;
+            console.appendChild(line);
+            console.scrollTop = console.scrollHeight;
+        }
+
+        // 원래 console.log 오버라이드
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addConsoleLog(args.join(' '));
+        };
+
+        const originalError = console.error;
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addConsoleLog('❌ ' + args.join(' '));
+        };
+    </script>
+</body>
+</html>

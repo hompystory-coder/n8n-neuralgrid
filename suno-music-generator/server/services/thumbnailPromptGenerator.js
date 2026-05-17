@@ -108,9 +108,34 @@ function generateCharacterFocused(title, template, language, includeText) {
 function generateMoodLandscape(title, template, language, includeText) {
   const colors = template.primaryColors;
   
-  // 🎲 시간대와 계절을 랜덤하게 선택하여 다양성 확보
-  const timeOfDay = ['golden hour sunrise', 'bright midday', 'warm afternoon', 'sunset golden hour', 'blue hour twilight'][Math.floor(Math.random() * 5)];
-  const season = ['spring cherry blossoms', 'summer vibrant green', 'autumn colorful leaves', 'winter magical atmosphere', 'rainy day reflections'][Math.floor(Math.random() * 5)];
+  // 🎯 장르별 최적 시간대/계절 선택 (브랜드 일관성)
+  let timeOfDay, season;
+  
+  if (template.name.includes('Lo-fi') || template.name.includes('Study')) {
+    // Lo-fi: 차분한 시간대만
+    timeOfDay = ['sunset golden hour', 'blue hour twilight'][Math.floor(Math.random() * 2)];
+    season = ['autumn colorful leaves', 'rainy day reflections'][Math.floor(Math.random() * 2)];
+  } else if (template.name.includes('Upbeat') || template.name.includes('Party')) {
+    // Upbeat: 활기찬 시간대만
+    timeOfDay = ['golden hour sunrise', 'bright midday'][Math.floor(Math.random() * 2)];
+    season = ['spring cherry blossoms', 'summer vibrant green'][Math.floor(Math.random() * 2)];
+  } else if (template.name.includes('Emotional') || template.name.includes('Night')) {
+    // Emotional: 감성적 시간대만
+    timeOfDay = ['sunset golden hour', 'blue hour twilight'][Math.floor(Math.random() * 2)];
+    season = ['autumn colorful leaves', 'winter magical atmosphere'][Math.floor(Math.random() * 2)];
+  } else if (template.name.includes('Cafe')) {
+    // Cafe: 따뜻한 시간대만
+    timeOfDay = ['warm afternoon', 'sunset golden hour'][Math.floor(Math.random() * 2)];
+    season = ['spring cherry blossoms', 'autumn colorful leaves'][Math.floor(Math.random() * 2)];
+  } else if (template.name.includes('Workout')) {
+    // Workout: 에너지 넘치는 시간대만
+    timeOfDay = ['golden hour sunrise', 'bright midday'][Math.floor(Math.random() * 2)];
+    season = ['spring cherry blossoms', 'summer vibrant green'][Math.floor(Math.random() * 2)];
+  } else {
+    // 기본: 밝은 시간대
+    timeOfDay = ['warm afternoon', 'sunset golden hour'][Math.floor(Math.random() * 2)];
+    season = ['spring cherry blossoms', 'autumn colorful leaves'][Math.floor(Math.random() * 2)];
+  }
   
   // 장르별 흥미로운 장소 (더 다양하고 매력적인 옵션)
   let scene = '';
@@ -191,6 +216,8 @@ function generateMoodLandscape(title, template, language, includeText) {
   - Instagram-worthy, travel-photography aesthetic
   - Clear focal point with attractive background blur
   - Dynamic elements (movement, reflections, lighting effects)
+  - 🔥 CTR OPTIMIZATION: Leave 30-40% bottom space for text overlay
+  - 🎯 High contrast background for readable white/yellow text overlay
 
 ❌ MUST AVOID:
   - Close-up people faces or portraits in foreground
@@ -200,13 +227,15 @@ function generateMoodLandscape(title, template, language, includeText) {
   - Illustrations, cartoons, digital art, anime style
   - Cluttered or confusing layouts
   - Generic stock photo look
+  - 🚫 Text or typography in the image itself (overlay will be added later)
 
 📐 COMPOSITION GUIDELINES:
 - Rule of thirds for dynamic balance
 - Leading lines to guide viewer's eye
 - Foreground, middle ground, background layers
 - Interesting perspective (not just straight-on view)
-- ${includeText ? 'Clear space at bottom center for text overlay (40% height)' : 'Visually balanced for text overlay later'}
+- ${includeText ? '💡 CTR TIP: Clear bottom 40% space for bold text (genre + mood keywords)' : 'Visually balanced for text overlay later'}
+- 🎯 YouTube CTR Strategy: Visual should tell a story that makes viewers CLICK
 
 💡 LIGHTING & ATMOSPHERE:
 - ${timeOfDay} creates natural magic hour glow

@@ -1,0 +1,460 @@
+'use client'
+
+import { useState, useRef } from 'react'
+
+export default function Home() {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [videoUrl, setVideoUrl] = useState<string>('')
+  const [processing, setProcessing] = useState(false)
+  const [activeTab, setActiveTab] = useState<'upload' | 'enhance' | 'watermark' | 'background'>('upload')
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file && file.type.startsWith('video/')) {
+      setSelectedFile(file)
+      const url = URL.createObjectURL(file)
+      setVideoUrl(url)
+      setActiveTab('enhance')
+    } else {
+      alert('비디오 파일을 선택해주세요.')
+    }
+  }
+
+  const handleProcessing = (type: string) => {
+    if (!selectedFile) {
+      alert('먼저 비디오를 업로드해주세요.')
+      return
+    }
+    
+    setProcessing(true)
+    // 시뮬레이션: 실제로는 서버 API 호출
+    setTimeout(() => {
+      setProcessing(false)
+      alert(`${type} 처리가 완료되었습니다! (데모 버전)`)
+    }, 2000)
+  }
+
+  return (
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+      {/* Header */}
+      <header style={{
+        padding: '20px 40px',
+        background: 'rgba(255, 255, 255, 0.1)',
+        backdropFilter: 'blur(10px)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.2)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+          <div style={{
+            fontSize: '32px',
+            background: 'linear-gradient(45deg, #fff, #a8edea)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            fontWeight: 'bold'
+          }}>
+            🎬 EasyVideo Web
+          </div>
+          <div style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '14px' }}>
+            AI-Powered Video Enhancement
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main style={{ padding: '40px 20px', maxWidth: '1400px', margin: '0 auto' }}>
+        <div style={{
+          background: 'rgba(255, 255, 255, 0.95)',
+          borderRadius: '20px',
+          padding: '40px',
+          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+        }}>
+          {/* Tabs */}
+          <div style={{ display: 'flex', gap: '10px', marginBottom: '30px', borderBottom: '2px solid #e0e0e0' }}>
+            {[
+              { id: 'upload', label: '📤 업로드', icon: '📤' },
+              { id: 'enhance', label: '✨ 화질 개선', icon: '✨' },
+              { id: 'watermark', label: '🚫 워터마크 제거', icon: '🚫' },
+              { id: 'background', label: '🎭 배경 제거', icon: '🎭' }
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                style={{
+                  padding: '15px 25px',
+                  border: 'none',
+                  background: activeTab === tab.id ? 'linear-gradient(135deg, #667eea, #764ba2)' : 'transparent',
+                  color: activeTab === tab.id ? 'white' : '#666',
+                  borderRadius: '10px 10px 0 0',
+                  cursor: 'pointer',
+                  fontSize: '16px',
+                  fontWeight: activeTab === tab.id ? 'bold' : 'normal',
+                  transition: 'all 0.3s ease',
+                  marginBottom: '-2px'
+                }}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Content Area */}
+          <div style={{ display: 'flex', gap: '40px', flexWrap: 'wrap' }}>
+            {/* Left Side - Upload or Video Preview */}
+            <div style={{ flex: '1 1 500px' }}>
+              {!videoUrl ? (
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  style={{
+                    border: '3px dashed #667eea',
+                    borderRadius: '15px',
+                    padding: '60px',
+                    textAlign: 'center',
+                    cursor: 'pointer',
+                    background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05))',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05))'
+                  }}
+                >
+                  <div style={{ fontSize: '80px', marginBottom: '20px' }}>🎥</div>
+                  <h3 style={{ fontSize: '24px', marginBottom: '10px', color: '#333' }}>
+                    비디오를 드래그하거나 클릭하세요
+                  </h3>
+                  <p style={{ color: '#666', fontSize: '14px' }}>
+                    MP4, AVI, MOV, MKV 등 지원
+                  </p>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="video/*"
+                    onChange={handleFileSelect}
+                    style={{ display: 'none' }}
+                  />
+                </div>
+              ) : (
+                <div>
+                  <video
+                    src={videoUrl}
+                    controls
+                    style={{
+                      width: '100%',
+                      borderRadius: '15px',
+                      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
+                    }}
+                  />
+                  <div style={{ marginTop: '15px', color: '#666', fontSize: '14px' }}>
+                    <strong>파일명:</strong> {selectedFile?.name}
+                    <br />
+                    <strong>크기:</strong> {(selectedFile?.size ?? 0 / (1024 * 1024)).toFixed(2)} MB
+                  </div>
+                  <button
+                    onClick={() => {
+                      setSelectedFile(null)
+                      setVideoUrl('')
+                      setActiveTab('upload')
+                    }}
+                    style={{
+                      marginTop: '15px',
+                      padding: '10px 20px',
+                      background: '#e74c3c',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      fontSize: '14px'
+                    }}
+                  >
+                    다른 비디오 선택
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Right Side - Tools */}
+            <div style={{ flex: '1 1 400px' }}>
+              <h2 style={{ marginBottom: '20px', color: '#333' }}>
+                {activeTab === 'upload' && '📤 비디오 업로드'}
+                {activeTab === 'enhance' && '✨ AI 화질 개선'}
+                {activeTab === 'watermark' && '🚫 워터마크 제거'}
+                {activeTab === 'background' && '🎭 배경 제거'}
+              </h2>
+
+              {activeTab === 'upload' && (
+                <div style={{ color: '#666', lineHeight: '1.8' }}>
+                  <p><strong>EasyVideo Web</strong>에 오신 것을 환영합니다!</p>
+                  <h4 style={{ marginTop: '20px', color: '#667eea' }}>주요 기능:</h4>
+                  <ul style={{ paddingLeft: '20px' }}>
+                    <li>🎯 AI 기반 비디오 화질 개선 (HD/4K)</li>
+                    <li>🚫 워터마크 자동 제거</li>
+                    <li>🎭 배경 제거 및 투명화</li>
+                    <li>✂️ 비디오 편집 도구</li>
+                  </ul>
+                  <div style={{
+                    marginTop: '30px',
+                    padding: '20px',
+                    background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))',
+                    borderRadius: '10px',
+                    border: '1px solid rgba(102, 126, 234, 0.3)'
+                  }}>
+                    <strong>💡 시작하기:</strong>
+                    <p style={{ margin: '10px 0 0 0', fontSize: '14px' }}>
+                      왼쪽의 업로드 영역을 클릭하여 비디오를 선택하세요.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'enhance' && (
+                <div>
+                  <p style={{ color: '#666', marginBottom: '20px', lineHeight: '1.6' }}>
+                    AI 기술을 사용하여 비디오 화질을 향상시킵니다.
+                    저화질 비디오를 HD, 1080p 또는 4K로 변환할 수 있습니다.
+                  </p>
+                  <div style={{ marginBottom: '20px' }}>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#333', fontWeight: 'bold' }}>
+                      출력 해상도:
+                    </label>
+                    <select style={{
+                      width: '100%',
+                      padding: '12px',
+                      borderRadius: '8px',
+                      border: '2px solid #e0e0e0',
+                      fontSize: '14px',
+                      cursor: 'pointer'
+                    }}>
+                      <option>HD (1280x720)</option>
+                      <option>Full HD (1920x1080)</option>
+                      <option>2K (2560x1440)</option>
+                      <option>4K (3840x2160)</option>
+                    </select>
+                  </div>
+                  <div style={{ marginBottom: '20px' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                      <input type="checkbox" defaultChecked />
+                      <span style={{ color: '#666' }}>노이즈 제거</span>
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', marginTop: '8px' }}>
+                      <input type="checkbox" defaultChecked />
+                      <span style={{ color: '#666' }}>샤프닝 적용</span>
+                    </label>
+                  </div>
+                  <button
+                    onClick={() => handleProcessing('화질 개선')}
+                    disabled={processing || !selectedFile}
+                    style={{
+                      width: '100%',
+                      padding: '15px',
+                      background: processing ? '#ccc' : 'linear-gradient(135deg, #667eea, #764ba2)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '10px',
+                      fontSize: '16px',
+                      fontWeight: 'bold',
+                      cursor: processing || !selectedFile ? 'not-allowed' : 'pointer',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    {processing ? '처리 중...' : '✨ 화질 개선 시작'}
+                  </button>
+                </div>
+              )}
+
+              {activeTab === 'watermark' && (
+                <div>
+                  <p style={{ color: '#666', marginBottom: '20px', lineHeight: '1.6' }}>
+                    AI가 자동으로 워터마크나 로고를 감지하고 제거합니다.
+                    제거할 영역을 수동으로 선택할 수도 있습니다.
+                  </p>
+                  <div style={{ marginBottom: '20px' }}>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#333', fontWeight: 'bold' }}>
+                      제거 방법:
+                    </label>
+                    <select style={{
+                      width: '100%',
+                      padding: '12px',
+                      borderRadius: '8px',
+                      border: '2px solid #e0e0e0',
+                      fontSize: '14px',
+                      cursor: 'pointer'
+                    }}>
+                      <option>자동 감지 및 제거</option>
+                      <option>수동 영역 선택</option>
+                      <option>특정 위치 지정</option>
+                    </select>
+                  </div>
+                  <div style={{
+                    padding: '15px',
+                    background: '#fff3cd',
+                    borderRadius: '8px',
+                    marginBottom: '20px',
+                    border: '1px solid #ffc107'
+                  }}>
+                    <strong>⚠️ 주의:</strong>
+                    <p style={{ margin: '5px 0 0 0', fontSize: '13px', color: '#666' }}>
+                      저작권이 있는 워터마크를 제거하는 것은 법적 문제가 될 수 있습니다.
+                      자신의 콘텐츠에만 사용하세요.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleProcessing('워터마크 제거')}
+                    disabled={processing || !selectedFile}
+                    style={{
+                      width: '100%',
+                      padding: '15px',
+                      background: processing ? '#ccc' : 'linear-gradient(135deg, #f093fb, #f5576c)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '10px',
+                      fontSize: '16px',
+                      fontWeight: 'bold',
+                      cursor: processing || !selectedFile ? 'not-allowed' : 'pointer',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    {processing ? '처리 중...' : '🚫 워터마크 제거 시작'}
+                  </button>
+                </div>
+              )}
+
+              {activeTab === 'background' && (
+                <div>
+                  <p style={{ color: '#666', marginBottom: '20px', lineHeight: '1.6' }}>
+                    AI를 사용하여 비디오에서 배경을 제거하고 투명한 배경을 만듭니다.
+                    녹색 스크린 없이도 작동합니다.
+                  </p>
+                  <div style={{ marginBottom: '20px' }}>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#333', fontWeight: 'bold' }}>
+                      출력 형식:
+                    </label>
+                    <select style={{
+                      width: '100%',
+                      padding: '12px',
+                      borderRadius: '8px',
+                      border: '2px solid #e0e0e0',
+                      fontSize: '14px',
+                      cursor: 'pointer'
+                    }}>
+                      <option>투명 배경 (WebM)</option>
+                      <option>투명 배경 (MOV)</option>
+                      <option>단색 배경</option>
+                      <option>그라데이션 배경</option>
+                    </select>
+                  </div>
+                  <div style={{ marginBottom: '20px' }}>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#333', fontWeight: 'bold' }}>
+                      정확도:
+                    </label>
+                    <input
+                      type="range"
+                      min="1"
+                      max="10"
+                      defaultValue="7"
+                      style={{ width: '100%' }}
+                    />
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#999' }}>
+                      <span>빠름</span>
+                      <span>정확</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleProcessing('배경 제거')}
+                    disabled={processing || !selectedFile}
+                    style={{
+                      width: '100%',
+                      padding: '15px',
+                      background: processing ? '#ccc' : 'linear-gradient(135deg, #4facfe, #00f2fe)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '10px',
+                      fontSize: '16px',
+                      fontWeight: 'bold',
+                      cursor: processing || !selectedFile ? 'not-allowed' : 'pointer',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    {processing ? '처리 중...' : '🎭 배경 제거 시작'}
+                  </button>
+                </div>
+              )}
+
+              {/* Processing Info */}
+              {selectedFile && (
+                <div style={{
+                  marginTop: '30px',
+                  padding: '20px',
+                  background: 'linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(139, 195, 74, 0.1))',
+                  borderRadius: '10px',
+                  border: '1px solid rgba(76, 175, 80, 0.3)'
+                }}>
+                  <h4 style={{ margin: '0 0 10px 0', color: '#4caf50' }}>📊 처리 정보</h4>
+                  <p style={{ margin: '5px 0', fontSize: '13px', color: '#666' }}>
+                    예상 처리 시간: 2-5분
+                  </p>
+                  <p style={{ margin: '5px 0', fontSize: '13px', color: '#666' }}>
+                    크레딧 소요: 10 크레딧
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Feature Cards */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+          gap: '20px',
+          marginTop: '40px'
+        }}>
+          {[
+            { icon: '🚀', title: '빠른 처리', desc: 'GPU 가속으로 빠른 처리 속도' },
+            { icon: '🔒', title: '안전한 보안', desc: '업로드된 파일은 암호화되어 보호됩니다' },
+            { icon: '☁️', title: '클라우드 저장', desc: '처리된 비디오를 클라우드에 저장' },
+            { icon: '📱', title: '모바일 지원', desc: '모든 기기에서 사용 가능' }
+          ].map((feature, index) => (
+            <div
+              key={index}
+              style={{
+                background: 'rgba(255, 255, 255, 0.95)',
+                padding: '25px',
+                borderRadius: '15px',
+                textAlign: 'center',
+                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
+                transition: 'transform 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-5px)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)'
+              }}
+            >
+              <div style={{ fontSize: '48px', marginBottom: '15px' }}>{feature.icon}</div>
+              <h3 style={{ margin: '0 0 10px 0', color: '#333' }}>{feature.title}</h3>
+              <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>{feature.desc}</p>
+            </div>
+          ))}
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer style={{
+        padding: '30px',
+        textAlign: 'center',
+        color: 'rgba(255, 255, 255, 0.7)',
+        borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+      }}>
+        <p style={{ margin: 0 }}>
+          © 2026 EasyVideo Web | AI-Powered Video Enhancement Platform
+        </p>
+        <p style={{ margin: '10px 0 0 0', fontSize: '14px' }}>
+          이것은 데모 버전입니다. 실제 AI 처리 기능은 백엔드 구현이 필요합니다.
+        </p>
+      </footer>
+    </div>
+  )
+}

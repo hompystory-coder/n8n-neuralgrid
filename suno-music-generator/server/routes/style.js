@@ -2950,7 +2950,7 @@ router.post('/upscale-image-base64', async (req, res) => {
       console.log(`📝 프롬프트: ${premiumPrompt.substring(0, 100)}...`);
       
       const output = await replicate.run(
-        "black-forest-labs/flux-1.1-pro-canny",
+        "black-forest-labs/flux-canny-pro",
         {
           input: {
             control_image: imageDataUrl,
@@ -2958,7 +2958,7 @@ router.post('/upscale-image-base64', async (req, res) => {
             output_format: "jpg",
             output_quality: 95,
             guidance: 3.5,
-            num_inference_steps: 30
+            steps: 30  // Flux Canny Pro uses 'steps' not 'num_inference_steps'
           }
         }
       );
@@ -3594,7 +3594,7 @@ router.post('/premium-upscale', async (req, res) => {
       console.log(`📝 프롬프트: ${premiumPrompt.substring(0, 100)}...`);
       
       const output = await replicate.run(
-        "black-forest-labs/flux-1.1-pro-canny",
+        "black-forest-labs/flux-canny-pro",
         {
           input: {
             control_image: imageDataUrl,
@@ -3602,7 +3602,7 @@ router.post('/premium-upscale', async (req, res) => {
             output_format: "jpg",
             output_quality: 95,
             guidance: 3.5,  // 구조 유지 정도 (낮을수록 원본 유지)
-            num_inference_steps: 30
+            steps: 30  // Flux Canny Pro uses 'steps' not 'num_inference_steps'
           }
         }
       );

@@ -511,10 +511,54 @@ router.post('/upload-audio', (req, res) => {
       console.log('✅ 초정밀 오디오 분석 완료!');
       console.log('🎨 생성된 태그:', analysisResult.tags.substring(0, 150) + '...');
 
+      // 썸네일 프롬프트 확인
+      const thumbnailPrompts = analysisResult.thumbnailPrompts || [];
+      console.log('🎨 썸네일 프롬프트:', thumbnailPrompts.length, '개');
+
+      // DALL-E 3로 이미지 생성 (옵션)
+      let thumbnailUrls = [];
+      let generationError = null;
+
+      if (thumbnailPrompts.length > 0) {
+        console.log('🖼️ DALL-E 3로 썸네일 생성 중...');
+        try {
+          const imagePromises = thumbnailPrompts.map((prompt, index) =>
+            openaiImageGenerator.generateSingleImage(prompt, {
+              size: '1792x1024',
+              quality: 'standard',
+              style: index % 2 === 0 ? 'vivid' : 'natural'
+            })
+              .then(result => {
+                console.log(`   ✅ 이미지 ${index + 1}/${thumbnailPrompts.length} 완료`);
+                return { index, url: result.imageUrl, prompt, success: true };
+              })
+              .catch(err => {
+                console.error(`   ❌ 이미지 ${index + 1} 실패:`, err.message);
+                return { index, url: null, prompt, error: err.message, success: false };
+              })
+          );
+
+          const results = await Promise.all(imagePromises);
+          thumbnailUrls = results
+            .filter(r => r.success && r.url)
+            .map(r => ({ url: r.url, prompt: r.prompt, index: r.index }));
+
+          console.log(`✅ ${thumbnailUrls.length}/${thumbnailPrompts.length} 이미지 생성 완료`);
+        } catch (err) {
+          generationError = err.message;
+          console.error('❌ 썸네일 생성 오류:', err.message);
+        }
+      }
+
       res.json({
         success: true,
         tags: analysisResult.tags,
         analysis: analysisResult.analysis,
+        thumbnails: {
+          count: thumbnailUrls.length,
+          images: thumbnailUrls,
+          error: generationError
+        },
         message: '✅ 오디오를 성공적으로 분석했습니다! Suno AI가 이 분석을 사용해 유사한 음악을 생성합니다.'
       });
 
