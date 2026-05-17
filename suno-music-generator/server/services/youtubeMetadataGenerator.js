@@ -456,9 +456,7 @@ ${musicEmoji} 언제 어디서나 함께하세요`
     // 공통 푸터 추가
     const footer = `
 
-━━━━━━━━━━━━━━━━━━━
 ${musicEmoji} More Playlists
-━━━━━━━━━━━━━━━━━━━
 구독하고 매주 새로운 음악을 만나보세요!
 
 #${styleInfo.genre} #${styleInfo.mood} #playlist #music${year}`;
@@ -679,13 +677,9 @@ ${musicEmoji} More Playlists
     const totalDuration = this._formatTimestamp(currentTime);
     const trackCount = tracks.length;
     
-    return `━━━━━━━━━━━━━━━━━━━━━━━━━━
-📋 Tracklist (${trackCount} track${trackCount > 1 ? 's' : ''} • ${totalDuration})
-━━━━━━━━━━━━━━━━━━━━━━━━━━
+    return `📋 Tracklist (${trackCount} track${trackCount > 1 ? 's' : ''} • ${totalDuration})
 
-${tracklistLines.join('\n')}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━`;
+${tracklistLines.join('\n')}`;
   }
 
   /**
