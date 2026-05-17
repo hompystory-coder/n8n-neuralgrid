@@ -6,6 +6,7 @@ const sunoClient = require('../services/sunoClient');
 const AudioAnalyzer = require('../services/audioAnalyzer');
 const audioAnalyzer = new AudioAnalyzer();
 const openaiImageGenerator = require('../services/openaiImageGenerator'); // 썸네일 생성용
+const thumbnailPromptGenerator = require('../services/thumbnailPromptGenerator'); // 🦔 고슴도치 썸네일
 
 // 스타일 라우터에서 생성된 메타데이터 가져오기
 let generatedMusicMetadata = null;
@@ -648,6 +649,144 @@ router.post('/extract-style', async (req, res) => {
 
   } catch (error) {
     console.error('Extract style error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+/**
+ * POST /api/music/generate-thumbnail
+ * Generate YouTube thumbnail with hedgehog character
+ */
+router.post('/generate-thumbnail', async (req, res) => {
+  try {
+    const { genre, mood, timeOfDay, scenario, count } = req.body;
+
+    console.log('🦔 썸네일 생성 요청:', { genre, mood, timeOfDay, scenario, count });
+
+    // 단일 또는 배치 생성
+    if (count && count > 1) {
+      // 배치 생성 (여러 변형)
+      const prompts = thumbnailPromptGenerator.generateBatch({ genre, mood, timeOfDay }, count);
+      
+      console.log(`🎨 ${prompts.length}개 썸네일 생성 중...`);
+      
+      const imagePromises = prompts.map((item, index) =>
+        openaiImageGenerator.generateSingleImage(item.prompt, {
+          size: '1792x1024',
+          quality: 'hd',
+          style: 'vivid'
+        })
+          .then(result => {
+            console.log(`   ✅ 썸네일 ${index + 1}/${prompts.length} 완료: ${item.name}`);
+            return { 
+              ...item,
+              url: result.imageUrl, 
+              success: true 
+            };
+          })
+          .catch(err => {
+            console.error(`   ❌ 썸네일 ${index + 1} 실패:`, err.message);
+            return { 
+              ...item,
+              url: null, 
+              error: err.message, 
+              success: false 
+            };
+          })
+      );
+
+      const results = await Promise.all(imagePromises);
+      const successResults = results.filter(r => r.success && r.url);
+
+      res.json({
+        success: true,
+        count: successResults.length,
+        thumbnails: successResults.map(r => ({
+          scenario: r.scenario,
+          name: r.name,
+          url: r.url,
+          prompt: r.prompt
+        })),
+        message: `${successResults.length}/${prompts.length} 썸네일 생성 완료`
+      });
+
+    } else {
+      // 단일 생성
+      const prompt = thumbnailPromptGenerator.generate({ genre, mood, timeOfDay, scenario });
+      
+      console.log('🎨 썸네일 생성 프롬프트:', prompt.substring(0, 100) + '...');
+
+      const result = await openaiImageGenerator.generateSingleImage(prompt, {
+        size: '1792x1024',
+        quality: 'hd',
+        style: 'vivid'
+      });
+
+      console.log('✅ 썸네일 생성 완료!');
+
+      res.json({
+        success: true,
+        thumbnail: {
+          url: result.imageUrl,
+          prompt: prompt
+        },
+        message: '썸네일이 성공적으로 생성되었습니다!'
+      });
+    }
+
+  } catch (error) {
+    console.error('❌ Thumbnail generation error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || '썸네일 생성 중 오류가 발생했습니다.'
+    });
+  }
+});
+
+/**
+ * GET /api/music/thumbnail-scenarios
+ * Get all available thumbnail scenarios
+ */
+router.get('/thumbnail-scenarios', (req, res) => {
+  try {
+    const scenarios = thumbnailPromptGenerator.getAllScenarios();
+    const stats = thumbnailPromptGenerator.getStats();
+
+    res.json({
+      success: true,
+      scenarios,
+      stats
+    });
+
+  } catch (error) {
+    console.error('Get scenarios error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+/**
+ * GET /api/music/thumbnail-scenarios/:genre
+ * Get recommended scenarios for specific genre
+ */
+router.get('/thumbnail-scenarios/:genre', (req, res) => {
+  try {
+    const { genre } = req.params;
+    const scenarios = thumbnailPromptGenerator.getRecommendedScenariosForGenre(genre);
+
+    res.json({
+      success: true,
+      genre,
+      scenarios
+    });
+
+  } catch (error) {
+    console.error('Get genre scenarios error:', error);
     res.status(500).json({
       success: false,
       error: error.message
