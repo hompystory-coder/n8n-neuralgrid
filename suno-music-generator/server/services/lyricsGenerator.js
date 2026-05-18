@@ -4162,6 +4162,90 @@ ${previousLyricsSample}
 }
 
 /**
+ * 🎵 후렴구에서 핵심 프레이즈 추출 (가장 반복되는 2-5단어 구절)
+ */
+function extractChorusPhrase(lyrics, language = 'korean') {
+  try {
+    // [Chorus] 섹션 추출
+    const chorusMatches = lyrics.match(/\[Chorus\]([\s\S]*?)(?=\[|$)/gi);
+    if (!chorusMatches || chorusMatches.length === 0) {
+      console.log('   ⚠️ 후렴구 없음, 프레이즈 추출 실패');
+      return null;
+    }
+
+    const isKorean = language.toLowerCase() === 'korean';
+    const phrases = {};
+    const minLength = isKorean ? 4 : 8;  // 한국어: 최소 4글자, 영어: 최소 8글자
+    const maxLength = isKorean ? 15 : 30; // 한국어: 최대 15글자, 영어: 최대 30글자
+
+    // 모든 후렴구에서 구절 추출
+    chorusMatches.forEach(chorus => {
+      const lines = chorus
+        .replace(/\[Chorus\]/gi, '')
+        .split('\n')
+        .map(l => l.trim())
+        .filter(l => l.length > 0 && !l.startsWith('['));
+
+      lines.forEach(line => {
+        // 줄 전체가 적절한 길이면 추가
+        if (line.length >= minLength && line.length <= maxLength) {
+          phrases[line] = (phrases[line] || 0) + 1;
+        }
+
+        // 한국어: 공백 기준 분리, 영어: 단어 기준 분리
+        if (isKorean) {
+          // 한국어는 구두점으로 구절 분리
+          const segments = line.split(/[,\.!?\s]+/).filter(s => s.length >= minLength && s.length <= maxLength);
+          segments.forEach(seg => {
+            const cleaned = seg.trim();
+            if (cleaned.length >= minLength) {
+              phrases[cleaned] = (phrases[cleaned] || 0) + 1;
+            }
+          });
+        } else {
+          // 영어는 2-5 단어 조합
+          const words = line.split(/\s+/);
+          for (let len = 2; len <= Math.min(5, words.length); len++) {
+            for (let i = 0; i <= words.length - len; i++) {
+              const phrase = words.slice(i, i + len).join(' ');
+              if (phrase.length >= minLength && phrase.length <= maxLength) {
+                phrases[phrase] = (phrases[phrase] || 0) + 1;
+              }
+            }
+          }
+        }
+      });
+    });
+
+    // 빈도순 정렬
+    const sorted = Object.entries(phrases)
+      .filter(([phrase, count]) => count >= 2) // 최소 2회 이상 반복
+      .sort((a, b) => {
+        // 빈도가 같으면 길이가 적절한 것 우선 (너무 짧거나 길지 않은)
+        if (b[1] === a[1]) {
+          const idealLength = isKorean ? 8 : 15;
+          const aDiff = Math.abs(a[0].length - idealLength);
+          const bDiff = Math.abs(b[0].length - idealLength);
+          return aDiff - bDiff;
+        }
+        return b[1] - a[1];
+      });
+
+    if (sorted.length > 0) {
+      const [bestPhrase, count] = sorted[0];
+      console.log(`   🎯 후렴구 핵심 프레이즈: "${bestPhrase}" (${count}회 반복)`);
+      return bestPhrase;
+    }
+
+    console.log('   ⚠️ 반복 프레이즈 없음 (최소 2회 필요)');
+    return null;
+  } catch (error) {
+    console.error('   ❌ 후렴구 프레이즈 추출 오류:', error.message);
+    return null;
+  }
+}
+
+/**
  * 가사에 맞는 제목 생성
  */
 async function generateTitle(lyrics, style, language, index = 0, issue = null) {
@@ -4170,7 +4254,20 @@ async function generateTitle(lyrics, style, language, index = 0, issue = null) {
   const uniqueSeed = Date.now() + index * 1000 + Math.floor(Math.random() * 10000);
 
   try {
-    console.log(`🤖 Gemini로 ${languageText} 제목 생성 중... (Index: ${index}, Seed: ${uniqueSeed})`);
+    console.log(`🤖 ${languageText} 제목 생성 중... (Index: ${index}, Seed: ${uniqueSeed})`);
+    if (issue) {
+      console.log(`   📰 원본 이슈: ${issue.title}`);
+    }
+
+    // 🎵 1단계: 후렴구에서 핵심 프레이즈 추출 시도
+    const chorusPhrase = extractChorusPhrase(lyrics, language);
+    if (chorusPhrase) {
+      console.log(`✅ 후렴구 프레이즈를 제목으로 사용: "${chorusPhrase}"`);
+      return chorusPhrase;
+    }
+
+    // 2단계: Gemini API로 시적 제목 생성
+    console.log(`   🤖 후렴구 추출 실패, Gemini API로 제목 생성 중...`);
     if (issue) {
       console.log(`   📰 원본 이슈: ${issue.title}`);
     }
@@ -4384,7 +4481,7 @@ Example: The Season of You`;
     }
     
     // 완전 폴백: index 기반 고유 제목
-    return generateFallbackTitle(language, index);
+    return generateFallbackTitle(language, index, style);
   }
 }
 
@@ -6453,7 +6550,7 @@ function generateIssueFallbackTitle(issue, language, index = 0) {
 /**
  * 폴백 제목 생성 (완전 랜덤 + 타임스탬프 기반)
  */
-function generateFallbackTitle(language, index = 0) {
+function generateFallbackTitle(language, index = 0, style = '') {
   const uniqueSeed = Date.now() + index * 1000;
   
   // 시드 기반 랜덤 함수
@@ -6462,98 +6559,216 @@ function generateFallbackTitle(language, index = 0) {
     return x - Math.floor(x);
   };
   
-  const koreanTitles = [
-    // 🌟 시적이고 감성적인 제목들 (120개)
-    // 자연 은유 (30개)
-    '너라는 계절', '멈춘 시간의 향기', '그림자 속의 빛', '네가 남긴 파도',
-    '달빛이 그린 약속', '별이 되어', '바람처럼 스쳐간', '마지막 봄날',
-    '고요 속을 걷다', '별빛 사이로', '파도의 속삭임', '달무리 너머',
-    '새벽이 오는 소리', '석양의 온도', '구름 위를 걷는 꿈', '바람의 기억',
-    '별이 내린 밤', '달이 머무는 곳', '햇살이 닿는 순간', '빗소리 속에서',
-    '눈꽃이 피던 날', '낙엽 지는 소리', '첫눈의 약속', '물결처럼 흐르는',
-    '안개 너머 너', '무지개를 건너', '들풀의 노래', '이슬 맺힌 아침',
-    '바람에 실린 말', '별똥별처럼',
+  // 🎵 장르별 제목 풀 (한국어)
+  const genreTitlesKorean = {
+    // 발라드 (30개)
+    ballad: [
+      '너의 온도', '멈춘 시간의 향기', '마지막 봄날', '돌아갈 수 없는 그곳',
+      '너라는 계절', '잊혀진 약속', '슬픈 미소', '그리운 얼굴',
+      '사랑했던 시간', '이별의 순간', '너를 보낸다', '혼자인 밤',
+      '추억 속의 너', '다시 만날 날', '영원한 사랑', '가슴 아픈 이야기',
+      '눈물의 이유', '보고 싶은 날', '후회', '미안해',
+      '사랑해', '안녕', '잘 지내니', '그때 그 순간',
+      '우리의 봄', '지난 여름', '슬픈 가을', '차가운 겨울',
+      '첫사랑', '마지막 사랑'
+    ],
     
-    // 감각 은유 (30개)
-    '너의 온도', '침묵의 향기', '기억의 색깔', '슬픈 미소의 이유',
-    '따뜻했던 그 공기', '떨림의 순간들', '익숙한 낯섦', '텅 빈 울림',
-    '가벼운 무게', '투명한 그리움', '부드러운 아픔', '달콤한 상처',
-    '쓸쓸한 포근함', '시린 온기', '차가운 따스함', '어두운 빛',
-    '고요한 외침', '조용한 함성', '무거운 가벼움', '선명한 희미함',
-    '뜨거운 한기', '부드러운 날카로움', '거친 부드러움', '투명한 어둠',
-    '밝은 그림자', '차분한 설렘', '고요한 파동', '잔잔한 파도',
-    '잔잔한 폭풍', '고요한 소란',
+    // 힙합/랩 (30개)
+    hiphop: [
+      '내 방식대로', '정상에서', '다시는 안 봐', '믿음', '최고가 될 거야',
+      '나를 봐', '실패는 없어', '끝까지 가', '포기 안 해', '내 길을 가',
+      '꿈을 이뤄', '성공의 맛', '돈', '명예', '권력',
+      '힙합', '리얼 토크', '진짜', '가짜', '차이',
+      '내 팀', '우리 크루', '형제들', '거리', '동네',
+      '랩 게임', '비트', '플로우', '라임', '벌스'
+    ],
     
-    // 시간 은유 (30개)
-    '흩어진 순간들', '멈춰버린 시계', '돌아갈 수 없는 봄', '영원했던 순간',
-    '잊혀질 시간', '머물던 그 시간', '지나간 내일', '오지 않는 어제',
-    '어제의 미래', '내일의 그리움', '과거의 숨결', '미래의 메아리',
-    '지금, 이 순간', '시간이 멈춘 곳', '잊혀진 계절', '돌아오는 봄',
-    '사라진 여름', '얼어붙은 가을', '끝나지 않는 겨울', '영원한 하루',
-    '하루가 일년처럼', '찰나의 영원', '순간의 무한', '끝없는 오늘',
-    '짧았던 영원', '길었던 순간', '잠시의 forever', '영원의 한 조각',
-    '시간의 흔적', '시간의 여백',
+    // 인디/포크 (30개)
+    indie: [
+      '나른한 오후', '커피 한 잔의 여유', '산책', '네가 좋아하던 노래',
+      '일요일의 기록', '작은 행복', '평범한 하루', '소소한 일상',
+      '창밖 풍경', '책 한 페이지', '낡은 사진', '오래된 편지',
+      '골목길', '단골 카페', '혼자만의 시간', '조용한 오전',
+      '비 오는 날', '맑은 하늘', '구름', '바람',
+      '기타 선율', '피아노 소리', '휘파람', '허밍',
+      '느린 걸음', '천천히', '여유', '휴식',
+      '자유', '자연'
+    ],
     
-    // 대비와 역설 (30개)
-    '슬프지 않은 눈물', '행복했던 이별', '아름다운 상처', '슬픈 미소',
-    '혼자인 우리', '함께한 고독', '외로운 사랑', '따뜻한 고독',
-    '밝은 어둠', '어두운 희망', '차가운 불꽃', '뜨거운 얼음',
-    '조용한 폭풍', '시끄러운 고요', '움직이는 정적', '고요한 질주',
-    '선명한 흐림', '명확한 혼란', '확실한 불안', '불안한 안정',
-    '편안한 긴장', '긴장된 평화', '혼란스러운 질서', '질서 있는 혼란',
-    '끝나지 않는 끝', '시작되는 끝', '끝나는 시작', '이별의 만남',
-    '만남의 이별', '슬픈 설렘'
-  ];
+    // 댄스/일렉트로 (30개)
+    dance: [
+      '밤새도록', '신나는 밤', '리듬 속으로', '춤춰', '파티 타임',
+      '열광', '폭발', '에너지', '비트', '드롭',
+      '클럽', '댄스 플로어', '불타는 밤', '미쳐', '날아올라',
+      '하이', '익스터시', '리듬', '그루브', '펑키',
+      '일렉트릭', '신스웨이브', '베이스', '킥', '스네어',
+      '빠르게', '격렬하게', '세게', '더 세게', '끝없이'
+    ],
+    
+    // 로파이/칠 (30개)
+    lofi: [
+      '비 오는 밤', '창가의 생각', '고요한 순간', '혼자만의 시간', '낮잠',
+      '느긋한 오후', '책과 커피', '달빛 아래', '조용한 밤', '평온',
+      '명상', '사색', '여유로운 시간', '쉼', '휴식의 순간',
+      '아늑한 방', '따뜻한 이불', '뜨거운 차', '향초', '잔잔한 음악',
+      '공부', '독서', '글쓰기', '그림', '생각',
+      '집중', '몰입', '조용', '고요', '평화'
+    ],
+    
+    // 일반 시적 (기존 120개)
+    general: [
+      // 자연 은유 (30개)
+      '너라는 계절', '멈춘 시간의 향기', '그림자 속의 빛', '네가 남긴 파도',
+      '달빛이 그린 약속', '별이 되어', '바람처럼 스쳐간', '마지막 봄날',
+      '고요 속을 걷다', '별빛 사이로', '파도의 속삭임', '달무리 너머',
+      '새벽이 오는 소리', '석양의 온도', '구름 위를 걷는 꿈', '바람의 기억',
+      '별이 내린 밤', '달이 머무는 곳', '햇살이 닿는 순간', '빗소리 속에서',
+      '눈꽃이 피던 날', '낙엽 지는 소리', '첫눈의 약속', '물결처럼 흐르는',
+      '안개 너머 너', '무지개를 건너', '들풀의 노래', '이슬 맺힌 아침',
+      '바람에 실린 말', '별똥별처럼',
+      
+      // 감각 은유 (30개)
+      '너의 온도', '침묵의 향기', '기억의 색깔', '슬픈 미소의 이유',
+      '따뜻했던 그 공기', '떨림의 순간들', '익숙한 낯섦', '텅 빈 울림',
+      '가벼운 무게', '투명한 그리움', '부드러운 아픔', '달콤한 상처',
+      '쓸쓸한 포근함', '시린 온기', '차가운 따스함', '어두운 빛',
+      '고요한 외침', '조용한 함성', '무거운 가벼움', '선명한 희미함',
+      '뜨거운 한기', '부드러운 날카로움', '거친 부드러움', '투명한 어둠',
+      '밝은 그림자', '차분한 설렘', '고요한 파동', '잔잔한 파도',
+      '잔잔한 폭풍', '고요한 소란',
+      
+      // 시간 은유 (30개)
+      '흩어진 순간들', '멈춰버린 시계', '돌아갈 수 없는 봄', '영원했던 순간',
+      '잊혀질 시간', '머물던 그 시간', '지나간 내일', '오지 않는 어제',
+      '어제의 미래', '내일의 그리움', '과거의 숨결', '미래의 메아리',
+      '지금, 이 순간', '시간이 멈춘 곳', '잊혀진 계절', '돌아오는 봄',
+      '사라진 여름', '얼어붙은 가을', '끝나지 않는 겨울', '영원한 하루',
+      '하루가 일년처럼', '찰나의 영원', '순간의 무한', '끝없는 오늘',
+      '짧았던 영원', '길었던 순간', '잠시의 forever', '영원의 한 조각',
+      '시간의 흔적', '시간의 여백',
+      
+      // 대비와 역설 (30개)
+      '슬프지 않은 눈물', '행복했던 이별', '아름다운 상처', '슬픈 미소',
+      '혼자인 우리', '함께한 고독', '외로운 사랑', '따뜻한 고독',
+      '밝은 어둠', '어두운 희망', '차가운 불꽃', '뜨거운 얼음',
+      '조용한 폭풍', '시끄러운 고요', '움직이는 정적', '고요한 질주',
+      '선명한 흐림', '명확한 혼란', '확실한 불안', '불안한 안정',
+      '편안한 긴장', '긴장된 평화', '혼란스러운 질서', '질서 있는 혼란',
+      '끝나지 않는 끝', '시작되는 끝', '끝나는 시작', '이별의 만남',
+      '만남의 이별', '슬픈 설렘'
+    ]
+  };
+
+  // 🎵 장르별 제목 풀 (영어)
+  const genreTitlesEnglish = {
+    ballad: [
+      'Your Warmth', 'Last Spring Day', 'Can\'t Go Back', 'The Season of You',
+      'Forgotten Promise', 'Sad Smile', 'Missing Face', 'Time We Loved',
+      'Moment of Farewell', 'Letting You Go', 'Alone Tonight', 'You in Memories',
+      'Day We Meet Again', 'Eternal Love', 'Heartbreak Story', 'Reason for Tears',
+      'Days I Miss You', 'Regret', 'I\'m Sorry', 'I Love You',
+      'Goodbye', 'Are You Okay', 'That Moment', 'Our Spring',
+      'Last Summer', 'Sad Autumn', 'Cold Winter', 'First Love', 'Last Love'
+    ],
+    
+    hiphop: [
+      'My Way', 'On Top', 'Never Again', 'Believe', 'Gonna Be The Best',
+      'Watch Me', 'No Failure', 'To The End', 'Never Give Up', 'My Path',
+      'Dream Come True', 'Taste of Success', 'Money', 'Fame', 'Power',
+      'Hip Hop', 'Real Talk', 'Real', 'Fake', 'Difference',
+      'My Team', 'Our Crew', 'Brothers', 'Streets', 'Hood',
+      'Rap Game', 'Beat', 'Flow', 'Rhyme', 'Verse'
+    ],
+    
+    indie: [
+      'Lazy Afternoon', 'Cup of Coffee', 'Walk', 'Song You Loved',
+      'Sunday Journal', 'Little Happiness', 'Ordinary Day', 'Simple Life',
+      'Window View', 'One Page', 'Old Photo', 'Old Letter',
+      'Alley', 'Regular Cafe', 'Alone Time', 'Quiet Morning',
+      'Rainy Day', 'Clear Sky', 'Clouds', 'Wind',
+      'Guitar Melody', 'Piano Sound', 'Whistle', 'Humming',
+      'Slow Walk', 'Slowly', 'Leisure', 'Rest',
+      'Freedom', 'Nature'
+    ],
+    
+    dance: [
+      'All Night Long', 'Exciting Night', 'Into the Rhythm', 'Dance', 'Party Time',
+      'Frenzy', 'Explosion', 'Energy', 'Beat', 'Drop',
+      'Club', 'Dance Floor', 'Burning Night', 'Go Crazy', 'Fly High',
+      'High', 'Ecstasy', 'Rhythm', 'Groove', 'Funky',
+      'Electric', 'Synthwave', 'Bass', 'Kick', 'Snare',
+      'Fast', 'Intense', 'Hard', 'Harder', 'Endless'
+    ],
+    
+    lofi: [
+      'Rainy Night', 'Thoughts by Window', 'Quiet Moment', 'Time Alone', 'Nap',
+      'Lazy Afternoon', 'Book and Coffee', 'Under Moonlight', 'Silent Night', 'Peace',
+      'Meditation', 'Contemplation', 'Leisure Time', 'Rest', 'Moment of Relief',
+      'Cozy Room', 'Warm Blanket', 'Hot Tea', 'Candles', 'Gentle Music',
+      'Study', 'Reading', 'Writing', 'Drawing', 'Thinking',
+      'Focus', 'Immersion', 'Quiet', 'Calm', 'Peaceful'
+    ],
+    
+    general: [
+      'The Season of You', 'Scent of Frozen Time', 'Light in the Shadow', 'Waves You Left Behind',
+      'Promise Drawn by Moonlight', 'Becoming a Star', 'Passing Like Wind', 'Last Spring Day',
+      'Walking Through Silence', 'Between Starlight', 'Whispers of Waves', 'Beyond Moon Halo',
+      'Sound of Dawn Arriving', 'Temperature of Sunset', 'Dreams Above Clouds', 'Memory of Wind',
+      'Night Stars Fell', 'Where Moon Stays', 'Moment Sunlight Touches', 'Within Rain Sound',
+      'Day Snow Flowers Bloomed', 'Sound of Falling Leaves', 'First Snow Promise', 'Flowing Like Water',
+      'You Beyond Mist', 'Crossing Rainbow', 'Song of Wildflowers', 'Dew-Kissed Morning',
+      'Words Carried by Wind', 'Like a Shooting Star',
+      'Your Warmth', 'Scent of Silence', 'Color of Memory', 'Reason for Sad Smile',
+      'That Warm Air', 'Moments of Trembling', 'Familiar Strangeness', 'Empty Resonance',
+      'Light Weight', 'Transparent Longing', 'Soft Pain', 'Sweet Wound',
+      'Lonely Comfort', 'Cold Warmth', 'Cold Heat', 'Dark Light',
+      'Quiet Scream', 'Silent Shout', 'Heavy Lightness', 'Clear Vagueness',
+      'Hot Chill', 'Soft Sharpness', 'Rough Softness', 'Transparent Darkness',
+      'Bright Shadow', 'Calm Excitement', 'Quiet Wave', 'Gentle Surge',
+      'Calm Storm', 'Quiet Chaos',
+      'Scattered Moments', 'Stopped Clock', 'Spring Can\'t Return', 'Moment Was Forever',
+      'Time to Forget', 'Time That Stayed', 'Yesterday That Passed', 'Tomorrow Never Comes',
+      'Future of Yesterday', 'Longing of Tomorrow', 'Breath of Past', 'Echo of Future',
+      'Now, This Moment', 'Where Time Stopped', 'Forgotten Season', 'Spring Returns',
+      'Vanished Summer', 'Frozen Autumn', 'Endless Winter', 'Eternal Day',
+      'Day Like a Year', 'Eternal Moment', 'Infinite Instant', 'Endless Today',
+      'Brief Eternity', 'Long Moment', 'Momentary Forever', 'Piece of Eternity',
+      'Trace of Time', 'Margin of Time',
+      'Tears Not Sad', 'Happy Farewell', 'Beautiful Wound', 'Sad Smile',
+      'Alone Together', 'Together in Solitude', 'Lonely Love', 'Warm Loneliness',
+      'Bright Darkness', 'Dark Hope', 'Cold Flame', 'Hot Ice',
+      'Quiet Storm', 'Noisy Silence', 'Moving Stillness', 'Silent Rush',
+      'Clear Blur', 'Clear Confusion', 'Certain Anxiety', 'Anxious Stability',
+      'Comfortable Tension', 'Tense Peace', 'Chaotic Order', 'Orderly Chaos',
+      'Ending Never Ends', 'Ending Begins', 'Beginning Ends', 'Farewell Meeting',
+      'Meeting Farewell', 'Sad Excitement'
+    ]
+  };
   
-  const englishTitles = [
-    // 🌟 Poetic and Emotional Titles (120)
-    // Nature Metaphors (30)
-    'The Season of You', 'Scent of Frozen Time', 'Light in the Shadow', 'Waves You Left Behind',
-    'Promise Drawn by Moonlight', 'Becoming a Star', 'Passing Like Wind', 'Last Spring Day',
-    'Walking Through Silence', 'Between Starlight', 'Whispers of Waves', 'Beyond Moon Halo',
-    'Sound of Dawn Arriving', 'Temperature of Sunset', 'Dreams Above Clouds', 'Memory of Wind',
-    'Night Stars Fell', 'Where Moon Stays', 'Moment Sunlight Touches', 'Within Rain Sound',
-    'Day Snow Flowers Bloomed', 'Sound of Falling Leaves', 'First Snow Promise', 'Flowing Like Water',
-    'You Beyond Mist', 'Crossing Rainbow', 'Song of Wildflowers', 'Dew-Kissed Morning',
-    'Words Carried by Wind', 'Like a Shooting Star',
-    
-    // Sensory Metaphors (30)
-    'Your Warmth', 'Scent of Silence', 'Color of Memory', 'Reason for Sad Smile',
-    'That Warm Air', 'Moments of Trembling', 'Familiar Strangeness', 'Empty Resonance',
-    'Light Weight', 'Transparent Longing', 'Soft Pain', 'Sweet Wound',
-    'Lonely Comfort', 'Cold Warmth', 'Cold Heat', 'Dark Light',
-    'Quiet Scream', 'Silent Shout', 'Heavy Lightness', 'Clear Vagueness',
-    'Hot Chill', 'Soft Sharpness', 'Rough Softness', 'Transparent Darkness',
-    'Bright Shadow', 'Calm Excitement', 'Quiet Wave', 'Gentle Surge',
-    'Calm Storm', 'Quiet Chaos',
-    
-    // Time Metaphors (30)
-    'Scattered Moments', 'Stopped Clock', 'Spring Can\'t Return', 'Moment Was Forever',
-    'Time to Forget', 'Time That Stayed', 'Yesterday That Passed', 'Tomorrow Never Comes',
-    'Future of Yesterday', 'Longing of Tomorrow', 'Breath of Past', 'Echo of Future',
-    'Now, This Moment', 'Where Time Stopped', 'Forgotten Season', 'Spring Returns',
-    'Vanished Summer', 'Frozen Autumn', 'Endless Winter', 'Eternal Day',
-    'Day Like a Year', 'Eternal Moment', 'Infinite Instant', 'Endless Today',
-    'Brief Eternity', 'Long Moment', 'Momentary Forever', 'Piece of Eternity',
-    'Trace of Time', 'Margin of Time',
-    
-    // Contrast & Paradox (30)
-    'Tears Not Sad', 'Happy Farewell', 'Beautiful Wound', 'Sad Smile',
-    'Alone Together', 'Together in Solitude', 'Lonely Love', 'Warm Loneliness',
-    'Bright Darkness', 'Dark Hope', 'Cold Flame', 'Hot Ice',
-    'Quiet Storm', 'Noisy Silence', 'Moving Stillness', 'Silent Rush',
-    'Clear Blur', 'Clear Confusion', 'Certain Anxiety', 'Anxious Stability',
-    'Comfortable Tension', 'Tense Peace', 'Chaotic Order', 'Orderly Chaos',
-    'Ending Never Ends', 'Ending Begins', 'Beginning Ends', 'Farewell Meeting',
-    'Meeting Farewell', 'Sad Excitement'
-  ];
+  // 장르 감지
+  const styleLower = (style || '').toLowerCase();
+  let genreKey = 'general';
   
-  const titles = language === 'korean' ? koreanTitles : englishTitles;
+  if (styleLower.includes('ballad') || styleLower.includes('발라드') || styleLower.includes('emotional')) {
+    genreKey = 'ballad';
+  } else if (styleLower.includes('hip hop') || styleLower.includes('hip-hop') || styleLower.includes('rap') || styleLower.includes('힙합')) {
+    genreKey = 'hiphop';
+  } else if (styleLower.includes('indie') || styleLower.includes('folk') || styleLower.includes('인디') || styleLower.includes('acoustic')) {
+    genreKey = 'indie';
+  } else if (styleLower.includes('dance') || styleLower.includes('edm') || styleLower.includes('electro') || styleLower.includes('댄스')) {
+    genreKey = 'dance';
+  } else if (styleLower.includes('lofi') || styleLower.includes('lo-fi') || styleLower.includes('chill') || styleLower.includes('로파이')) {
+    genreKey = 'lofi';
+  }
+  
+  const genreTitles = language === 'korean' ? genreTitlesKorean : genreTitlesEnglish;
+  const titles = genreTitles[genreKey] || genreTitles.general;
   
   // 🎲 완전 랜덤 선택 (시드 기반)
   const randomIndex = Math.floor(seedRandom(uniqueSeed) * titles.length);
   
-  console.log(`🏷️ 폴백 제목 생성: Index=${index}, Seed=${uniqueSeed}, 선택=${randomIndex}`);
+  console.log(`🏷️ 폴백 제목 생성: Genre=${genreKey}, Index=${index}, Seed=${uniqueSeed}, 선택=${randomIndex}`);
+  console.log(`   📚 제목 풀 크기: ${titles.length}개, 선택된 제목: "${titles[randomIndex]}"`);
   
   return titles[randomIndex];
 }
