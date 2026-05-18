@@ -668,37 +668,48 @@ router.post('/generate-thumbnail', async (req, res) => {
 
     // 단일 또는 배치 생성
     if (count && count > 1) {
-      // 배치 생성 (여러 변형)
+      // 배치 생성 (여러 변형) - 순차적 생성으로 Rate Limit 방지
       const prompts = thumbnailPromptGenerator.generateBatch({ genre, mood, timeOfDay }, count);
       
-      console.log(`🎨 ${prompts.length}개 썸네일 생성 중...`);
+      console.log(`🎨 ${prompts.length}개 썸네일 순차 생성 중... (Rate Limit 방지)`);
       
-      const imagePromises = prompts.map((item, index) =>
-        replicateImageGenerator.generateSingleImage(item.prompt, {
-          width: 1792,
-          height: 1024,
-          num_inference_steps: 28
-        })
-          .then(result => {
-            console.log(`   ✅ 썸네일 ${index + 1}/${prompts.length} 완료: ${item.name}`);
-            return { 
-              ...item,
-              url: result.imageUrl, 
-              success: true 
-            };
-          })
-          .catch(err => {
-            console.error(`   ❌ 썸네일 ${index + 1} 실패:`, err.message);
-            return { 
-              ...item,
-              url: null, 
-              error: err.message, 
-              success: false 
-            };
-          })
-      );
+      const results = [];
+      
+      // 순차적으로 생성 (동시 생성 시 Rate Limit 발생)
+      for (let i = 0; i < prompts.length; i++) {
+        const item = prompts[i];
+        try {
+          console.log(`   ⏳ 썸네일 ${i + 1}/${prompts.length} 생성 중: ${item.name}`);
+          
+          const result = await replicateImageGenerator.generateSingleImage(item.prompt, {
+            width: 1792,
+            height: 1024,
+            num_inference_steps: 28
+          });
+          
+          console.log(`   ✅ 썸네일 ${i + 1}/${prompts.length} 완료: ${item.name}`);
+          results.push({ 
+            ...item,
+            url: result.imageUrl, 
+            success: true 
+          });
+          
+          // Rate Limit 방지: 다음 생성 전 대기 (마지막 항목 제외)
+          if (i < prompts.length - 1) {
+            console.log(`   ⏱️ Rate Limit 방지를 위해 12초 대기...`);
+            await new Promise(resolve => setTimeout(resolve, 12000)); // 12초 대기
+          }
+        } catch (err) {
+          console.error(`   ❌ 썸네일 ${i + 1} 실패:`, err.message);
+          results.push({ 
+            ...item,
+            url: null, 
+            error: err.message, 
+            success: false 
+          });
+        }
+      }
 
-      const results = await Promise.all(imagePromises);
       const successResults = results.filter(r => r.success && r.url);
 
       res.json({
