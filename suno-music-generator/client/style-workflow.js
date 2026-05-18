@@ -4510,10 +4510,10 @@ function copyPromptAndShowInstructions() {
 }
 
 /**
- * 🎨 YouTube 썸네일 생성 (웹훅 방식)
+ * 🎨 YouTube 썸네일 생성 (🦔 블루 고슴도치 캐릭터 자동 생성)
  */
 async function generateYouTubeThumbnail() {
-  console.log('🎨 YouTube 썸네일 생성 시작 (웹훅 자동화)');
+  console.log('🦔 블루 고슴도치 썸네일 생성 시작 (완전 자동)');
   
   const btn = document.getElementById('generateThumbnailBtn');
   const resultDiv = document.getElementById('thumbnailResult');
@@ -4532,71 +4532,127 @@ async function generateYouTubeThumbnail() {
   // 로딩 상태
   const originalHTML = btn.innerHTML;
   btn.innerHTML = `
-    <span style="font-size: 1.4em; animation: spin 1s linear infinite;">🎨</span>
+    <span style="font-size: 1.4em; animation: spin 1s linear infinite;">🦔</span>
     <div style="text-align: left;">
-      <div>썸네일 요청 중...</div>
+      <div>고슴도치 썸네일 생성 중...</div>
       <div style="font-size: 0.7em; font-weight: 500; opacity: 0.9; margin-top: 4px;">
-        AI 어시스턴트가 자동으로 처리합니다
+        3가지 스타일 생성 (약 40초 소요)
       </div>
     </div>
   `;
   btn.disabled = true;
   
   try {
-    // AI 모델 선택 (기본값: replicate - FLUX Schnell 완전 자동)
-    const aiModel = document.getElementById('aiModelSelect')?.value || 'replicate';
+    // 스타일에서 장르 추출
+    const style = window.albumMetadata.style || 'Music Playlist';
+    let genre = 'lofi'; // 기본값
     
-    // 웹훅으로 썸네일 요청
-    const response = await fetch('/api/webhook/thumbnail-request', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        title: window.albumMetadata.youtubeTitle || window.albumMetadata.albumTitle,
-        style: window.albumMetadata.style || 'Music Playlist',
-        language: currentGeneratedLanguage,
-        aiModel: aiModel  // 'openai' (자동) 또는 'genspark' (수동)
-      })
-    });
-    
-    const data = await response.json();
-    console.log('🎨 썸네일 요청 응답:', data);
-    
-    if (!data.success) {
-      throw new Error(data.error || '썸네일 요청 실패');
+    const styleLower = style.toLowerCase();
+    if (styleLower.includes('hip hop') || styleLower.includes('hiphop')) {
+      genre = 'hip hop';
+    } else if (styleLower.includes('jazz')) {
+      genre = 'jazz';
+    } else if (styleLower.includes('chill')) {
+      genre = 'chill';
+    } else if (styleLower.includes('lofi') || styleLower.includes('lo-fi')) {
+      genre = 'lofi';
+    } else if (styleLower.includes('study')) {
+      genre = 'lofi';
     }
     
-    // 요청 ID 저장
-    window.currentThumbnailRequestId = data.requestId;
+    console.log('🎵 감지된 장르:', genre);
     
     // 대기 중 UI 표시
     resultDiv.style.display = 'block';
     resultDiv.innerHTML = `
-      <div style="padding: 20px; background: rgba(59,130,246,0.1); border: 2px solid rgba(59,130,246,0.3); border-radius: 12px;">
+      <div style="padding: 20px; background: rgba(72,209,204,0.1); border: 2px solid rgba(72,209,204,0.3); border-radius: 12px;">
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-          <span style="font-size: 2em; animation: spin 2s linear infinite;">⏳</span>
+          <span style="font-size: 2em; animation: spin 2s linear infinite;">🦔</span>
           <div>
-            <div style="font-size: 1.2em; font-weight: 700; color: #3b82f6;">AI 어시스턴트가 썸네일 생성 중...</div>
+            <div style="font-size: 1.2em; font-weight: 700; color: #48d1cc;">블루 고슴도치 썸네일 생성 중...</div>
             <div style="font-size: 0.9em; color: rgba(255,255,255,0.7); margin-top: 4px;">
-              요청 ID: ${data.requestId}
+              장르: ${genre} | 3가지 스타일 순차 생성 중
             </div>
           </div>
         </div>
         
         <div style="padding: 16px; background: rgba(251,191,36,0.1); border-left: 3px solid #fbbf24; border-radius: 8px;">
-          <div style="font-weight: 600; color: #fbbf24; margin-bottom: 8px;">📝 생성 프롬프트</div>
-          <pre style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px; color: rgba(255,255,255,0.8); font-size: 0.85em; line-height: 1.6; white-space: pre-wrap;">${data.prompt}</pre>
-        </div>
-        
-        <div style="margin-top: 16px; padding: 12px; background: rgba(139,92,246,0.1); border-radius: 8px; text-align: center;">
-          <div style="font-size: 0.9em; color: rgba(255,255,255,0.7);">
-            💡 자동으로 완료됩니다 (예상 시간: 10-30초)
+          <div style="font-weight: 600; color: #fbbf24; margin-bottom: 8px;">⏱️ 생성 진행 상황</div>
+          <div style="color: rgba(255,255,255,0.8); font-size: 0.9em; line-height: 1.8;">
+            ⏳ 1번째 썸네일 생성 중... (약 10초)<br>
+            ⏱️ 2번째 썸네일 대기 중... (12초 대기)<br>
+            ⏱️ 3번째 썸네일 대기 중... (12초 대기)<br>
+            <br>
+            💡 총 예상 시간: 약 40초 (Rate Limit 방지)
           </div>
         </div>
       </div>
     `;
     
-    // 폴링 시작 (Socket.IO로 대체 가능)
-    pollThumbnailStatus(data.requestId, originalHTML);
+    // 🦔 블루 고슴도치 썸네일 자동 생성 API 호출
+    const response = await fetch('/api/music/generate-thumbnail', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        genre: genre,
+        mood: 'calm',
+        count: 3  // 3가지 스타일 생성
+      })
+    });
+    
+    const data = await response.json();
+    console.log('✅ 썸네일 생성 완료:', data);
+    
+    if (!data.success) {
+      throw new Error(data.error || '썸네일 생성 실패');
+    }
+    
+    // 버튼 복원
+    btn.innerHTML = originalHTML;
+    btn.disabled = false;
+    
+    // 성공 UI 표시
+    const thumbnails = data.thumbnails || [];
+    resultDiv.innerHTML = `
+      <div style="padding: 20px; background: rgba(34,197,94,0.1); border: 2px solid rgba(34,197,94,0.3); border-radius: 12px;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+          <span style="font-size: 2em;">✅</span>
+          <div>
+            <div style="font-size: 1.2em; font-weight: 700; color: #22c55e;">썸네일 생성 완료!</div>
+            <div style="font-size: 0.9em; color: rgba(255,255,255,0.7); margin-top: 4px;">
+              ${thumbnails.length}개의 고슴도치 스타일 생성됨
+            </div>
+          </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+          ${thumbnails.map((thumb, index) => `
+            <div style="background: rgba(0,0,0,0.3); border-radius: 12px; overflow: hidden; border: 1px solid rgba(72,209,204,0.3); transition: all 0.3s; cursor: pointer;"
+                 onmouseover="this.style.transform='translateY(-4px)'; this.style.borderColor='rgba(72,209,204,0.6)';"
+                 onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(72,209,204,0.3)';"
+                 onclick="window.open('${thumb.url}', '_blank')">
+              <img src="${thumb.url}" alt="${thumb.name}" style="width: 100%; height: auto; display: block;">
+              <div style="padding: 12px;">
+                <h5 style="margin: 0 0 8px 0; color: #48d1cc; font-size: 0.9em;">
+                  🦔 ${thumb.name || `스타일 ${index + 1}`}
+                </h5>
+                <p style="margin: 0; color: rgba(255,255,255,0.6); font-size: 0.8em;">
+                  ${thumb.scenario || ''}
+                </p>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        
+        <div style="margin-top: 16px; padding: 12px; background: rgba(139,92,246,0.1); border-radius: 8px; text-align: center;">
+          <div style="font-size: 0.9em; color: rgba(255,255,255,0.7);">
+            💡 썸네일을 클릭하면 크게 볼 수 있습니다
+          </div>
+        </div>
+      </div>
+    `;
+    
+    return; // 폴링 없이 즉시 완료
     
   } catch (error) {
     console.error('❌ 썸네일 요청 실패:', error);
