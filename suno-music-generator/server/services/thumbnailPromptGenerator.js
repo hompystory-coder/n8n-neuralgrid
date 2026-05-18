@@ -225,10 +225,12 @@ class ThumbnailPromptGenerator {
    * @param {string} options.mood - 분위기 (예: 'chill', 'energetic', 'peaceful')
    * @param {string} options.timeOfDay - 시간대 (예: 'morning', 'night', 'afternoon')
    * @param {string} options.scenario - 직접 시나리오 지정 (선택적)
+   * @param {boolean} options.includeText - 텍스트 오버레이 포함 여부 (기본값: true)
+   * @param {string} options.customText - 커스텀 텍스트 (선택적)
    * @returns {string} DALL-E용 프롬프트
    */
   generate(options = {}) {
-    const { genre, mood, timeOfDay, scenario } = options;
+    const { genre, mood, timeOfDay, scenario, includeText = true, customText } = options;
 
     // 시나리오 선택
     let selectedScenario;
@@ -241,7 +243,7 @@ class ThumbnailPromptGenerator {
     }
 
     // 프롬프트 조합
-    const prompt = this._buildPrompt(selectedScenario);
+    const prompt = this._buildPrompt(selectedScenario, { includeText, customText });
 
     return prompt;
   }
@@ -301,12 +303,53 @@ class ThumbnailPromptGenerator {
   /**
    * 프롬프트 조합 생성
    */
-  _buildPrompt(scenario) {
+  _buildPrompt(scenario, options = {}) {
     const outfit = this.outfits[scenario.outfit] || this.outfits.casual;
+    const { includeText = true, customText } = options;
 
-    const prompt = `YouTube thumbnail for ${scenario.name.toLowerCase()} music. ${this.character.base} ${outfit}, ${scenario.setting}. ${scenario.elements}. ${scenario.colors}, ${scenario.mood}. The hedgehog ${scenario.activity}. ${scenario.extras}. 1280x720px, professional YouTube thumbnail style`;
+    // 기본 장면 프롬프트
+    let prompt = `YouTube thumbnail for ${scenario.name.toLowerCase()} music. ${this.character.base} ${outfit}, ${scenario.setting}. ${scenario.elements}. ${scenario.colors}, ${scenario.mood}. The hedgehog ${scenario.activity}. ${scenario.extras}`;
+
+    // 텍스트 오버레이 추가 (CTR 향상을 위해)
+    if (includeText) {
+      const textContent = customText || this._generateCatchyText(scenario);
+      prompt += `. IMPORTANT: Include bold, eye-catching text overlay: "${textContent}" in large, modern bold font at the top. Use high-contrast colors (white text with black outline or shadow) to make it pop. The text should be highly visible and professional, following YouTube thumbnail best practices for maximum click-through rate`;
+    }
+
+    prompt += `. 1280x720px, professional YouTube thumbnail style, high quality, sharp details`;
 
     return prompt;
+  }
+
+  /**
+   * 시나리오별 매력적인 텍스트 생성 (CTR 최적화)
+   */
+  _generateCatchyText(scenario) {
+    const textTemplates = {
+      lofi_study: ['STUDY BEATS', 'FOCUS MODE', 'STUDY VIBES'],
+      hip_hop_production: ['HIP HOP BEATS', 'PRODUCER MODE', 'BEAT MAKING'],
+      morning_chill: ['MORNING CHILL', 'SUNRISE VIBES', 'WAKE UP MUSIC'],
+      night_drive: ['NIGHT DRIVE', 'LATE NIGHT', 'MIDNIGHT VIBES'],
+      cafe_jazz: ['CAFE JAZZ', 'COFFEE MUSIC', 'JAZZ VIBES'],
+      sunset_rooftop: ['SUNSET CHILL', 'GOLDEN HOUR', 'EVENING VIBES'],
+      library_study: ['DEEP FOCUS', 'STUDY TIME', 'LIBRARY VIBES'],
+      bedroom_chill: ['BEDROOM LOFI', 'CHILL BEATS', 'LATE NIGHT'],
+      train_commute: ['TRAVEL MUSIC', 'JOURNEY VIBES', 'ON THE ROAD'],
+      rain_window: ['RAINY DAY', 'COZY VIBES', 'RAIN SOUNDS'],
+      park_bench: ['NATURE SOUNDS', 'PARK VIBES', 'OUTDOOR CHILL'],
+      vinyl_shop: ['VINYL VIBES', 'CLASSIC BEATS', 'RECORD STORE'],
+      beach_sunset: ['BEACH CHILL', 'SUMMER VIBES', 'OCEAN SOUNDS'],
+      winter_cabin: ['WINTER COZY', 'FIREPLACE VIBES', 'SNOWY DAY'],
+      city_night: ['CITY NIGHTS', 'URBAN VIBES', 'NEON LIGHTS']
+    };
+
+    const scenarioKey = Object.keys(this.scenarios).find(
+      key => this.scenarios[key] === scenario
+    );
+
+    const templates = textTemplates[scenarioKey] || ['LOFI BEATS', 'CHILL VIBES', 'STUDY MUSIC'];
+    const randomIndex = Math.floor(Math.random() * templates.length);
+    return templates[randomIndex];
   }
 
   /**
@@ -339,7 +382,7 @@ class ThumbnailPromptGenerator {
    */
   generateBatch(options = {}, count = 5) {
     const prompts = [];
-    const { genre, mood, timeOfDay } = options;
+    const { genre, mood, timeOfDay, includeText = true } = options;
 
     // 장르 기반 후보 시나리오들 가져오기
     let scenarioKeys = [];
@@ -356,7 +399,7 @@ class ThumbnailPromptGenerator {
 
     for (const key of selected) {
       const scenario = this.scenarios[key];
-      const prompt = this._buildPrompt(scenario);
+      const prompt = this._buildPrompt(scenario, { includeText });
       prompts.push({
         scenario: key,
         name: scenario.name,
