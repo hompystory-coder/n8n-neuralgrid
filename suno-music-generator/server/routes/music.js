@@ -682,8 +682,8 @@ router.post('/generate-thumbnail', async (req, res) => {
           console.log(`   ⏳ 썸네일 ${i + 1}/${prompts.length} 생성 중: ${item.name}`);
           
           const result = await replicateImageGenerator.generateSingleImage(item.prompt, {
-            width: 1792,
-            height: 1024,
+            width: 1280,
+            height: 720,
             num_inference_steps: 28
           });
           
@@ -731,8 +731,8 @@ router.post('/generate-thumbnail', async (req, res) => {
       console.log('🎨 썸네일 생성 프롬프트:', prompt.substring(0, 100) + '...');
 
       const result = await replicateImageGenerator.generateSingleImage(prompt, {
-        width: 1792,
-        height: 1024,
+        width: 1280,
+        height: 720,
         num_inference_steps: 28
       });
 
