@@ -662,14 +662,27 @@ router.post('/extract-style', async (req, res) => {
  */
 router.post('/generate-thumbnail', async (req, res) => {
   try {
-    const { genre, mood, timeOfDay, scenario, count } = req.body;
+    const { firstTrack, genre, mood, timeOfDay, scenario, count } = req.body;
 
-    console.log('🦔 썸네일 생성 요청:', { genre, mood, timeOfDay, scenario, count });
+    console.log('🦔 썸네일 생성 요청:', { 
+      has1stTrack: !!firstTrack, 
+      firstTrackTitle: firstTrack?.title,
+      genre, 
+      mood, 
+      timeOfDay, 
+      scenario, 
+      count 
+    });
 
     // 단일 또는 배치 생성
     if (count && count > 1) {
       // 배치 생성 (여러 변형) - 순차적 생성으로 Rate Limit 방지
-      const prompts = thumbnailPromptGenerator.generateBatch({ genre, mood, timeOfDay }, count);
+      const prompts = thumbnailPromptGenerator.generateBatch({ 
+        firstTrack,  // 🆕 1번 곡 정보 전달
+        genre, 
+        mood, 
+        timeOfDay 
+      }, count);
       
       console.log(`🎨 ${prompts.length}개 썸네일 순차 생성 중... (Rate Limit 방지)`);
       
@@ -726,7 +739,13 @@ router.post('/generate-thumbnail', async (req, res) => {
 
     } else {
       // 단일 생성
-      const prompt = thumbnailPromptGenerator.generate({ genre, mood, timeOfDay, scenario });
+      const prompt = thumbnailPromptGenerator.generate({ 
+        firstTrack,  // 🆕 1번 곡 정보 전달
+        genre, 
+        mood, 
+        timeOfDay, 
+        scenario 
+      });
       
       console.log('🎨 썸네일 생성 프롬프트:', prompt.substring(0, 100) + '...');
 
