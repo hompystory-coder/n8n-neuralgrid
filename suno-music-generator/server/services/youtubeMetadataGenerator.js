@@ -769,6 +769,345 @@ ${tracklist}
 
 🎧 구독하고 매주 새로운 음악을 만나보세요!`;
   }
+
+  /**
+   * 🎵 플레이리스트 메타데이터 생성 (OOOffi 스타일)
+   * 
+   * 여러 곡을 묶은 플레이리스트 전체의 분위기/감정을 표현
+   * @param {Object} playlistData - 플레이리스트 정보
+   * @param {Array} playlistData.tracks - 곡 리스트 [{title, duration, lyrics, style}]
+   * @param {String} playlistData.style - 전체 스타일
+   * @returns {Object} { titleKR, titleEN, description, tags }
+   */
+  async generatePlaylistMetadata(playlistData) {
+    const {
+      tracks = [],
+      style = '',
+      artist = 'Various Artists',
+      year = new Date().getFullYear()
+    } = playlistData;
+
+    if (tracks.length === 0) {
+      throw new Error('플레이리스트에 곡이 없습니다.');
+    }
+
+    console.log(`\n🎬 플레이리스트 메타데이터 생성 시작 (${tracks.length}곡)`);
+    console.log(`   스타일: ${style}`);
+
+    // 1. 전체 플레이리스트 분위기 분석
+    const overallMood = this._analyzePlaylistMood(tracks, style);
+    console.log(`   📊 분석된 분위기: ${JSON.stringify(overallMood)}`);
+
+    // 2. LLM으로 OOOffi 스타일 제목 생성 (한국어 + 영어)
+    const titles = await this._generateOOOffiStyleTitles(overallMood, tracks);
+    console.log(`   ✅ 제목 생성 완료`);
+    console.log(`      한국어: ${titles.korean}`);
+    console.log(`      영어: ${titles.english}`);
+
+    // 3. 설명란 생성 (Tracklist 포함)
+    const description = this._generatePlaylistDescription(tracks, overallMood, year);
+    console.log(`   ✅ 설명란 생성 완료 (${description.length}자)`);
+
+    // 4. 태그 생성
+    const tags = this._generatePlaylistTags(overallMood, tracks);
+    console.log(`   ✅ 태그 생성 완료 (${tags.length}개)`);
+
+    return {
+      titleKR: titles.korean,
+      titleEN: titles.english,
+      description: description,
+      tags: tags,
+      metadata: {
+        trackCount: tracks.length,
+        overallMood: overallMood,
+        generatedAt: new Date().toISOString()
+      }
+    };
+  }
+
+  /**
+   * 🎭 플레이리스트 전체 분위기 분석
+   */
+  _analyzePlaylistMood(tracks, style) {
+    // 스타일 파싱
+    const parsedStyle = styleParser.parseStyle(style);
+    
+    // 곡들의 가사에서 키워드 추출
+    const allKeywords = [];
+    tracks.forEach(track => {
+      if (track.lyrics) {
+        const keywords = this._extractKeywordsFromLyrics(track.lyrics);
+        allKeywords.push(...keywords);
+      }
+    });
+
+    // 가장 많이 나온 키워드 찾기
+    const keywordFreq = {};
+    allKeywords.forEach(kw => {
+      keywordFreq[kw] = (keywordFreq[kw] || 0) + 1;
+    });
+    const topKeywords = Object.entries(keywordFreq)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([kw]) => kw);
+
+    // 분위기 결정
+    const mood = parsedStyle.moods?.[0] || 'chill';
+    const genre = parsedStyle.genreCategory || 'pop';
+    const energy = parsedStyle.isHighEnergy ? 'energetic' : (parsedStyle.isCalm ? 'calm' : 'balanced');
+
+    // 듣기 좋은 상황 추론
+    const situations = this._inferSituations(mood, energy, genre);
+
+    return {
+      mood,
+      genre,
+      energy,
+      bpm: parsedStyle.bpm || 120,
+      keywords: topKeywords,
+      situations,
+      trackCount: tracks.length
+    };
+  }
+
+  /**
+   * 🌟 상황 추론 (언제 듣기 좋은지)
+   */
+  _inferSituations(mood, energy, genre) {
+    const situations = [];
+
+    // 에너지 기반
+    if (energy === 'energetic') {
+      situations.push('work', 'exercise', 'morning routine');
+    } else if (energy === 'calm') {
+      situations.push('sleep', 'meditation', 'reading');
+    } else {
+      situations.push('study', 'cafe', 'relax');
+    }
+
+    // 무드 기반
+    if (mood.includes('chill') || mood.includes('relax')) {
+      situations.push('cafe vibes', 'cozy time');
+    }
+    if (mood.includes('romantic') || mood.includes('love')) {
+      situations.push('date night', 'romantic dinner');
+    }
+    if (mood.includes('happy') || mood.includes('upbeat')) {
+      situations.push('feel good', 'mood boost');
+    }
+
+    // 장르 기반
+    if (genre.includes('jazz')) {
+      situations.push('jazz cafe', 'wine time');
+    }
+    if (genre.includes('acoustic')) {
+      situations.push('acoustic vibes', 'unplugged session');
+    }
+
+    return [...new Set(situations)].slice(0, 4); // 중복 제거 & 최대 4개
+  }
+
+  /**
+   * 🎨 OOOffi 스타일 제목 생성 (LLM)
+   */
+  async _generateOOOffiStyleTitles(overallMood, tracks) {
+    try {
+      // LLM API 설정 확인
+      const { generateWithLLM } = require('./lyricsGenerator');
+
+      const systemPrompt = `당신은 YouTube 음악 플레이리스트 제목 전문가입니다.
+
+**OOOffi 채널 스타일 분석:**
+OOOffi는 19.2K 구독자를 보유한 인기 플레이리스트 채널입니다.
+
+**제목 패턴:**
+1. 감정적 훅 (듣는 사람의 기분/상황 표현)
+2. 이모지 1-2개만 사용 (과하지 않게)
+3. 구체적 상황 묘사
+4. 음악 장르 태그
+
+**실제 OOOffi 제목 예시:**
+- "Pop Songs for a Day Where Everything Goes Right🩵 Good Vibe Cafe Music · Work Mix🎧"
+- "Feel Good Instantly 🌸 Uplifting New York Vibes 🗽 Cafe Music · Work Music"
+- "Wow this song is so good...🥹 A magical spring playlist you'll fall for🩵 lofi cafe music"
+- "Pleasant Spring Pop Songs for This Weather🌿Trending Acoustic Pop Playlist☀️"
+- "Songs that make you want to leave right now 🌊☀️Upbeat Drive Pop ✈️ acoustic pop cafe music"
+
+**특징:**
+- 감정을 자극하는 훅 문장
+- 듣는 순간의 느낌을 구체적으로 표현
+- 이모지는 1-2개만 (🌸☕️🩵🗽 등)
+- 자연스러운 영어 표현
+- 장르 태그는 끝에 간결하게`;
+
+      const userPrompt = `아래 플레이리스트에 맞는 YouTube 제목을 생성하세요:
+
+**플레이리스트 정보:**
+- 곡 수: ${tracks.length}곡
+- 전체 분위기: ${overallMood.mood}
+- 에너지: ${overallMood.energy}
+- 장르: ${overallMood.genre}
+- 듣기 좋은 상황: ${overallMood.situations.join(', ')}
+- 키워드: ${overallMood.keywords.join(', ')}
+
+**요구사항:**
+1. OOOffi 스타일로 **한국어 제목 1개** 생성
+2. OOOffi 스타일로 **영어 제목 1개** 생성
+3. 이모지는 각 제목마다 1-2개만 사용
+4. 감정적 훅 + 구체적 상황 + 장르 태그 구조
+5. 자연스럽고 매력적인 표현
+
+**출력 형식 (JSON):**
+\`\`\`json
+{
+  "korean": "한국어 제목 (이모지 1-2개 포함)",
+  "english": "영어 제목 (이모지 1-2개 포함)"
+}
+\`\`\`
+
+⚠️ **주의**: JSON만 출력하세요 (설명 금지)`;
+
+      const result = await generateWithLLM(systemPrompt, userPrompt, 0.8, 500);
+      const responseText = result.response.text().trim();
+
+      // JSON 파싱
+      const jsonMatch = responseText.match(/```json\s*([\s\S]*?)\s*```/) || 
+                        responseText.match(/\{[\s\S]*\}/);
+      
+      if (jsonMatch) {
+        const titles = JSON.parse(jsonMatch[1] || jsonMatch[0]);
+        
+        // 검증
+        if (titles.korean && titles.english) {
+          return {
+            korean: titles.korean.trim(),
+            english: titles.english.trim()
+          };
+        }
+      }
+
+      throw new Error('LLM 응답 파싱 실패');
+
+    } catch (error) {
+      console.error('❌ LLM 제목 생성 실패:', error.message);
+      console.log('   📦 폴백 템플릿 사용');
+
+      // 폴백: 템플릿 기반 제목 생성
+      return this._generateFallbackTitles(overallMood, tracks);
+    }
+  }
+
+  /**
+   * 📦 폴백 제목 생성 (LLM 실패 시)
+   */
+  _generateFallbackTitles(overallMood, tracks) {
+    const { mood, genre, situations, energy } = overallMood;
+
+    // 이모지 선택
+    const moodEmojis = {
+      'chill': ['🌸', '☕️'],
+      'happy': ['🩵', '☀️'],
+      'romantic': ['💛', '🌙'],
+      'energetic': ['⚡', '🔥'],
+      'calm': ['🍃', '🌿']
+    };
+    const emoji = (moodEmojis[mood] || ['🎵', '🎧'])[0];
+
+    // 감정적 훅 선택
+    const hooks = {
+      'chill': ['편안한 하루를 위한', 'Feel Good Vibes'],
+      'happy': ['기분 좋아지는', 'Songs That Make You Happy'],
+      'romantic': ['설레는 순간을 위한', 'Romantic Moments'],
+      'energetic': ['에너지 충전되는', 'Energy Boost Playlist'],
+      'calm': ['평온한 시간을 위한', 'Peaceful Moments']
+    };
+    const hook = hooks[mood] || ['듣기 좋은', 'Good Vibes'];
+
+    // 상황 설명
+    const situation = situations[0] || 'music';
+
+    // 한국어 제목
+    const korean = `${hook[0]} ${genre} 플레이리스트 ${emoji} ${situation} · ${tracks.length}곡`;
+
+    // 영어 제목
+    const english = `${hook[1]} ${emoji} ${this._capitalize(genre)} Playlist · ${situation}`;
+
+    return { korean, english };
+  }
+
+  /**
+   * 📝 플레이리스트 설명 생성
+   */
+  _generatePlaylistDescription(tracks, overallMood, year) {
+    const { mood, genre, situations, energy } = overallMood;
+
+    // 감정적 인트로 (2-3줄)
+    const intros = {
+      'chill': `🌸 편안하고 여유로운 시간을 위한 ${genre} 플레이리스트입니다.\n카페에서 커피 한 잔과 함께 즐기세요.`,
+      'happy': `☀️ 기분 좋은 하루를 만들어줄 ${genre} 모음입니다.\n긍정적인 에너지를 충전하세요!`,
+      'romantic': `💛 설레는 순간을 더 특별하게 만들어줄 ${genre} 플레이리스트입니다.\n소중한 사람과 함께 들어보세요.`,
+      'energetic': `⚡ 활기찬 하루를 시작할 ${genre} 모음입니다.\n에너지 넘치는 음악과 함께하세요!`,
+      'calm': `🍃 평온한 마음을 위한 ${genre} 플레이리스트입니다.\n조용히 휴식하며 들어보세요.`
+    };
+    const intro = intros[mood] || `🎵 ${tracks.length}곡의 ${genre} 플레이리스트입니다.`;
+
+    // Tracklist 생성
+    const tracklist = this._generateDetailedTracklist(tracks);
+
+    // Perfect for 섹션
+    const perfectFor = situations.map(s => `✓ ${s}`).join('\n');
+
+    // 설명란 조립
+    return `${intro}
+
+🎵 Tracklist:
+${tracklist}
+
+📌 Perfect for:
+${perfectFor}
+
+💙 Subscribe for more playlists!
+
+#${genre.replace(/\s+/g, '').toLowerCase()} #playlist #music${year} #cafemusic #chillvibes`;
+  }
+
+  /**
+   * 🎵 상세 Tracklist 생성 (실제 곡 제목 표시)
+   */
+  _generateDetailedTracklist(tracks) {
+    let tracklist = '';
+    let currentTime = 0;
+
+    tracks.forEach((track, index) => {
+      const minutes = Math.floor(currentTime / 60);
+      const seconds = Math.floor(currentTime % 60);
+      const timeStr = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      
+      tracklist += `${timeStr} ${track.title}\n`;
+      
+      currentTime += track.duration || 180; // 기본 3분
+    });
+
+    return tracklist.trim();
+  }
+
+  /**
+   * 🏷️ 플레이리스트 태그 생성
+   */
+  _generatePlaylistTags(overallMood, tracks) {
+    const { mood, genre, situations } = overallMood;
+    
+    const tags = [
+      genre.toLowerCase().replace(/\s+/g, ''),
+      'playlist',
+      'music',
+      mood + 'vibes',
+      ...situations.map(s => s.replace(/\s+/g, ''))
+    ];
+
+    // 중복 제거 & 최대 15개
+    return [...new Set(tags)].slice(0, 15);
+  }
 }
 
 module.exports = new YouTubeMetadataGenerator();
