@@ -2151,263 +2151,92 @@ router.post('/generate-album-metadata', async (req, res) => {
       return res.status(400).json({ error: '트랙 정보가 없습니다' });
     }
     
-    console.log(`🎯 AI 메타데이터 생성 요청: ${tracks.length}곡, 스타일: ${style}`);
-    
-    // ✅ /analyze-album 로직 재사용 (기존 함수 대신)
-    const songs = tracks.map(t => ({
-      title: t.title,
-      duration: t.duration || 180,
-      lyrics: t.lyrics || ''
-    }));
-    
-    // 언어 결정
-    const lang = language || 'korean';
-    const musicStyle = style || '';
+    console.log(`\n🎬 OOOffi 스타일 플레이리스트 메타데이터 생성 시작`);
+    console.log(`   곡 수: ${tracks.length}곡`);
+    console.log(`   스타일: ${style}`);
+    console.log(`   언어: ${language || 'korean'}`);
     
     // 중복 제거
     const uniqueSongs = [];
     const seenTitles = new Set();
-    songs.forEach(song => {
-      if (!seenTitles.has(song.title)) {
-        seenTitles.add(song.title);
-        uniqueSongs.push(song);
+    tracks.forEach(track => {
+      if (!seenTitles.has(track.title)) {
+        seenTitles.add(track.title);
+        uniqueSongs.push({
+          title: track.title,
+          duration: track.duration || 180,
+          lyrics: track.lyrics || '',
+          style: track.style || style
+        });
       }
     });
     
-    console.log(`🎵 중복 제거: ${songs.length}곡 → ${uniqueSongs.length}곡`);
+    console.log(`   중복 제거: ${tracks.length}곡 → ${uniqueSongs.length}곡`);
     
-    // 총 재생 시간 계산
-    const totalSeconds = uniqueSongs.reduce((sum, song) => {
-      return sum + (song.duration ? Math.floor(song.duration) : 210);
-    }, 0);
-    const totalMinutes = Math.floor(totalSeconds / 60);
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
+    // 🎵 새로운 generatePlaylistMetadata() 사용
+    const metadata = await youtubeMetadataGenerator.generatePlaylistMetadata({
+      tracks: uniqueSongs,
+      style: style || 'pop, chill',
+      language: language || 'korean'
+    });
     
-    // 언어별 시간 표시
-    let durationText;
-    if (lang === 'english') {
-      durationText = hours > 0 ? `${hours}h ${minutes}min` : `${minutes}min`;
-    } else {
-      durationText = hours > 0 ? `${hours}시간 ${minutes}분` : `${minutes}분`;
-    }
+    console.log(`\n✅ OOOffi 스타일 메타데이터 생성 완료!`);
+    console.log(`   한국어 제목: "${metadata.titleKR}"`);
+    console.log(`   영어 제목: "${metadata.titleEN}"`);
+    console.log(`   설명란: ${metadata.description.length}자`);
+    console.log(`   태그: ${metadata.tags.length}개`);
     
-    const uniqueTitles = uniqueSongs.map(s => s.title).join(', ');
-    
-    // 타임스탬프 생성
-    let currentTime = 0;
-    const timeTrack = uniqueSongs.map((song, i) => {
-      const mins = Math.floor(currentTime / 60);
-      const secs = Math.floor(currentTime % 60);
-      const timeString = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-      
-      const songDuration = song.duration ? Math.floor(song.duration) : 210;
-      currentTime += songDuration;
-      
-      return `${timeString} - ${song.title}`;
-    }).join('\n');
-    
-    // GenSpark LLM으로 트렌드 분석 및 메타데이터 생성
-    try {
-      const apiKey = loadGenSparkAPIKey();
-      
-      if (!apiKey) {
-        throw new Error('GenSpark API key not found');
-      }
-      
-      const response = await axios.post('https://www.genspark.ai/api/llm/openai/v1/chat/completions', {
-        model: 'gpt-5',
-        messages: [
-          {
-            role: 'system',
-            content: `You are a music metadata expert. Analyze the given music style tags and track titles accurately to generate YouTube metadata.
-
-🌐 Language Rule:
-- Generate ALL content in ${lang === 'english' ? 'ENGLISH' : 'KOREAN'}
-- Album name, title, description, tags must be in ${lang === 'english' ? 'English' : 'Korean'}
-- Use ${lang === 'english' ? 'English' : 'Korean'} for mood descriptions and use cases`
-          },
-          {
-            role: 'user',
-            content: lang === 'english' ? 
-              `Generate YouTube upload metadata for an album of ${uniqueSongs.length} tracks:
-
-╭──────────────────────╮
-🎼 Music Style Tags
-╰──────────────────────╯
-${musicStyle}
-
-╭──────────────────────╮
-📝 Track Titles (${uniqueSongs.length} tracks)
-╰──────────────────────╯
-${uniqueTitles}
-
-**Respond in JSON format only**:
-{
-  "albumTitle": "Album Title (emotional, 5-15 chars)",
-  "youtubeTitle": "YouTube Title (Playlist style)",
-  "description": "2-line description",
-  "tags": "keyword1, keyword2, keyword3, ... (NO # symbols)"
-}` 
-              : 
-              `다음 ${uniqueSongs.length}곡으로 구성된 앨범의 YouTube 업로드용 메타데이터를 생성해주세요:
-
-╭──────────────────────╮
-🎼 음악 스타일 태그
-╰──────────────────────╯
-${musicStyle}
-
-╭──────────────────────╮
-📝 곡 제목 리스트 (${uniqueSongs.length}곡)
-╰──────────────────────╯
-${uniqueTitles}
-
-**JSON 형식으로만 응답**:
-{
-  "albumTitle": "앨범명 (감성적, 5-15자)",
-  "youtubeTitle": "YouTube 제목 (Playlist 스타일)",
-  "description": "2줄 설명",
-  "tags": "키워드1, 키워드2, 키워드3, ... (# 기호 없이)"
-}`
-          }
-        ],
-        temperature: 0.85
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
-        }
-      });
-      
-      const content = response.data.choices[0].message.content;
-      
-      // JSON 추출
-      const jsonMatch = content.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        const aiMetadata = JSON.parse(jsonMatch[0]);
-        
-        // 🎵 youtubeMetadataGenerator로 완전한 메타데이터 생성
-        console.log(`🎵 YouTube 메타데이터 생성 중...`);
-        const parsedStyle = styleParser.parseStyle(musicStyle);
-        const totalDuration = uniqueSongs.reduce((sum, song) => sum + (song.duration || 0), 0);
-        
-        const metadata = await youtubeMetadataGenerator.generate({
-          title: uniqueSongs[0]?.title || 'New Music',
-          lyrics: uniqueSongs.map(s => s.lyrics || '').join('\n'),
-          style: musicStyle,
-          genre: parsedStyle.genreCategory || 'pop',
-          mood: (parsedStyle.moods && parsedStyle.moods[0]) || 'chill',
-          bpm: parsedStyle.bpm || 120,
-          tracks: uniqueSongs.map(song => ({
-            title: song.title,
-            duration: song.duration || 180
-          })),
-          totalDuration: totalDuration
-        });
-        
-        // AI 생성 앨범명 + youtubeMetadataGenerator 제목/설명/태그 조합
-        const finalMetadata = {
-          albumName: aiMetadata.albumTitle || metadata.tags[0] || 'Music Playlist',
-          youtubeTitle: metadata.title,
-          description: metadata.description,
-          tags: metadata.tags.join(', ')
-        };
-        
-        console.log('✅ 완전한 메타데이터 생성 완료');
-        console.log(`   제목: "${finalMetadata.youtubeTitle}"`);
-        console.log(`   태그: ${metadata.tags.length}개`);
-        
-        return res.json({ success: true, metadata: finalMetadata });
-      }
-      
-      throw new Error('JSON 파싱 실패');
-      
-    } catch (llmError) {
-      console.warn('⚠️  GenSpark LLM 실패, 폴백 사용:', llmError.message);
-      
-      // 폴백: Playlist 스타일 제목 생성
-      const viralTitle = await generateViralYouTubeTitle(uniqueSongs, musicStyle, lang);
-      
-      // 폴백: youtubeMetadataGenerator 사용
-      console.log('⚠️  AI 응답 파싱 실패, youtubeMetadataGenerator 사용');
-      const parsedStyle = styleParser.parseStyle(musicStyle);
-      const totalDuration = uniqueSongs.reduce((sum, song) => sum + (song.duration || 0), 0);
-      
-      const metadata = await youtubeMetadataGenerator.generate({
-        title: uniqueSongs[0]?.title || 'New Music',
-        lyrics: uniqueSongs.map(s => s.lyrics || '').join('\n'),
-        style: musicStyle,
-        genre: parsedStyle.genreCategory || 'pop',
-        mood: (parsedStyle.moods && parsedStyle.moods[0]) || 'chill',
-        bpm: parsedStyle.bpm || 120,
-        tracks: uniqueSongs.map(song => ({
-          title: song.title,
-          duration: song.duration || 180
-        })),
-        totalDuration: totalDuration
-      });
-      
-      const fallbackMetadata = {
-        albumName: metadata.tags[0] || 'Music Playlist',
-        youtubeTitle: metadata.title,
+    // 응답 형식 (기존 호환)
+    return res.json({
+      success: true,
+      metadata: {
+        albumName: metadata.titleKR, // 앨범명으로 한국어 제목 사용
+        youtubeTitle: metadata.titleKR, // 기본은 한국어
+        youtubeTitleEN: metadata.titleEN, // 영어 제목도 제공
         description: metadata.description,
-        tags: metadata.tags.join(', ')
-      };
-      
-      console.log('✅ 폴백 메타데이터 생성 완료');
-      return res.json({ success: true, metadata: fallbackMetadata });
-    }
+        tags: metadata.tags.join(', '),
+        // 추가 정보
+        trackCount: uniqueSongs.length,
+        overallMood: metadata.metadata.overallMood
+      }
+    });
     
   } catch (error) {
-    console.error('❌ AI 메타데이터 생성 오류:', error);
+    console.error('❌ 플레이리스트 메타데이터 생성 오류:', error);
     
-    // 최종 폴백: youtubeMetadataGenerator
+    // 최종 폴백: 간단한 메타데이터
     try {
       const uniqueSongs = req.body.tracks || [];
-      const musicStyle = req.body.musicStyle || 'pop, chill';
+      const musicStyle = req.body.style || 'pop, chill';
       const lang = req.body.language || 'korean';
       
-      const parsedStyle = styleParser.parseStyle(musicStyle);
-      const totalDuration = uniqueSongs.reduce((sum, song) => sum + (song.duration || 0), 0);
-      
-      const metadata = await youtubeMetadataGenerator.generate({
-        title: uniqueSongs[0]?.title || 'New Music',
-        lyrics: uniqueSongs.map(s => s.lyrics || '').join('\n'),
-        style: musicStyle,
-        genre: parsedStyle.genreCategory || 'pop',
-        mood: (parsedStyle.moods && parsedStyle.moods[0]) || 'chill',
-        bpm: parsedStyle.bpm || 120,
-        tracks: uniqueSongs.map(song => ({
-          title: song.title,
-          duration: song.duration || 180
-        })),
-        totalDuration: totalDuration
-      });
+      const fallbackTitle = lang === 'english' 
+        ? `Playlist | ${uniqueSongs.length} Songs Mix`
+        : `플레이리스트 | ${uniqueSongs.length}곡 모음`;
       
       return res.json({
         success: true,
         metadata: {
-          albumName: lang === 'korean' ? `음악 모음집 ${uniqueSongs.length}곡` : `Music Collection ${uniqueSongs.length} tracks`,
-          youtubeTitle: metadata.title,
-          description: metadata.description,
-          tags: metadata.tags.join(', ')
+          albumName: fallbackTitle,
+          youtubeTitle: fallbackTitle,
+          youtubeTitleEN: `Playlist | ${uniqueSongs.length} Songs Mix`,
+          description: lang === 'english'
+            ? `${uniqueSongs.length} songs playlist\n\nTracklist:\n${uniqueSongs.map((s, i) => `${i + 1}. ${s.title}`).join('\n')}`
+            : `${uniqueSongs.length}곡 플레이리스트\n\nTracklist:\n${uniqueSongs.map((s, i) => `${i + 1}. ${s.title}`).join('\n')}`,
+          tags: 'playlist, music',
+          trackCount: uniqueSongs.length
         }
       });
     } catch (fallbackError) {
       console.error('❌ 폴백 메타데이터 생성도 실패:', fallbackError);
-      res.status(500).json({ 
+      return res.status(500).json({
         success: false,
-        error: error.message,
-        metadata: {
-          albumName: `음악 모음집`,
-          youtubeTitle: '[Playlist] Music Collection',
-          description: 'A curated music collection.',
-          tags: '감성음악, 플레이리스트, music'
-        }
+        error: '메타데이터 생성 실패'
       });
     }
   }
 });
+
 
 /**
  * 🎨 YouTube 썸네일 자동 생성 API

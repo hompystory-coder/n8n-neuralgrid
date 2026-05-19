@@ -7491,5 +7491,6 @@ module.exports = {
   generateTitle,
   generateAlbumMetadata,
   collectRealIssues,
-  generateLyricsFromIssue
+  generateLyricsFromIssue,
+  generateWithLLM  // ✅ OOOffi 스타일 제목 생성에 필요
 };
