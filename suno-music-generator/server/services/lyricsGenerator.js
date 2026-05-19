@@ -8,8 +8,8 @@ const yaml = require('js-yaml');
 const os = require('os');
 const path = require('path');
 
-// OpenAI API 설정 (우선 사용)
-const USE_OPENAI = true;
+// OpenAI API 설정 (비용 절감을 위해 Gemini 우선 사용)
+const USE_OPENAI = false;  // ⚠️ true → false: 월 $2,250 → $0 절감!
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 // Gemini API 키 설정 (fallback)
@@ -231,7 +231,7 @@ ${count}개의 안전한 이슈를 검색해주세요.
 - JSON만 출력 (설명 금지)`;
 
     // 🔥 LLM API 호출 (간단한 이슈 수집만)
-    const result = await generateWithLLM(systemInstruction, userPrompt, 0.3, 2000);
+    const result = await generateWithLLM(systemInstruction, userPrompt, 0.3, 1000);  // 2000 → 1000 토큰 (50% 절감)
     const responseText = result.response.text().trim();
     console.log(`📊 이슈 검색 결과 (원본 일부):`, responseText.substring(0, 200));
     
@@ -303,7 +303,7 @@ ${count}개의 안전한 이슈를 검색해주세요.
 
 ⚠️ **필수**: emotionalStory 400자 이상, sensoryDetails 50자 이상`;
 
-        const storyResult = await generateWithLLM('당신은 창의적인 감성 스토리 작가입니다. 매번 다른 시간대를 사용하여 영화 시나리오처럼 구체적이고 상세하게 작성하세요.', storyPrompt, 0.9, 1500);
+        const storyResult = await generateWithLLM('당신은 창의적인 감성 스토리 작가입니다. 매번 다른 시간대를 사용하여 영화 시나리오처럼 구체적이고 상세하게 작성하세요.', storyPrompt, 0.9, 800);  // 1500 → 800 토큰
         const storyText = storyResult.response.text().trim();
         
         // JSON 파싱
@@ -359,7 +359,7 @@ Output only JSON:
 Language: ${targetLanguage}`;
 
     // 🔥 Gemini API 호출
-    const result = await generateWithLLM(systemInstruction, userPrompt, 0.3, 3000);
+    const result = await generateWithLLM(systemInstruction, userPrompt, 0.3, 1500);  // 3000 → 1500 토큰 (가사 생성)
     const responseText = result.response.text().trim();
     const jsonMatch = responseText.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
@@ -663,7 +663,7 @@ async function generateLyricsFromIssue(issue, style, language, gender, index, pr
       console.log(`🎵 가사 생성 시도 ${attempt}/${maxAttempts}...`);
       
       // 🎨 Temperature 0.9 → 0.95로 증가 (더 창의적인 가사 생성)
-      const result = await generateWithLLM(systemInstruction, userPrompt, 0.95, 2048);
+      const result = await generateWithLLM(systemInstruction, userPrompt, 0.95, 1024);  // 2048 → 1024 토큰
       lyrics = result.response.text().trim();
       
       // 🔍 디버그: Gemini 응답 확인
@@ -4500,7 +4500,7 @@ Output only the title. No quotes or explanations!
 Example: The Season of You`;
 
     // 🔥 Gemini API 호출 - Temperature 0.8 → 0.9로 증가 (더 다양한 은유 표현)
-    const result = await generateWithLLM(systemInstruction, userPrompt, 0.9, 200);
+    const result = await generateWithLLM(systemInstruction, userPrompt, 0.9, 100);  // 200 → 100 토큰 (제목은 짧음)
     const titleText = result.response.text().trim();
     
     // 따옴표 제거 및 정리
