@@ -881,17 +881,13 @@ class ThumbnailPromptGenerator {
       }
     }
 
-    // 장르 기반 후보 시나리오들 가져오기
-    let scenarioKeys = [];
-    if (genre) {
-      const genreKey = genre.toLowerCase().trim();
-      scenarioKeys = this.genreMapping[genreKey] || Object.keys(this.scenarios);
-    } else {
-      scenarioKeys = Object.keys(this.scenarios);
-    }
-
-    // count만큼 다른 시나리오 선택
-    const shuffled = [...scenarioKeys].sort(() => Math.random() - 0.5);
+    // 🎲 나머지는 전체 시나리오에서 다양하게 선택 (장르 제한 없이)
+    // 이미 선택된 시나리오는 제외
+    const usedKeys = prompts.map(p => p.scenario);
+    const availableKeys = Object.keys(this.scenarios).filter(key => !usedKeys.includes(key));
+    
+    // count만큼 다른 시나리오 랜덤 선택
+    const shuffled = [...availableKeys].sort(() => Math.random() - 0.5);
     const selected = shuffled.slice(0, Math.min(count, shuffled.length));
 
     for (const key of selected) {

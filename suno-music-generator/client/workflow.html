@@ -4463,7 +4463,18 @@ ${lyrics}
                     }
                 }
                 
-                console.log('🦔 썸네일 생성 시작:', { genre });
+                // 🆕 1번 곡 정보 추출 (제목 + 가사)
+                let firstTrack = null;
+                if (generatedMusicData.tracks && generatedMusicData.tracks.length > 0) {
+                    const track = generatedMusicData.tracks[0];
+                    firstTrack = {
+                        title: track.title || '',
+                        lyrics: track.lyrics || ''
+                    };
+                    console.log('🎵 1번 곡 정보:', firstTrack.title);
+                }
+                
+                console.log('🦔 썸네일 생성 시작:', { genre, has1stTrack: !!firstTrack });
                 
                 // API 호출
                 const response = await fetch('/api/music/generate-thumbnail', {
@@ -4472,6 +4483,7 @@ ${lyrics}
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
+                        firstTrack: firstTrack,  // 🆕 1번 곡 정보 전달
                         genre: genre,
                         mood: 'calm',
                         count: 3  // 3개 변형 생성
