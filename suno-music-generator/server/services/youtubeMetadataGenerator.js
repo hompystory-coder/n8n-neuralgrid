@@ -967,12 +967,12 @@ OOOffi는 19.2K 구독자를 보유한 인기 플레이리스트 채널입니다
 
 ⚠️ **주의**: JSON만 출력하세요 (설명 금지)`;
 
-      const result = await generateWithLLM(systemPrompt, userPrompt, 0.8, 500);
-      const responseText = result.response.text().trim();
+      const responseText = await generateWithLLM(systemPrompt, userPrompt, 0.8, 500);
+      const trimmedText = responseText.trim();
 
       // JSON 파싱
-      const jsonMatch = responseText.match(/```json\s*([\s\S]*?)\s*```/) || 
-                        responseText.match(/\{[\s\S]*\}/);
+      const jsonMatch = trimmedText.match(/```json\s*([\s\S]*?)\s*```/) || 
+                        trimmedText.match(/\{[\s\S]*\}/);
       
       if (jsonMatch) {
         const titles = JSON.parse(jsonMatch[1] || jsonMatch[0]);
