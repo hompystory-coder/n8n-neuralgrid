@@ -1,0 +1,5978 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-22",
+  "totalGenres": 202,
+  "categories": [
+    {
+      "id": "pop",
+      "name": "POP 팝",
+      "emoji": "🎤",
+      "description": "차트 중심의 대중 음악 전반. 멜로디 중심이며 가장 넓은 범위를 커버합니다.",
+      "count": 22,
+      "genres": [
+        {
+          "id": "hit-pop-song",
+          "name": "HIT Pop Song",
+          "nameKo": "히트팝송",
+          "description": "히트팝송, 차트 팝, 라디오 친화적",
+          "bpm": {
+            "min": 100,
+            "max": 130,
+            "default": 120
+          },
+          "mood": [
+            "upbeat",
+            "catchy",
+            "energetic",
+            "commercial"
+          ],
+          "instruments": [
+            "synth",
+            "drums",
+            "bass",
+            "vocals",
+            "guitar"
+          ],
+          "promptTemplate": "upbeat commercial pop song, catchy hooks, radio-friendly production",
+          "examples": [
+            "Ariana Grande",
+            "The Weeknd",
+            "Dua Lipa"
+          ]
+        },
+        {
+          "id": "dance-pop",
+          "name": "Dance Pop",
+          "nameKo": "댄스팝",
+          "description": "4-on-the-floor 비트, 클럽 에너지",
+          "bpm": {
+            "min": 120,
+            "max": 130,
+            "default": 125
+          },
+          "mood": [
+            "energetic",
+            "upbeat",
+            "danceable",
+            "party"
+          ],
+          "instruments": [
+            "synth",
+            "electronic-drums",
+            "bass",
+            "vocals"
+          ],
+          "promptTemplate": "dance pop with four-on-the-floor beat, club energy, infectious rhythm",
+          "examples": [
+            "Lady Gaga",
+            "Kylie Minogue",
+            "Robyn"
+          ]
+        },
+        {
+          "id": "electro-pop",
+          "name": "Electro Pop",
+          "nameKo": "일렉트로팝",
+          "description": "신스 중심 전자음악 팝",
+          "bpm": {
+            "min": 110,
+            "max": 130,
+            "default": 120
+          },
+          "mood": [
+            "futuristic",
+            "energetic",
+            "synthetic",
+            "modern"
+          ],
+          "instruments": [
+            "synthesizer",
+            "drum-machine",
+            "vocoder",
+            "electronic-bass"
+          ],
+          "promptTemplate": "electro pop with heavy synthesizers, electronic beats, futuristic production",
+          "examples": [
+            "CHVRCHES",
+            "Grimes",
+            "La Roux"
+          ]
+        },
+        {
+          "id": "k-pop",
+          "name": "K-Pop",
+          "nameKo": "케이팝",
+          "description": "한국 아이돌 팝, 퍼포먼스 중심",
+          "bpm": {
+            "min": 110,
+            "max": 140,
+            "default": 128
+          },
+          "mood": [
+            "energetic",
+            "catchy",
+            "vibrant",
+            "polished"
+          ],
+          "instruments": [
+            "synth",
+            "drums",
+            "bass",
+            "vocals",
+            "rap"
+          ],
+          "promptTemplate": "K-Pop with dynamic vocals, catchy hooks, polished production, rap sections",
+          "examples": [
+            "BTS",
+            "BLACKPINK",
+            "NewJeans"
+          ]
+        },
+        {
+          "id": "j-pop",
+          "name": "J-Pop",
+          "nameKo": "제이팝",
+          "description": "일본 팝, 독특한 멜로디 구조",
+          "bpm": {
+            "min": 100,
+            "max": 150,
+            "default": 135
+          },
+          "mood": [
+            "cute",
+            "energetic",
+            "unique",
+            "melodic"
+          ],
+          "instruments": [
+            "synth",
+            "drums",
+            "guitar",
+            "vocals"
+          ],
+          "promptTemplate": "J-Pop with unique melodic structure, bright production, anime-style energy",
+          "examples": [
+            "Perfume",
+            "LiSA",
+            "YOASOBI"
+          ]
+        },
+        {
+          "id": "y2k-pop",
+          "name": "Y2K Pop",
+          "nameKo": "와이투케이팝",
+          "description": "2000년대 초반 복고 팝",
+          "bpm": {
+            "min": 110,
+            "max": 130,
+            "default": 120
+          },
+          "mood": [
+            "nostalgic",
+            "fun",
+            "retro",
+            "playful"
+          ],
+          "instruments": [
+            "synth",
+            "auto-tune",
+            "drums",
+            "bass"
+          ],
+          "promptTemplate": "Y2K pop with early 2000s production, auto-tune, nostalgic sound",
+          "examples": [
+            "Britney Spears",
+            "Nsync",
+            "Christina Aguilera"
+          ]
+        },
+        {
+          "id": "2010s-pop",
+          "name": "2010's Pop",
+          "nameKo": "2010년대팝",
+          "description": "2010년대 메인스트림 팝",
+          "bpm": {
+            "min": 100,
+            "max": 130,
+            "default": 120
+          },
+          "mood": [
+            "modern",
+            "polished",
+            "mainstream",
+            "catchy"
+          ],
+          "instruments": [
+            "synth",
+            "drums",
+            "bass",
+            "vocals"
+          ],
+          "promptTemplate": "2010s mainstream pop with EDM influences, polished production",
+          "examples": [
+            "Taylor Swift",
+            "Katy Perry",
+            "Bruno Mars"
+          ]
+        },
+        {
+          "id": "dark-pop",
+          "name": "Dark Pop",
+          "nameKo": "다크팝",
+          "description": "어둡고 무거운 분위기의 팝",
+          "bpm": {
+            "min": 80,
+            "max": 110,
+            "default": 95
+          },
+          "mood": [
+            "dark",
+            "moody",
+            "atmospheric",
+            "melancholic"
+          ],
+          "instruments": [
+            "synth",
+            "deep-bass",
+            "electronic-drums",
+            "vocals"
+          ],
+          "promptTemplate": "dark pop with moody atmosphere, heavy bass, melancholic melodies",
+          "examples": [
+            "Billie Eilish",
+            "The Weeknd",
+            "Lorde"
+          ]
+        },
+        {
+          "id": "acoustic-pop",
+          "name": "Acoustic Pop",
+          "nameKo": "어쿠스틱팝",
+          "description": "어쿠스틱 기타 중심 팝",
+          "bpm": {
+            "min": 80,
+            "max": 110,
+            "default": 95
+          },
+          "mood": [
+            "warm",
+            "intimate",
+            "organic",
+            "gentle"
+          ],
+          "instruments": [
+            "acoustic-guitar",
+            "light-drums",
+            "vocals",
+            "strings"
+          ],
+          "promptTemplate": "acoustic pop with gentle guitar, warm vocals, organic production",
+          "examples": [
+            "Ed Sheeran",
+            "Jack Johnson",
+            "John Mayer"
+          ]
+        },
+        {
+          "id": "bedroom-pop",
+          "name": "Bedroom Pop",
+          "nameKo": "베드룸팝",
+          "description": "홈레코딩 감성, DIY 팝",
+          "bpm": {
+            "min": 80,
+            "max": 110,
+            "default": 90
+          },
+          "mood": [
+            "lo-fi",
+            "intimate",
+            "DIY",
+            "dreamy"
+          ],
+          "instruments": [
+            "vocals",
+            "synth",
+            "guitar",
+            "drum-machine"
+          ],
+          "promptTemplate": "bedroom pop with lo-fi production, intimate vocals, DIY aesthetic",
+          "examples": [
+            "Clairo",
+            "Rex Orange County",
+            "Gus Dapperton"
+          ]
+        },
+        {
+          "id": "dream-pop",
+          "name": "Dream Pop",
+          "nameKo": "드림팝",
+          "description": "몽환적이고 리버브 가득한 팝",
+          "bpm": {
+            "min": 80,
+            "max": 110,
+            "default": 95
+          },
+          "mood": [
+            "dreamy",
+            "ethereal",
+            "atmospheric",
+            "reverb-heavy"
+          ],
+          "instruments": [
+            "guitar",
+            "synth",
+            "reverb-vocals",
+            "ambient-pads"
+          ],
+          "promptTemplate": "dream pop with lush reverb, ethereal vocals, atmospheric soundscapes",
+          "examples": [
+            "Beach House",
+            "Cigarettes After Sex",
+            "Mazzy Star"
+          ]
+        },
+        {
+          "id": "indie-pop",
+          "name": "Indie Pop",
+          "nameKo": "인디팝",
+          "description": "독립 레이블 감성 팝",
+          "bpm": {
+            "min": 90,
+            "max": 130,
+            "default": 110
+          },
+          "mood": [
+            "quirky",
+            "alternative",
+            "creative",
+            "indie"
+          ],
+          "instruments": [
+            "guitar",
+            "synth",
+            "drums",
+            "vocals"
+          ],
+          "promptTemplate": "indie pop with quirky melodies, alternative production, creative arrangements",
+          "examples": [
+            "Tame Impala",
+            "MGMT",
+            "Foster the People"
+          ]
+        },
+        {
+          "id": "synth-pop",
+          "name": "Synth Pop",
+          "nameKo": "신스팝",
+          "description": "신디사이저 중심 팝",
+          "bpm": {
+            "min": 100,
+            "max": 130,
+            "default": 120
+          },
+          "mood": [
+            "retro",
+            "electronic",
+            "melodic",
+            "nostalgic"
+          ],
+          "instruments": [
+            "synthesizer",
+            "drum-machine",
+            "vocoder",
+            "bass-synth"
+          ],
+          "promptTemplate": "synth pop with 80s-style synthesizers, electronic beats, nostalgic melodies",
+          "examples": [
+            "Depeche Mode",
+            "Pet Shop Boys",
+            "The Human League"
+          ]
+        },
+        {
+          "id": "avant-pop",
+          "name": "Avant-Pop",
+          "nameKo": "아방가르드팝",
+          "description": "실험적이고 전위적인 팝",
+          "bpm": {
+            "min": 80,
+            "max": 140,
+            "default": 110
+          },
+          "mood": [
+            "experimental",
+            "avant-garde",
+            "unconventional",
+            "artistic"
+          ],
+          "instruments": [
+            "synth",
+            "unconventional-sounds",
+            "electronic",
+            "vocals"
+          ],
+          "promptTemplate": "avant-pop with experimental production, unconventional song structures, artistic vision",
+          "examples": [
+            "Björk",
+            "FKA twigs",
+            "Arca"
+          ]
+        },
+        {
+          "id": "hyper-pop",
+          "name": "Hyper Pop",
+          "nameKo": "하이퍼팝",
+          "description": "과장되고 극단적인 디지털 팝",
+          "bpm": {
+            "min": 140,
+            "max": 180,
+            "default": 160
+          },
+          "mood": [
+            "hyper",
+            "chaotic",
+            "exaggerated",
+            "digital"
+          ],
+          "instruments": [
+            "distorted-vocals",
+            "heavy-bass",
+            "glitchy-synth",
+            "aggressive-drums"
+          ],
+          "promptTemplate": "hyper pop with distorted vocals, aggressive production, chaotic energy, exaggerated sounds",
+          "examples": [
+            "100 gecs",
+            "SOPHIE",
+            "Charli XCX"
+          ]
+        },
+        {
+          "id": "internet-pop",
+          "name": "Internet Pop",
+          "nameKo": "인터넷팝",
+          "description": "인터넷 문화에서 탄생한 팝",
+          "bpm": {
+            "min": 100,
+            "max": 150,
+            "default": 130
+          },
+          "mood": [
+            "meme-culture",
+            "viral",
+            "playful",
+            "digital"
+          ],
+          "instruments": [
+            "synth",
+            "electronic-drums",
+            "vocals",
+            "samples"
+          ],
+          "promptTemplate": "internet pop with viral potential, meme-inspired elements, digital culture references",
+          "examples": [
+            "Yung Lean",
+            "Lil Nas X",
+            "Oliver Tree"
+          ]
+        },
+        {
+          "id": "city-pop",
+          "name": "City Pop",
+          "nameKo": "시티팝",
+          "description": "일본 80년대 도시 감성 팝",
+          "bpm": {
+            "min": 100,
+            "max": 120,
+            "default": 110
+          },
+          "mood": [
+            "nostalgic",
+            "urban",
+            "smooth",
+            "retro"
+          ],
+          "instruments": [
+            "synth",
+            "electric-bass",
+            "drums",
+            "guitar",
+            "saxophone"
+          ],
+          "promptTemplate": "city pop with 80s Tokyo vibes, smooth bass lines, jazzy chords, nostalgic atmosphere",
+          "examples": [
+            "Mariya Takeuchi",
+            "Tatsuro Yamashita",
+            "Anri"
+          ]
+        },
+        {
+          "id": "latin-pop",
+          "name": "Latin Pop",
+          "nameKo": "라틴팝",
+          "description": "라틴 리듬이 결합된 팝",
+          "bpm": {
+            "min": 100,
+            "max": 130,
+            "default": 120
+          },
+          "mood": [
+            "passionate",
+            "rhythmic",
+            "vibrant",
+            "danceable"
+          ],
+          "instruments": [
+            "guitar",
+            "percussion",
+            "brass",
+            "vocals"
+          ],
+          "promptTemplate": "latin pop with rhythmic percussion, passionate vocals, vibrant energy",
+          "examples": [
+            "Shakira",
+            "Enrique Iglesias",
+            "Ricky Martin"
+          ]
+        },
+        {
+          "id": "euro-pop",
+          "name": "EuroPop",
+          "nameKo": "유로팝",
+          "description": "유럽 스타일의 댄스 팝",
+          "bpm": {
+            "min": 120,
+            "max": 140,
+            "default": 130
+          },
+          "mood": [
+            "upbeat",
+            "danceable",
+            "european",
+            "catchy"
+          ],
+          "instruments": [
+            "synth",
+            "electronic-drums",
+            "vocals",
+            "bass"
+          ],
+          "promptTemplate": "europop with driving beats, catchy melodies, dance-oriented production",
+          "examples": [
+            "ABBA",
+            "Ace of Base",
+            "Aqua"
+          ]
+        },
+        {
+          "id": "pop-rock",
+          "name": "Pop Rock",
+          "nameKo": "팝록",
+          "description": "팝과 록의 경계",
+          "bpm": {
+            "min": 100,
+            "max": 140,
+            "default": 120
+          },
+          "mood": [
+            "energetic",
+            "guitar-driven",
+            "melodic",
+            "mainstream"
+          ],
+          "instruments": [
+            "electric-guitar",
+            "drums",
+            "bass",
+            "vocals"
+          ],
+          "promptTemplate": "pop rock with guitar-driven melodies, energetic drums, catchy hooks",
+          "examples": [
+            "Maroon 5",
+            "OneRepublic",
+            "Imagine Dragons"
+          ]
+        },
+        {
+          "id": "old-pop",
+          "name": "Old Pop",
+          "nameKo": "올드팝",
+          "description": "1960-1980년대 클래식 팝 사운드",
+          "bpm": {
+            "min": 80,
+            "max": 120,
+            "default": 100
+          },
+          "mood": [
+            "nostalgic",
+            "vintage",
+            "romantic",
+            "timeless"
+          ],
+          "instruments": [
+            "acoustic-guitar",
+            "piano",
+            "strings",
+            "soft-drums",
+            "warm-vocals"
+          ],
+          "promptTemplate": "vintage pop from 60s-80s era, nostalgic melodies, warm analog production, classic songwriting",
+          "examples": [
+            "The Beatles",
+            "ABBA",
+            "Carpenters"
+          ]
+        },
+        {
+          "id": "easy-pop",
+          "name": "Easy Pop",
+          "nameKo": "이지팝",
+          "description": "쉽게 듣기 좋은 편안한 팝",
+          "bpm": {
+            "min": 85,
+            "max": 110,
+            "default": 95
+          },
+          "mood": [
+            "relaxing",
+            "comfortable",
+            "easy-listening",
+            "mellow"
+          ],
+          "instruments": [
+            "acoustic-guitar",
+            "piano",
+            "soft-synth",
+            "light-drums",
+            "smooth-vocals"
+          ],
+          "promptTemplate": "easy listening pop, soft melodies, comfortable tempo, relaxing atmosphere",
+          "examples": [
+            "Jason Mraz",
+            "Colbie Caillat",
+            "Jack Johnson"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rock",
+      "name": "ROCK 록",
+      "emoji": "🎸",
+      "description": "기타 중심의 음악. 에너지와 날 것의 사운드가 핵심입니다.",
+      "count": 38,
+      "genres": [
+        {
+          "id": "classic-rock",
+          "name": "Classic Rock",
+          "nameKo": "클래식록",
+          "description": "70~80년대 전통 록",
+          "bpm": {
+            "min": 100,
+            "max": 140,
+            "default": 120
+          },
+          "mood": [
+            "timeless",
+            "energetic",
+            "guitar-driven",
+            "anthemic"
+          ],
+          "instruments": [
+            "electric-guitar",
+            "drums",
+            "bass",
+            "vocals",
+            "hammond-organ"
+          ],
+          "promptTemplate": "classic rock with powerful guitar riffs, driving drums, anthemic vocals",
+          "examples": [
+            "Led Zeppelin",
+            "The Rolling Stones",
+            "Queen"
+          ]
+        },
+        {
+          "id": "radio-rock",
+          "name": "Radio Rock",
+          "nameKo": "라디오록",
+          "description": "라디오 친화적 메인스트림 록",
+          "bpm": {
+            "min": 100,
+            "max": 130,
+            "default": 115
+          },
+          "mood": [
+            "accessible",
+            "melodic",
+            "mainstream",
+            "catchy"
+          ],
+          "instruments": [
+            "electric-guitar",
+            "drums",
+            "bass",
+            "vocals"
+          ],
+          "promptTemplate": "radio rock with catchy hooks, polished production, mainstream appeal",
+          "examples": [
+            "Foo Fighters",
+            "Nickelback",
+            "3 Doors Down"
+          ]
+        },
+        {
+          "id": "hard-rock",
+          "name": "Hard Rock",
+          "nameKo": "하드록",
+          "description": "강한 기타 리프, 파워풀한 사운드",
+          "bpm": {
+            "min": 110,
+            "max": 150,
+            "default": 130
+          },
+          "mood": [
+            "aggressive",
+            "powerful",
+            "heavy",
+            "energetic"
+          ],
+          "instruments": [
+            "distorted-guitar",
+            "heavy-drums",
+            "bass",
+            "powerful-vocals"
+          ],
+          "promptTemplate": "hard rock with heavy guitar riffs, powerful drums, aggressive energy",
+          "examples": [
+            "AC/DC",
+            "Guns N' Roses",
+            "Van Halen"
+          ]
+        },
+        {
+          "id": "alternative-rock",
+          "name": "Alternative Rock",
+          "nameKo": "얼터너티브록",
+          "description": "얼터너티브, 비주류 록",
+          "bpm": {
+            "min": 90,
+            "max": 140,
+            "default": 115
+          },
+          "mood": [
+            "alternative",
+            "diverse",
+            "experimental",
+            "indie"
+          ],
+          "instruments": [
+            "guitar",
+            "drums",
+            "bass",
+            "vocals"
+          ],
+          "promptTemplate": "alternative rock with diverse influences, experimental elements, indie aesthetic",
+          "examples": [
+            "Radiohead",
+            "The Smashing Pumpkins",
+            "R.E.M."
+          ]
+        },
+        {
+          "id": "indie-rock",
+          "name": "Indie Rock",
+          "nameKo": "인디록",
+          "description": "독립 록",
+          "bpm": {
+            "min": 90,
+            "max": 140,
+            "default": 110
+          },
+          "mood": [
+            "independent",
+            "creative",
+            "raw",
+            "authentic"
+          ],
+          "instruments": [
+            "guitar",
+            "drums",
+            "bass",
+            "vocals"
+          ],
+          "promptTemplate": "indie rock with raw production, creative arrangements, authentic sound",
+          "examples": [
+            "Arctic Monkeys",
+            "The Strokes",
+            "Vampire Weekend"
+          ]
+        },
+        {
+          "id": "pop-punk",
+          "name": "Pop Punk",
+          "nameKo": "팝펑크",
+          "description": "팝 멜로디 + 펑크 에너지",
+          "bpm": {
+            "min": 150,
+            "max": 190,
+            "default": 170
+          },
+          "mood": [
+            "energetic",
+            "youthful",
+            "catchy",
+            "rebellious"
+          ],
+          "instruments": [
+            "power-chords",
+            "fast-drums",
+            "bass",
+            "vocals"
+          ],
+          "promptTemplate": "pop punk with fast tempo, catchy melodies, power chords, youthful energy",
+          "examples": [
+            "Blink-182",
+            "Green Day",
+            "Sum 41"
+          ]
+        },
+        {
+          "id": "punk-rock",
+          "name": "Punk Rock",
+          "nameKo": "펑크록",
+          "description": "빠르고 거칠고 반항적인 록",
+          "bpm": {
+            "min": 160,
+            "max": 200,
+            "default": 180
+          },
+          "mood": [
+            "aggressive",
+            "rebellious",
+            "raw",
+            "fast"
+          ],
+          "instruments": [
+            "distorted-guitar",
+            "fast-drums",
+            "bass",
+            "shouting-vocals"
+          ],
+          "promptTemplate": "punk rock with fast aggressive tempo, raw distorted guitars, rebellious attitude",
+          "examples": [
+            "The Ramones",
+            "Sex Pistols",
+            "The Clash"
+          ]
+        },
+        {
+          "id": "emo-rock",
+          "name": "Emo Rock",
+          "nameKo": "이모록",
+          "description": "감성적이고 고백적인 록",
+          "bpm": {
+            "min": 100,
+            "max": 160,
+            "default": 130
+          },
+          "mood": [
+            "emotional",
+            "confessional",
+            "angsty",
+            "melodic"
+          ],
+          "instruments": [
+            "guitar",
+            "drums",
+            "bass",
+            "emotional-vocals"
+          ],
+          "promptTemplate": "emo rock with emotional lyrics, melodic guitars, confessional vocals",
+          "examples": [
+            "My Chemical Romance",
+            "Fall Out Boy",
+            "Dashboard Confessional"
+          ]
+        },
+        {
+          "id": "post-punk",
+          "name": "Post Punk",
+          "nameKo": "포스트펑크",
+          "description": "펑크 이후 어두운 실험적 록",
+          "bpm": {
+            "min": 100,
+            "max": 140,
+            "default": 120
+          },
+          "mood": [
+            "dark",
+            "experimental",
+            "angular",
+            "moody"
+          ],
+          "instruments": [
+            "bass-guitar",
+            "angular-guitar",
+            "drums",
+            "atmospheric-synth"
+          ],
+          "promptTemplate": "post punk with prominent bass lines, angular guitars, dark atmosphere",
+          "examples": [
+            "Joy Division",
+            "The Cure",
+            "Interpol"
+          ]
+        },
+        {
+          "id": "grunge",
+          "name": "Grunge",
+          "nameKo": "그런지",
+          "description": "90년대 시애틀 사운드, 찌그러진 기타",
+          "bpm": {
+            "min": 80,
+            "max": 130,
+            "default": 100
+          },
+          "mood": [
+            "distorted",
+            "raw",
+            "angst",
+            "heavy"
+          ],
+          "instruments": [
+            "heavily-distorted-guitar",
+            "heavy-drums",
+            "bass",
+            "raw-vocals"
+          ],
+          "promptTemplate": "grunge with heavily distorted guitars, raw vocals, sludgy production, Seattle sound",
+          "examples": [
+            "Nirvana",
+            "Pearl Jam",
+            "Soundgarden"
+          ]
+        },
+        {
+          "id": "ska",
+          "name": "Ska",
+          "nameKo": "스카",
+          "description": "자메이카 리듬 + 록",
+          "bpm": {
+            "min": 130,
+            "max": 180,
+            "default": 160
+          },
+          "mood": [
+            "upbeat",
+            "rhythmic",
+            "brass",
+            "jamaican"
+          ],
+          "instruments": [
+            "brass-section",
+            "guitar",
+            "bass",
+            "drums",
+            "organ"
+          ],
+          "promptTemplate": "ska with upbeat tempo, offbeat guitar rhythm, prominent brass section",
+          "examples": [
+            "The Specials",
+            "Madness",
+            "The Skatalites"
+          ]
+        },
+        {
+          "id": "ska-punk",
+          "name": "Ska Punk",
+          "nameKo": "스카펑크",
+          "description": "스카 + 펑크 에너지",
+          "bpm": {
+            "min": 160,
+            "max": 200,
+            "default": 180
+          },
+          "mood": [
+            "energetic",
+            "fast",
+            "brass",
+            "punk"
+          ],
+          "instruments": [
+            "brass",
+            "distorted-guitar",
+            "fast-drums",
+            "bass"
+          ],
+          "promptTemplate": "ska punk with fast punk tempo, energetic brass, distorted guitars",
+          "examples": [
+            "Reel Big Fish",
+            "Less Than Jake",
+            "Streetlight Manifesto"
+          ]
+        },
+        {
+          "id": "rockabilly",
+          "name": "Rockabilly",
+          "nameKo": "로커빌리",
+          "description": "50년대 로큰롤 + 컨트리",
+          "bpm": {
+            "min": 140,
+            "max": 180,
+            "default": 160
+          },
+          "mood": [
+            "retro",
+            "energetic",
+            "vintage",
+            "rockabilly"
+          ],
+          "instruments": [
+            "guitar",
+            "upright-bass",
+            "drums",
+            "vocals"
+          ],
+          "promptTemplate": "rockabilly with slap bass, twangy guitar, vintage 1950s rock and roll energy",
+          "examples": [
+            "Elvis Presley",
+            "Carl Perkins",
+            "Stray Cats"
+          ]
+        },
+        {
+          "id": "celtic-punk",
+          "name": "Celtic Punk",
+          "nameKo": "켈틱펑크",
+          "description": "켈틱 민속음악 + 펑크",
+          "bpm": {
+            "min": 150,
+            "max": 190,
+            "default": 170
+          },
+          "mood": [
+            "energetic",
+            "folk",
+            "rebellious",
+            "celtic"
+          ],
+          "instruments": [
+            "bagpipes",
+            "tin-whistle",
+            "distorted-guitar",
+            "fast-drums"
+          ],
+          "promptTemplate": "celtic punk with traditional Irish instruments, punk energy, fast tempo",
+          "examples": [
+            "Flogging Molly",
+            "Dropkick Murphys",
+            "The Pogues"
+          ]
+        },
+        {
+          "id": "hair-metal",
+          "name": "Hair Metal",
+          "nameKo": "헤어메탈",
+          "description": "80년대 글램 메탈",
+          "bpm": {
+            "min": 100,
+            "max": 140,
+            "default": 120
+          },
+          "mood": [
+            "glam",
+            "energetic",
+            "anthemic",
+            "80s"
+          ],
+          "instruments": [
+            "electric-guitar",
+            "keyboards",
+            "drums",
+            "high-vocals"
+          ],
+          "promptTemplate": "hair metal with powerful guitar solos, anthemic choruses, 80s glam production",
+          "examples": [
+            "Mötley Crüe",
+            "Poison",
+            "Def Leppard"
+          ]
+        },
+        {
+          "id": "psychedelic-rock",
+          "name": "Psychedelic Rock",
+          "nameKo": "사이키델릭록",
+          "description": "사이키델릭, 몽환적 록",
+          "bpm": {
+            "min": 80,
+            "max": 130,
+            "default": 110
+          },
+          "mood": [
+            "psychedelic",
+            "trippy",
+            "experimental",
+            "mind-bending"
+          ],
+          "instruments": [
+            "guitar-effects",
+            "organ",
+            "sitar",
+            "experimental-sounds"
+          ],
+          "promptTemplate": "psychedelic rock with swirling effects, experimental sounds, trippy atmosphere",
+          "examples": [
+            "Pink Floyd",
+            "The Doors",
+            "Jimi Hendrix"
+          ]
+        },
+        {
+          "id": "blues",
+          "name": "Blues",
+          "nameKo": "블루스",
+          "description": "블루스, 록의 뿌리",
+          "bpm": {
+            "min": 60,
+            "max": 120,
+            "default": 90
+          },
+          "mood": [
+            "soulful",
+            "emotional",
+            "traditional",
+            "roots"
+          ],
+          "instruments": [
+            "blues-guitar",
+            "harmonica",
+            "bass",
+            "drums"
+          ],
+          "promptTemplate": "blues with soulful guitar, emotional vocals, traditional 12-bar structure",
+          "examples": [
+            "B.B. King",
+            "Muddy Waters",
+            "Robert Johnson"
+          ]
+        },
+        {
+          "id": "southern-rock",
+          "name": "Southern Rock",
+          "nameKo": "서던록",
+          "description": "미국 남부 감성 록",
+          "bpm": {
+            "min": 90,
+            "max": 130,
+            "default": 110
+          },
+          "mood": [
+            "southern",
+            "blues-influenced",
+            "guitar-heavy",
+            "americana"
+          ],
+          "instruments": [
+            "slide-guitar",
+            "drums",
+            "bass",
+            "piano"
+          ],
+          "promptTemplate": "southern rock with blues influences, dual guitars, americana spirit",
+          "examples": [
+            "Lynyrd Skynyrd",
+            "The Allman Brothers",
+            "ZZ Top"
+          ]
+        },
+        {
+          "id": "acoustic-rock",
+          "name": "Acoustic Rock",
+          "nameKo": "어쿠스틱록",
+          "description": "어쿠스틱 기반의 록",
+          "bpm": {
+            "min": 80,
+            "max": 130,
+            "default": 100
+          },
+          "mood": [
+            "organic",
+            "intimate",
+            "unplugged",
+            "warm"
+          ],
+          "instruments": [
+            "acoustic-guitar",
+            "light-drums",
+            "vocals",
+            "strings"
+          ],
+          "promptTemplate": "acoustic rock with unplugged guitars, organic sound, intimate atmosphere",
+          "examples": [
+            "Eric Clapton Unplugged",
+            "Nirvana MTV Unplugged",
+            "Alice in Chains"
+          ]
+        },
+        {
+          "id": "yacht-rock",
+          "name": "Yacht Rock",
+          "nameKo": "요트록",
+          "description": "부드럽고 세련된 70~80년대 록",
+          "bpm": {
+            "min": 90,
+            "max": 120,
+            "default": 105
+          },
+          "mood": [
+            "smooth",
+            "sophisticated",
+            "mellow",
+            "jazzy"
+          ],
+          "instruments": [
+            "electric-piano",
+            "smooth-guitar",
+            "bass",
+            "saxophone"
+          ],
+          "promptTemplate": "yacht rock with smooth production, jazzy chords, mellow atmosphere, 70s sophistication",
+          "examples": [
+            "Steely Dan",
+            "Toto",
+            "Christopher Cross"
+          ]
+        },
+        {
+          "id": "progressive-rock",
+          "name": "Progressive Rock",
+          "nameKo": "프로그레시브록",
+          "description": "복잡한 구조, 실험적 록",
+          "bpm": {
+            "min": 80,
+            "max": 160,
+            "default": 120
+          },
+          "mood": [
+            "complex",
+            "experimental",
+            "technical",
+            "epic"
+          ],
+          "instruments": [
+            "synthesizer",
+            "guitar",
+            "bass",
+            "drums",
+            "mellotron"
+          ],
+          "promptTemplate": "progressive rock with complex time signatures, long instrumental sections, epic arrangements",
+          "examples": [
+            "Yes",
+            "Genesis",
+            "King Crimson"
+          ]
+        },
+        {
+          "id": "math-rock",
+          "name": "Math Rock",
+          "nameKo": "매스록",
+          "description": "비정형 박자, 기술적 록",
+          "bpm": {
+            "min": 100,
+            "max": 180,
+            "default": 140
+          },
+          "mood": [
+            "technical",
+            "angular",
+            "complex",
+            "instrumental"
+          ],
+          "instruments": [
+            "guitar-tapping",
+            "complex-drums",
+            "bass"
+          ],
+          "promptTemplate": "math rock with irregular time signatures, intricate guitar work, technical precision",
+          "examples": [
+            "Don Caballero",
+            "Battles",
+            "American Football"
+          ]
+        },
+        {
+          "id": "shoegaze",
+          "name": "Shoegaze",
+          "nameKo": "슈게이저",
+          "description": "이펙트로 뒤덮인 몽환적 록",
+          "bpm": {
+            "min": 90,
+            "max": 130,
+            "default": 110
+          },
+          "mood": [
+            "dreamy",
+            "wall-of-sound",
+            "reverb-heavy",
+            "atmospheric"
+          ],
+          "instruments": [
+            "heavily-effected-guitar",
+            "ethereal-vocals",
+            "bass",
+            "drums"
+          ],
+          "promptTemplate": "shoegaze with layers of guitar effects, dreamy vocals buried in mix, wall of sound",
+          "examples": [
+            "My Bloody Valentine",
+            "Slowdive",
+            "Ride"
+          ]
+        },
+        {
+          "id": "stoner-rock",
+          "name": "Stoner Rock",
+          "nameKo": "스토너록",
+          "description": "무겁고 느린 사이키델릭 록",
+          "bpm": {
+            "min": 60,
+            "max": 100,
+            "default": 80
+          },
+          "mood": [
+            "heavy",
+            "slow",
+            "fuzzy",
+            "psychedelic"
+          ],
+          "instruments": [
+            "downtuned-guitar",
+            "heavy-bass",
+            "slow-drums"
+          ],
+          "promptTemplate": "stoner rock with slow heavy riffs, fuzzy distortion, psychedelic atmosphere",
+          "examples": [
+            "Kyuss",
+            "Sleep",
+            "Queens of the Stone Age"
+          ]
+        },
+        {
+          "id": "industrial-rock",
+          "name": "Industrial Rock",
+          "nameKo": "인더스트리얼록",
+          "description": "기계적 노이즈 + 록",
+          "bpm": {
+            "min": 100,
+            "max": 150,
+            "default": 125
+          },
+          "mood": [
+            "aggressive",
+            "mechanical",
+            "harsh",
+            "industrial"
+          ],
+          "instruments": [
+            "distorted-guitar",
+            "electronic-drums",
+            "synthesizer",
+            "samples"
+          ],
+          "promptTemplate": "industrial rock with mechanical beats, harsh distortion, aggressive electronics",
+          "examples": [
+            "Nine Inch Nails",
+            "Ministry",
+            "Rammstein"
+          ]
+        },
+        {
+          "id": "surf-rock",
+          "name": "Surf Rock",
+          "nameKo": "서프록",
+          "description": "60년대 서핑 감성 록",
+          "bpm": {
+            "min": 140,
+            "max": 180,
+            "default": 160
+          },
+          "mood": [
+            "upbeat",
+            "vintage",
+            "energetic",
+            "californian"
+          ],
+          "instruments": [
+            "reverb-guitar",
+            "drums",
+            "bass"
+          ],
+          "promptTemplate": "surf rock with reverb-drenched guitars, energetic rhythm, 1960s California beach vibes",
+          "examples": [
+            "The Beach Boys",
+            "Dick Dale",
+            "The Ventures"
+          ]
+        },
+        {
+          "id": "50s-doo-wop",
+          "name": "50's Doo Wop",
+          "nameKo": "50년대 두왑",
+          "description": "50년대 코러스 보컬 팝 록",
+          "bpm": {
+            "min": 100,
+            "max": 140,
+            "default": 120
+          },
+          "mood": [
+            "nostalgic",
+            "harmonious",
+            "vintage",
+            "vocal"
+          ],
+          "instruments": [
+            "vocal-harmony",
+            "light-guitar",
+            "bass",
+            "light-drums"
+          ],
+          "promptTemplate": "1950s doo wop with vocal harmonies, simple instrumentation, nostalgic charm",
+          "examples": [
+            "The Platters",
+            "The Drifters",
+            "Frankie Lymon"
+          ]
+        },
+        {
+          "id": "goth-rock",
+          "name": "Goth Rock",
+          "nameKo": "고딕록",
+          "description": "어둡고 드라마틱한 록",
+          "bpm": {
+            "min": 90,
+            "max": 130,
+            "default": 110
+          },
+          "mood": [
+            "dark",
+            "dramatic",
+            "gothic",
+            "atmospheric"
+          ],
+          "instruments": [
+            "atmospheric-guitar",
+            "bass",
+            "drums",
+            "dark-synth"
+          ],
+          "promptTemplate": "goth rock with dark atmosphere, dramatic vocals, brooding guitar tones",
+          "examples": [
+            "Bauhaus",
+            "Sisters of Mercy",
+            "Siouxsie and the Banshees"
+          ]
+        },
+        {
+          "id": "metal",
+          "name": "Metal",
+          "nameKo": "메탈",
+          "description": "헤비 메탈",
+          "bpm": {
+            "min": 120,
+            "max": 180,
+            "default": 150
+          },
+          "mood": [
+            "heavy",
+            "aggressive",
+            "powerful",
+            "intense"
+          ],
+          "instruments": [
+            "distorted-guitar",
+            "double-bass-drums",
+            "bass",
+            "powerful-vocals"
+          ],
+          "promptTemplate": "heavy metal with powerful riffs, aggressive drums, intense vocals",
+          "examples": [
+            "Black Sabbath",
+            "Judas Priest",
+            "Iron Maiden"
+          ]
+        },
+        {
+          "id": "metalcore",
+          "name": "Metalcore",
+          "nameKo": "메탈코어",
+          "description": "메탈 + 하드코어",
+          "bpm": {
+            "min": 140,
+            "max": 200,
+            "default": 170
+          },
+          "mood": [
+            "aggressive",
+            "intense",
+            "breakdown-heavy",
+            "modern"
+          ],
+          "instruments": [
+            "heavy-guitar",
+            "breakdowns",
+            "double-bass",
+            "screaming-vocals"
+          ],
+          "promptTemplate": "metalcore with heavy breakdowns, mix of clean and screaming vocals, aggressive riffs",
+          "examples": [
+            "Killswitch Engage",
+            "As I Lay Dying",
+            "Parkway Drive"
+          ]
+        },
+        {
+          "id": "thrash-metal",
+          "name": "Thrash Metal",
+          "nameKo": "스래시메탈",
+          "description": "빠르고 공격적인 메탈",
+          "bpm": {
+            "min": 160,
+            "max": 220,
+            "default": 190
+          },
+          "mood": [
+            "fast",
+            "aggressive",
+            "intense",
+            "technical"
+          ],
+          "instruments": [
+            "fast-guitar-riffs",
+            "double-bass-drums",
+            "aggressive-vocals"
+          ],
+          "promptTemplate": "thrash metal with fast aggressive riffs, intense double bass drumming, shredding solos",
+          "examples": [
+            "Metallica",
+            "Slayer",
+            "Megadeth"
+          ]
+        },
+        {
+          "id": "deathcore",
+          "name": "Deathcore",
+          "nameKo": "데스코어",
+          "description": "극단적 헤비 메탈",
+          "bpm": {
+            "min": 100,
+            "max": 200,
+            "default": 150
+          },
+          "mood": [
+            "brutal",
+            "heavy",
+            "extreme",
+            "aggressive"
+          ],
+          "instruments": [
+            "downtuned-guitar",
+            "blast-beats",
+            "breakdowns",
+            "growling-vocals"
+          ],
+          "promptTemplate": "deathcore with brutal breakdowns, growling vocals, extreme heaviness, technical riffs",
+          "examples": [
+            "Suicide Silence",
+            "Whitechapel",
+            "Thy Art Is Murder"
+          ]
+        },
+        {
+          "id": "nu-metal",
+          "name": "Nu Metal",
+          "nameKo": "뉴메탈",
+          "description": "90년대 뉴메탈, 힙합+메탈",
+          "bpm": {
+            "min": 90,
+            "max": 140,
+            "default": 115
+          },
+          "mood": [
+            "groovy",
+            "aggressive",
+            "rap-influenced",
+            "90s"
+          ],
+          "instruments": [
+            "7-string-guitar",
+            "turntables",
+            "rap-vocals",
+            "heavy-drums"
+          ],
+          "promptTemplate": "nu metal with rap-influenced vocals, downtuned guitars, DJ scratching, groove-oriented riffs",
+          "examples": [
+            "Korn",
+            "Limp Bizkit",
+            "Linkin Park"
+          ]
+        },
+        {
+          "id": "doom-metal",
+          "name": "Doom Metal",
+          "nameKo": "둠메탈",
+          "description": "느리고 무거운 메탈",
+          "bpm": {
+            "min": 40,
+            "max": 80,
+            "default": 60
+          },
+          "mood": [
+            "slow",
+            "heavy",
+            "crushing",
+            "doom"
+          ],
+          "instruments": [
+            "downtuned-guitar",
+            "slow-drums",
+            "heavy-bass"
+          ],
+          "promptTemplate": "doom metal with extremely slow tempo, crushing heavy riffs, oppressive atmosphere",
+          "examples": [
+            "Black Sabbath",
+            "Candlemass",
+            "Electric Wizard"
+          ]
+        },
+        {
+          "id": "groove-metal",
+          "name": "Groove Metal",
+          "nameKo": "그루브메탈",
+          "description": "그루비한 헤비 메탈",
+          "bpm": {
+            "min": 100,
+            "max": 150,
+            "default": 120
+          },
+          "mood": [
+            "groovy",
+            "heavy",
+            "rhythmic",
+            "headbanging"
+          ],
+          "instruments": [
+            "groove-guitar-riffs",
+            "heavy-drums",
+            "bass"
+          ],
+          "promptTemplate": "groove metal with syncopated heavy riffs, groove-oriented drums, headbanging rhythms",
+          "examples": [
+            "Pantera",
+            "Lamb of God",
+            "Gojira"
+          ]
+        },
+        {
+          "id": "progressive-metal",
+          "name": "Progressive Metal",
+          "nameKo": "프로그레시브메탈",
+          "description": "복잡한 구조의 메탈",
+          "bpm": {
+            "min": 100,
+            "max": 180,
+            "default": 140
+          },
+          "mood": [
+            "complex",
+            "technical",
+            "progressive",
+            "epic"
+          ],
+          "instruments": [
+            "7-string-guitar",
+            "keyboards",
+            "technical-drums"
+          ],
+          "promptTemplate": "progressive metal with complex time signatures, technical proficiency, epic song structures",
+          "examples": [
+            "Dream Theater",
+            "Opeth",
+            "Tool"
+          ]
+        },
+        {
+          "id": "symphonic-metal",
+          "name": "Symphonic Metal",
+          "nameKo": "심포닉메탈",
+          "description": "오케스트라 + 메탈",
+          "bpm": {
+            "min": 100,
+            "max": 160,
+            "default": 130
+          },
+          "mood": [
+            "epic",
+            "orchestral",
+            "dramatic",
+            "cinematic"
+          ],
+          "instruments": [
+            "orchestra",
+            "heavy-guitar",
+            "operatic-vocals",
+            "drums"
+          ],
+          "promptTemplate": "symphonic metal with orchestral arrangements, operatic vocals, epic cinematic scope",
+          "examples": [
+            "Nightwish",
+            "Epica",
+            "Within Temptation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hip-hop",
+      "name": "HIP HOP 힙합",
+      "emoji": "🎧",
+      "description": "비트와 라임 중심의 음악. 서브장르마다 지역색과 사운드가 확연히 다릅니다.",
+      "count": 21,
+      "genres": [
+        {
+          "id": "boom-bap",
+          "name": "Boom Bap",
+          "nameKo": "붐뱁",
+          "description": "90년대 클래식 힙합, 선명한 킥&스네어",
+          "bpm": {
+            "min": 85,
+            "max": 100,
+            "default": 90
+          },
+          "mood": [
+            "classic",
+            "raw",
+            "authentic",
+            "90s"
+          ],
+          "instruments": [
+            "sampled-drums",
+            "bass",
+            "vinyl-crackle",
+            "rap-vocals"
+          ],
+          "promptTemplate": "boom bap hip hop with classic 90s drum samples, hard-hitting kicks and snares, raw authentic sound",
+          "examples": [
+            "DJ Premier",
+            "Pete Rock",
+            "J Dilla"
+          ]
+        },
+        {
+          "id": "east-coast-hip-hop",
+          "name": "East Coast Hip Hop",
+          "nameKo": "이스트코스트힙합",
+          "description": "뉴욕 중심, 복잡한 라임",
+          "bpm": {
+            "min": 85,
+            "max": 100,
+            "default": 93
+          },
+          "mood": [
+            "lyrical",
+            "urban",
+            "gritty",
+            "complex"
+          ],
+          "instruments": [
+            "sampled-beats",
+            "bass",
+            "scratching",
+            "rap"
+          ],
+          "promptTemplate": "east coast hip hop with complex lyricism, gritty New York sound, jazz samples",
+          "examples": [
+            "Nas",
+            "Wu-Tang Clan",
+            "The Notorious B.I.G."
+          ]
+        },
+        {
+          "id": "west-coast-hip-hop",
+          "name": "West Coast Hip Hop",
+          "nameKo": "웨스트코스트힙합",
+          "description": "LA 중심, 펑키한 그루브",
+          "bpm": {
+            "min": 85,
+            "max": 105,
+            "default": 95
+          },
+          "mood": [
+            "funky",
+            "smooth",
+            "gangsta",
+            "west-coast"
+          ],
+          "instruments": [
+            "funk-bass",
+            "synthesizer",
+            "talkbox",
+            "rap"
+          ],
+          "promptTemplate": "west coast hip hop with funky g-funk synths, smooth laid-back groove, California vibes",
+          "examples": [
+            "Dr. Dre",
+            "Snoop Dogg",
+            "2Pac"
+          ]
+        },
+        {
+          "id": "trap",
+          "name": "Trap",
+          "nameKo": "트랩",
+          "description": "808 베이스, 하이햇 중심 현대 힙합",
+          "bpm": {
+            "min": 130,
+            "max": 170,
+            "default": 140
+          },
+          "mood": [
+            "modern",
+            "heavy",
+            "bass-driven",
+            "energetic"
+          ],
+          "instruments": [
+            "808-bass",
+            "hi-hats",
+            "snare-rolls",
+            "ad-libs"
+          ],
+          "promptTemplate": "trap with heavy 808 bass, rapid hi-hat rolls, modern production, energetic ad-libs",
+          "examples": [
+            "Future",
+            "Migos",
+            "Travis Scott"
+          ]
+        },
+        {
+          "id": "memphis-trap",
+          "name": "Memphis Trap",
+          "nameKo": "멤피스트랩",
+          "description": "다크하고 슬로우한 트랩",
+          "bpm": {
+            "min": 60,
+            "max": 90,
+            "default": 75
+          },
+          "mood": [
+            "dark",
+            "slow",
+            "menacing",
+            "underground"
+          ],
+          "instruments": [
+            "808-bass",
+            "cowbell",
+            "dark-synth",
+            "chopped-vocals"
+          ],
+          "promptTemplate": "memphis trap with dark atmosphere, slow tempo, chopped and screwed vocals, cowbell patterns",
+          "examples": [
+            "Three 6 Mafia",
+            "SpaceGhostPurrp",
+            "Raider Klan"
+          ]
+        },
+        {
+          "id": "atlanta-trap",
+          "name": "Atlanta Trap",
+          "nameKo": "애틀란타트랩",
+          "description": "바운시한 애틀란타 스타일",
+          "bpm": {
+            "min": 130,
+            "max": 160,
+            "default": 145
+          },
+          "mood": [
+            "bouncy",
+            "energetic",
+            "street",
+            "atlanta"
+          ],
+          "instruments": [
+            "808-bass",
+            "hi-hats",
+            "brass",
+            "ad-libs"
+          ],
+          "promptTemplate": "atlanta trap with bouncy 808s, rapid hi-hats, street energy, signature ad-libs",
+          "examples": [
+            "Gucci Mane",
+            "T.I.",
+            "Young Thug"
+          ]
+        },
+        {
+          "id": "chicago-drill",
+          "name": "Chicago Drill",
+          "nameKo": "시카고드릴",
+          "description": "어둡고 공격적인 드릴",
+          "bpm": {
+            "min": 60,
+            "max": 80,
+            "default": 70
+          },
+          "mood": [
+            "dark",
+            "aggressive",
+            "street",
+            "menacing"
+          ],
+          "instruments": [
+            "808-bass",
+            "dark-synth",
+            "sliding-hi-hats"
+          ],
+          "promptTemplate": "chicago drill with dark menacing beats, slow aggressive tempo, street narrative",
+          "examples": [
+            "Chief Keef",
+            "Lil Durk",
+            "King Von"
+          ]
+        },
+        {
+          "id": "uk-drill",
+          "name": "UK Drill",
+          "nameKo": "유케이드릴",
+          "description": "영국식 드릴, 냉소적 분위기",
+          "bpm": {
+            "min": 135,
+            "max": 150,
+            "default": 142
+          },
+          "mood": [
+            "dark",
+            "cold",
+            "aggressive",
+            "uk"
+          ],
+          "instruments": [
+            "808-bass",
+            "sliding-hi-hats",
+            "dark-piano"
+          ],
+          "promptTemplate": "uk drill with icy cold beats, sliding 808 patterns, dark piano melodies, uk street narrative",
+          "examples": [
+            "Headie One",
+            "Digga D",
+            "Central Cee"
+          ]
+        },
+        {
+          "id": "cloud-rap",
+          "name": "Cloud Rap",
+          "nameKo": "클라우드랩",
+          "description": "몽환적이고 에어리한 랩",
+          "bpm": {
+            "min": 60,
+            "max": 90,
+            "default": 75
+          },
+          "mood": [
+            "dreamy",
+            "ethereal",
+            "atmospheric",
+            "spacey"
+          ],
+          "instruments": [
+            "airy-synth",
+            "reverb",
+            "808",
+            "autotuned-vocals"
+          ],
+          "promptTemplate": "cloud rap with dreamy atmospheric production, reverb-heavy vocals, spacey soundscapes",
+          "examples": [
+            "Yung Lean",
+            "Bones",
+            "Lil B"
+          ]
+        },
+        {
+          "id": "lo-fi-hip-hop",
+          "name": "Lo-fi Hip Hop",
+          "nameKo": "로파이힙합",
+          "description": "따뜻하고 느긋한 공부용 비트",
+          "bpm": {
+            "min": 70,
+            "max": 90,
+            "default": 80
+          },
+          "mood": [
+            "chill",
+            "relaxed",
+            "study",
+            "nostalgic"
+          ],
+          "instruments": [
+            "vinyl-crackle",
+            "jazz-samples",
+            "mellow-drums",
+            "soft-bass"
+          ],
+          "promptTemplate": "lo-fi hip hop with vinyl crackle, jazzy samples, mellow drums, study-friendly atmosphere",
+          "examples": [
+            "Nujabes",
+            "J Dilla",
+            "Jinsang"
+          ]
+        },
+        {
+          "id": "emo-rap",
+          "name": "Emo Rap",
+          "nameKo": "이모랩",
+          "description": "감성적이고 고백적인 랩",
+          "bpm": {
+            "min": 120,
+            "max": 160,
+            "default": 140
+          },
+          "mood": [
+            "emotional",
+            "melancholic",
+            "confessional",
+            "vulnerable"
+          ],
+          "instruments": [
+            "guitar",
+            "808",
+            "melodic-rap",
+            "autotune"
+          ],
+          "promptTemplate": "emo rap with emotional lyrics, guitar-driven beats, vulnerable autotuned vocals",
+          "examples": [
+            "Juice WRLD",
+            "Lil Peep",
+            "XXXTentacion"
+          ]
+        },
+        {
+          "id": "memphis-phonk",
+          "name": "Memphis Phonk",
+          "nameKo": "멤피스포크",
+          "description": "90년대 멤피스 + 현대 드리프트 감성",
+          "bpm": {
+            "min": 120,
+            "max": 160,
+            "default": 140
+          },
+          "mood": [
+            "aggressive",
+            "dark",
+            "drift",
+            "underground"
+          ],
+          "instruments": [
+            "cowbell",
+            "808-bass",
+            "vocal-samples",
+            "dark-synth"
+          ],
+          "promptTemplate": "memphis phonk with cowbell patterns, aggressive 808s, chopped vocal samples, drift culture",
+          "examples": [
+            "DJ Smokey",
+            "Soudiere",
+            "Pharmacist"
+          ]
+        },
+        {
+          "id": "mumble-rap",
+          "name": "Mumble Rap",
+          "nameKo": "멈블랩",
+          "description": "불분명한 발음, 멜로디 중심",
+          "bpm": {
+            "min": 130,
+            "max": 160,
+            "default": 145
+          },
+          "mood": [
+            "melodic",
+            "vibe-focused",
+            "modern",
+            "autotuned"
+          ],
+          "instruments": [
+            "808-bass",
+            "hi-hats",
+            "autotune",
+            "ad-libs"
+          ],
+          "promptTemplate": "mumble rap with melodic flow, heavy autotune, vibe-focused over lyricism",
+          "examples": [
+            "Future",
+            "Playboi Carti",
+            "Lil Uzi Vert"
+          ]
+        },
+        {
+          "id": "alternative-hip-hop",
+          "name": "Alternative Hip Hop",
+          "nameKo": "얼터너티브힙합",
+          "description": "실험적이고 비주류 힙합",
+          "bpm": {
+            "min": 80,
+            "max": 120,
+            "default": 100
+          },
+          "mood": [
+            "experimental",
+            "alternative",
+            "artistic",
+            "unconventional"
+          ],
+          "instruments": [
+            "diverse-instruments",
+            "unconventional-samples",
+            "creative-production"
+          ],
+          "promptTemplate": "alternative hip hop with experimental production, unconventional samples, artistic vision",
+          "examples": [
+            "MF DOOM",
+            "Tyler The Creator",
+            "A Tribe Called Quest"
+          ]
+        },
+        {
+          "id": "trip-hop",
+          "name": "Trip Hop",
+          "nameKo": "트립홉",
+          "description": "느리고 무거운 일렉트로닉 힙합",
+          "bpm": {
+            "min": 60,
+            "max": 90,
+            "default": 75
+          },
+          "mood": [
+            "dark",
+            "atmospheric",
+            "downtempo",
+            "electronic"
+          ],
+          "instruments": [
+            "electronic-drums",
+            "atmospheric-synth",
+            "samples",
+            "bass"
+          ],
+          "promptTemplate": "trip hop with slow heavy beats, atmospheric electronics, dark moody production",
+          "examples": [
+            "Massive Attack",
+            "Portishead",
+            "Tricky"
+          ]
+        },
+        {
+          "id": "g-funk",
+          "name": "G Funk",
+          "nameKo": "지펑크",
+          "description": "신스 + 서부 갱스터 랩",
+          "bpm": {
+            "min": 90,
+            "max": 105,
+            "default": 98
+          },
+          "mood": [
+            "funky",
+            "smooth",
+            "west-coast",
+            "gangsta"
+          ],
+          "instruments": [
+            "synthesizer",
+            "talk-box",
+            "bass",
+            "funk-samples"
+          ],
+          "promptTemplate": "g-funk with synthesizer melodies, talkbox, smooth west coast gangsta rap vibes",
+          "examples": [
+            "Dr. Dre",
+            "Warren G",
+            "Nate Dogg"
+          ]
+        },
+        {
+          "id": "conscious-rap",
+          "name": "Conscious Rap",
+          "nameKo": "컨셔스랩",
+          "description": "사회적 메시지 중심 랩",
+          "bpm": {
+            "min": 85,
+            "max": 105,
+            "default": 95
+          },
+          "mood": [
+            "thoughtful",
+            "political",
+            "socially-aware",
+            "message-driven"
+          ],
+          "instruments": [
+            "live-instruments",
+            "soulful-samples",
+            "conscious-lyrics"
+          ],
+          "promptTemplate": "conscious rap with socially aware lyrics, soulful production, message-driven content",
+          "examples": [
+            "Kendrick Lamar",
+            "Common",
+            "Mos Def"
+          ]
+        },
+        {
+          "id": "pop-rap",
+          "name": "Pop Rap",
+          "nameKo": "팝랩",
+          "description": "팝 멜로디 + 랩",
+          "bpm": {
+            "min": 90,
+            "max": 130,
+            "default": 110
+          },
+          "mood": [
+            "catchy",
+            "mainstream",
+            "melodic",
+            "accessible"
+          ],
+          "instruments": [
+            "pop-production",
+            "melodic-rap",
+            "catchy-hooks"
+          ],
+          "promptTemplate": "pop rap with catchy pop melodies, accessible production, mainstream appeal",
+          "examples": [
+            "Post Malone",
+            "Drake",
+            "Cardi B"
+          ]
+        },
+        {
+          "id": "chillhop",
+          "name": "Chillhop",
+          "nameKo": "칠합",
+          "description": "칠한 로파이 힙합",
+          "bpm": {
+            "min": 70,
+            "max": 95,
+            "default": 85
+          },
+          "mood": [
+            "chill",
+            "relaxed",
+            "jazzy",
+            "mellow"
+          ],
+          "instruments": [
+            "jazz-samples",
+            "vinyl-crackle",
+            "soft-drums",
+            "bass"
+          ],
+          "promptTemplate": "chillhop with jazzy samples, relaxed beats, mellow atmosphere, study-friendly vibes",
+          "examples": [
+            "Jinsang",
+            "Tomppabeats",
+            "Idealism"
+          ]
+        },
+        {
+          "id": "jazz-hip-hop",
+          "name": "Jazz Hip-Hop",
+          "nameKo": "재즈힙합",
+          "description": "재즈 샘플과 힙합의 만남",
+          "bpm": {
+            "min": 80,
+            "max": 100,
+            "default": 90
+          },
+          "mood": [
+            "sophisticated",
+            "laid-back",
+            "smooth",
+            "jazzy"
+          ],
+          "instruments": [
+            "jazz-samples",
+            "saxophone",
+            "piano",
+            "vinyl-drums",
+            "upright-bass",
+            "rap-vocals"
+          ],
+          "promptTemplate": "jazz hip-hop with smooth jazz samples, boom-bap drums, saxophone melodies, laid-back flow",
+          "examples": [
+            "Nujabes",
+            "J Dilla",
+            "A Tribe Called Quest"
+          ]
+        },
+        {
+          "id": "emotional-hip-hop",
+          "name": "Emotional Hip-Hop",
+          "nameKo": "감성힙합",
+          "description": "감성적이고 서정적인 힙합",
+          "bpm": {
+            "min": 70,
+            "max": 95,
+            "default": 80
+          },
+          "mood": [
+            "emotional",
+            "melancholic",
+            "introspective",
+            "heartfelt"
+          ],
+          "instruments": [
+            "piano",
+            "acoustic-guitar",
+            "strings",
+            "soft-drums",
+            "melodic-vocals"
+          ],
+          "promptTemplate": "emotional hip-hop with piano melodies, heartfelt lyrics, melodic rap, introspective atmosphere",
+          "examples": [
+            "Post Malone",
+            "Juice WRLD",
+            "Lil Peep"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ballad-rnb-soul",
+      "name": "BALLAD/R&B/SOUL 발라드·알앤비·소울",
+      "emoji": "🎹",
+      "description": "감성과 보컬이 중심. 느리고 서정적인 장르부터 리듬감 있는 R&B까지.",
+      "count": 19,
+      "genres": [
+        {
+          "id": "singer-songwriter",
+          "name": "Singer Songwriter",
+          "nameKo": "싱어송라이터",
+          "description": "보컬+기타/피아노 중심, 고백적",
+          "bpm": {
+            "min": 60,
+            "max": 100,
+            "default": 80
+          },
+          "mood": [
+            "intimate",
+            "confessional",
+            "acoustic",
+            "emotional"
+          ],
+          "instruments": [
+            "acoustic-guitar",
+            "piano",
+            "vocals"
+          ],
+          "promptTemplate": "singer songwriter with intimate vocals, acoustic guitar or piano, confessional storytelling",
+          "examples": [
+            "James Taylor",
+            "Joni Mitchell",
+            "Bon Iver"
+          ]
+        },
+        {
+          "id": "pop-ballad",
+          "name": "Pop Ballad",
+          "nameKo": "팝발라드",
+          "description": "감성적인 팝 발라드",
+          "bpm": {
+            "min": 60,
+            "max": 90,
+            "default": 75
+          },
+          "mood": [
+            "emotional",
+            "romantic",
+            "powerful-vocals",
+            "dramatic"
+          ],
+          "instruments": [
+            "piano",
+            "strings",
+            "powerful-vocals",
+            "drums"
+          ],
+          "promptTemplate": "pop ballad with emotional vocals, dramatic piano, orchestral strings, powerful crescendos",
+          "examples": [
+            "Adele",
+            "Sam Smith",
+            "Celine Dion"
+          ]
+        },
+        {
+          "id": "contemporary-rnb",
+          "name": "Contemporary R&B",
+          "nameKo": "컨템포러리알앤비",
+          "description": "현대 R&B, 세련된 사운드",
+          "bpm": {
+            "min": 70,
+            "max": 110,
+            "default": 90
+          },
+          "mood": [
+            "smooth",
+            "modern",
+            "sensual",
+            "polished"
+          ],
+          "instruments": [
+            "synth",
+            "808-bass",
+            "smooth-vocals",
+            "electronic-drums"
+          ],
+          "promptTemplate": "contemporary r&b with smooth vocals, modern production, sensual atmosphere, 808 bass",
+          "examples": [
+            "The Weeknd",
+            "SZA",
+            "Frank Ocean"
+          ]
+        },
+        {
+          "id": "90s-rnb",
+          "name": "90s R&B",
+          "nameKo": "90년대알앤비",
+          "description": "90년대 클래식 R&B",
+          "bpm": {
+            "min": 70,
+            "max": 100,
+            "default": 85
+          },
+          "mood": [
+            "smooth",
+            "nostalgic",
+            "soulful",
+            "90s"
+          ],
+          "instruments": [
+            "electric-piano",
+            "smooth-bass",
+            "drums",
+            "harmonies"
+          ],
+          "promptTemplate": "90s r&b with smooth harmonies, classic drum patterns, electric piano, nostalgic production",
+          "examples": [
+            "Aaliyah",
+            "TLC",
+            "Usher"
+          ]
+        },
+        {
+          "id": "gospel-rnb",
+          "name": "Gospel R&B",
+          "nameKo": "가스펠알앤비",
+          "description": "가스펠 감성 R&B",
+          "bpm": {
+            "min": 70,
+            "max": 100,
+            "default": 85
+          },
+          "mood": [
+            "spiritual",
+            "uplifting",
+            "soulful",
+            "powerful"
+          ],
+          "instruments": [
+            "organ",
+            "choir",
+            "powerful-vocals",
+            "bass"
+          ],
+          "promptTemplate": "gospel r&b with church-inspired vocals, organ, choir harmonies, spiritual uplift",
+          "examples": [
+            "Kirk Franklin",
+            "Mary Mary",
+            "Tasha Cobbs"
+          ]
+        },
+        {
+          "id": "new-jack-swing",
+          "name": "New Jack Swing",
+          "nameKo": "뉴잭스윙",
+          "description": "90년대 초 스윙 R&B",
+          "bpm": {
+            "min": 100,
+            "max": 120,
+            "default": 110
+          },
+          "mood": [
+            "upbeat",
+            "funky",
+            "90s",
+            "danceable"
+          ],
+          "instruments": [
+            "drum-machine",
+            "synth-bass",
+            "vocals",
+            "samples"
+          ],
+          "promptTemplate": "new jack swing with swinging drum machine beats, funky bass, 90s hip hop influences",
+          "examples": [
+            "Bobby Brown",
+            "Janet Jackson",
+            "Bell Biv DeVoe"
+          ]
+        },
+        {
+          "id": "soul",
+          "name": "Soul",
+          "nameKo": "소울",
+          "description": "소울, R&B의 뿌리",
+          "bpm": {
+            "min": 70,
+            "max": 110,
+            "default": 90
+          },
+          "mood": [
+            "emotional",
+            "authentic",
+            "powerful",
+            "classic"
+          ],
+          "instruments": [
+            "horns",
+            "organ",
+            "powerful-vocals",
+            "bass"
+          ],
+          "promptTemplate": "soul music with powerful emotional vocals, horn sections, organ, authentic feeling",
+          "examples": [
+            "Aretha Franklin",
+            "Otis Redding",
+            "Sam Cooke"
+          ]
+        },
+        {
+          "id": "motown-soul",
+          "name": "Motown Soul",
+          "nameKo": "모타운소울",
+          "description": "60년대 모타운 레코드 스타일",
+          "bpm": {
+            "min": 100,
+            "max": 130,
+            "default": 115
+          },
+          "mood": [
+            "upbeat",
+            "polished",
+            "classic",
+            "optimistic"
+          ],
+          "instruments": [
+            "bass",
+            "drums",
+            "tambourine",
+            "strings",
+            "vocals"
+          ],
+          "promptTemplate": "motown soul with polished production, driving bass line, tambourine, string arrangements",
+          "examples": [
+            "The Supremes",
+            "Marvin Gaye",
+            "Stevie Wonder"
+          ]
+        },
+        {
+          "id": "neo-soul",
+          "name": "Neo Soul",
+          "nameKo": "네오소울",
+          "description": "현대적으로 재해석한 소울",
+          "bpm": {
+            "min": 70,
+            "max": 100,
+            "default": 85
+          },
+          "mood": [
+            "smooth",
+            "modern",
+            "jazzy",
+            "sophisticated"
+          ],
+          "instruments": [
+            "rhodes-piano",
+            "live-drums",
+            "bass",
+            "jazzy-chords"
+          ],
+          "promptTemplate": "neo soul with jazzy chords, rhodes piano, live instrumentation, sophisticated production",
+          "examples": [
+            "Erykah Badu",
+            "D'Angelo",
+            "Lauryn Hill"
+          ]
+        },
+        {
+          "id": "trap-soul",
+          "name": "Trap Soul",
+          "nameKo": "트랩소울",
+          "description": "트랩 비트 + 소울 보컬",
+          "bpm": {
+            "min": 60,
+            "max": 90,
+            "default": 75
+          },
+          "mood": [
+            "modern",
+            "moody",
+            "smooth",
+            "trap-influenced"
+          ],
+          "instruments": [
+            "808-bass",
+            "hi-hats",
+            "smooth-vocals",
+            "atmospheric-synth"
+          ],
+          "promptTemplate": "trap soul with trap-style 808s and hi-hats, smooth r&b vocals, atmospheric production",
+          "examples": [
+            "Bryson Tiller",
+            "Tory Lanez",
+            "6LACK"
+          ]
+        },
+        {
+          "id": "funk",
+          "name": "Funk",
+          "nameKo": "펑크",
+          "description": "그루비한 리듬 중심, 소울의 사촌",
+          "bpm": {
+            "min": 100,
+            "max": 130,
+            "default": 115
+          },
+          "mood": [
+            "groovy",
+            "danceable",
+            "rhythmic",
+            "funky"
+          ],
+          "instruments": [
+            "slap-bass",
+            "wah-guitar",
+            "horns",
+            "drums"
+          ],
+          "promptTemplate": "funk with slap bass, syncopated rhythms, wah guitar, horn stabs, groovy feel",
+          "examples": [
+            "James Brown",
+            "Parliament-Funkadelic",
+            "Earth Wind & Fire"
+          ]
+        },
+        {
+          "id": "disco",
+          "name": "Disco",
+          "nameKo": "디스코",
+          "description": "70년대 디스코, 댄스 파티 사운드",
+          "bpm": {
+            "min": 110,
+            "max": 135,
+            "default": 120
+          },
+          "mood": [
+            "upbeat",
+            "danceable",
+            "funky",
+            "70s"
+          ],
+          "instruments": [
+            "four-on-floor-drums",
+            "strings",
+            "synth",
+            "bass"
+          ],
+          "promptTemplate": "disco with four-on-the-floor beat, lush strings, funky bass, 70s dance party vibes",
+          "examples": [
+            "Donna Summer",
+            "Bee Gees",
+            "Chic"
+          ]
+        },
+        {
+          "id": "classic-country",
+          "name": "Classic Country",
+          "nameKo": "클래식컨트리",
+          "description": "전통 컨트리",
+          "bpm": {
+            "min": 90,
+            "max": 130,
+            "default": 110
+          },
+          "mood": [
+            "traditional",
+            "storytelling",
+            "authentic",
+            "rustic"
+          ],
+          "instruments": [
+            "acoustic-guitar",
+            "fiddle",
+            "steel-guitar",
+            "vocals"
+          ],
+          "promptTemplate": "classic country with storytelling lyrics, steel guitar, fiddle, traditional instrumentation",
+          "examples": [
+            "Johnny Cash",
+            "Dolly Parton",
+            "Willie Nelson"
+          ]
+        },
+        {
+          "id": "outlaw-country",
+          "name": "Outlaw Country",
+          "nameKo": "아웃로컨트리",
+          "description": "거칠고 자유분방한 컨트리",
+          "bpm": {
+            "min": 90,
+            "max": 130,
+            "default": 110
+          },
+          "mood": [
+            "rebellious",
+            "rough",
+            "authentic",
+            "outlaw"
+          ],
+          "instruments": [
+            "acoustic-guitar",
+            "harmonica",
+            "rough-vocals"
+          ],
+          "promptTemplate": "outlaw country with rebellious spirit, rough vocals, authentic storytelling, honky tonk vibes",
+          "examples": [
+            "Waylon Jennings",
+            "Willie Nelson",
+            "Merle Haggard"
+          ]
+        },
+        {
+          "id": "pop-country",
+          "name": "Pop Country",
+          "nameKo": "팝컨트리",
+          "description": "팝 + 컨트리",
+          "bpm": {
+            "min": 100,
+            "max": 130,
+            "default": 115
+          },
+          "mood": [
+            "catchy",
+            "mainstream",
+            "polished",
+            "accessible"
+          ],
+          "instruments": [
+            "guitar",
+            "drums",
+            "banjo",
+            "pop-production"
+          ],
+          "promptTemplate": "pop country with catchy melodies, polished pop production, country instrumentation",
+          "examples": [
+            "Taylor Swift",
+            "Shania Twain",
+            "Carrie Underwood"
+          ]
+        },
+        {
+          "id": "country-rock",
+          "name": "Country Rock",
+          "nameKo": "컨트리록",
+          "description": "컨트리 + 록",
+          "bpm": {
+            "min": 110,
+            "max": 140,
+            "default": 125
+          },
+          "mood": [
+            "energetic",
+            "guitar-driven",
+            "hybrid",
+            "southern"
+          ],
+          "instruments": [
+            "electric-guitar",
+            "drums",
+            "pedal-steel",
+            "bass"
+          ],
+          "promptTemplate": "country rock with electric guitars, rock energy, country storytelling, southern spirit",
+          "examples": [
+            "Eagles",
+            "Lynyrd Skynyrd",
+            "Alabama"
+          ]
+        },
+        {
+          "id": "americana",
+          "name": "Americana",
+          "nameKo": "아메리카나",
+          "description": "미국 전통 루츠 음악",
+          "bpm": {
+            "min": 80,
+            "max": 120,
+            "default": 100
+          },
+          "mood": [
+            "roots",
+            "authentic",
+            "folk-influenced",
+            "storytelling"
+          ],
+          "instruments": [
+            "acoustic-guitar",
+            "banjo",
+            "fiddle",
+            "harmonica"
+          ],
+          "promptTemplate": "americana with roots music elements, authentic storytelling, traditional folk instruments",
+          "examples": [
+            "Jason Isbell",
+            "Sturgill Simpson",
+            "Brandi Carlile"
+          ]
+        },
+        {
+          "id": "bluegrass",
+          "name": "Bluegrass",
+          "nameKo": "블루그래스",
+          "description": "어쿠스틱 현악 중심 컨트리",
+          "bpm": {
+            "min": 130,
+            "max": 180,
+            "default": 155
+          },
+          "mood": [
+            "fast",
+            "acoustic",
+            "technical",
+            "traditional"
+          ],
+          "instruments": [
+            "banjo",
+            "fiddle",
+            "mandolin",
+            "upright-bass"
+          ],
+          "promptTemplate": "bluegrass with fast tempo, banjo and fiddle, mandolin, tight harmonies, technical picking",
+          "examples": [
+            "Bill Monroe",
+            "Alison Krauss",
+            "Earl Scruggs"
+          ]
+        },
+        {
+          "id": "honky-tonk",
+          "name": "Honky Tonk",
+          "nameKo": "홍키통크",
+          "description": "바 감성 컨트리",
+          "bpm": {
+            "min": 100,
+            "max": 140,
+            "default": 120
+          },
+          "mood": [
+            "upbeat",
+            "bar-room",
+            "piano-driven",
+            "working-class"
+          ],
+          "instruments": [
+            "piano",
+            "steel-guitar",
+            "fiddle",
+            "vocals"
+          ],
+          "promptTemplate": "honky tonk with upbeat piano, steel guitar, bar-room atmosphere, working-class narratives",
+          "examples": [
+            "Hank Williams",
+            "George Strait",
+            "Dwight Yoakam"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "house-edm-electronic",
+      "name": "HOUSE/EDM/ELECTRONIC 하우스·EDM·일렉트로닉",
+      "emoji": "🏠",
+      "description": "전자음악 기반의 댄스 음악 전반. 클럽, 페스티벌, 홈 리스닝까지 폭넓게 커버합니다.",
+      "count": 39,
+      "genres": [
+        {
+          "id": "house",
+          "name": "House",
+          "nameKo": "하우스",
+          "description": "클래식 하우스, 시카고 기원",
+          "bpm": {
+            "min": 120,
+            "max": 130,
+            "default": 125
+          },
+          "mood": [
+            "groovy",
+            "four-on-floor",
+            "classic",
+            "danceable"
+          ],
+          "instruments": [
+            "four-on-floor-kick",
+            "hi-hats",
+            "bass",
+            "piano-stabs"
+          ],
+          "promptTemplate": "classic house music with four-on-the-floor kick, groovy bass lines, piano stabs",
+          "examples": [
+            "Frankie Knuckles",
+            "Larry Heard",
+            "Marshall Jefferson"
+          ]
+        },
+        {
+          "id": "90s-house",
+          "name": "90's House",
+          "nameKo": "90년대하우스",
+          "description": "90년대 클래식 하우스 사운드",
+          "bpm": {
+            "min": 120,
+            "max": 130,
+            "default": 125
+          },
+          "mood": [
+            "nostalgic",
+            "groovy",
+            "90s",
+            "classic"
+          ],
+          "instruments": [
+            "909-drums",
+            "acid-bass",
+            "organ-stabs",
+            "vocal-samples"
+          ],
+          "promptTemplate": "90s house with classic 909 drums, acid bass lines, organ stabs, nostalgic vibes",
+          "examples": [
+            "Daft Punk",
+            "Armand Van Helden",
+            "Masters At Work"
+          ]
+        },
+        {
+          "id": "progressive-house",
+          "name": "Progressive House",
+          "nameKo": "프로그레시브하우스",
+          "description": "빌드업과 드롭 중심, 웅장한 하우스",
+          "bpm": {
+            "min": 125,
+            "max": 135,
+            "default": 128
+          },
+          "mood": [
+            "epic",
+            "build-up",
+            "melodic",
+            "euphoric"
+          ],
+          "instruments": [
+            "layered-synth",
+            "driving-bass",
+            "sweeping-effects",
+            "white-noise"
+          ],
+          "promptTemplate": "progressive house with epic build-ups, melodic drops, layered synths, euphoric atmosphere",
+          "examples": [
+            "Deadmau5",
+            "Eric Prydz",
+            "Swedish House Mafia"
+          ]
+        },
+        {
+          "id": "big-room-house",
+          "name": "Big Room House",
+          "nameKo": "빅룸하우스",
+          "description": "메인스테이지 EDM 하우스, 거대한 드롭",
+          "bpm": {
+            "min": 126,
+            "max": 132,
+            "default": 128
+          },
+          "mood": [
+            "massive",
+            "festival",
+            "anthemic",
+            "energetic"
+          ],
+          "instruments": [
+            "huge-kick",
+            "aggressive-synth",
+            "electro-lead",
+            "reverb-clap"
+          ],
+          "promptTemplate": "big room house with massive drops, anthemic synth leads, festival energy, huge kicks",
+          "examples": [
+            "Martin Garrix",
+            "Hardwell",
+            "Dimitri Vegas & Like Mike"
+          ]
+        },
+        {
+          "id": "future-house",
+          "name": "Future House",
+          "nameKo": "퓨처하우스",
+          "description": "미래적 사운드, 베이스 중심 하우스",
+          "bpm": {
+            "min": 120,
+            "max": 130,
+            "default": 125
+          },
+          "mood": [
+            "futuristic",
+            "bouncy",
+            "bass-heavy",
+            "modern"
+          ],
+          "instruments": [
+            "metallic-bass",
+            "vocal-chops",
+            "future-synth",
+            "tight-drums"
+          ],
+          "promptTemplate": "future house with bouncy metallic bass, vocal chops, futuristic synths, tight production",
+          "examples": [
+            "Oliver Heldens",
+            "Don Diablo",
+            "Tchami"
+          ]
+        },
+        {
+          "id": "bass-house",
+          "name": "Bass House",
+          "nameKo": "베이스하우스",
+          "description": "강렬한 베이스라인의 하우스",
+          "bpm": {
+            "min": 125,
+            "max": 130,
+            "default": 128
+          },
+          "mood": [
+            "aggressive",
+            "bass-heavy",
+            "energetic",
+            "dark"
+          ],
+          "instruments": [
+            "wobble-bass",
+            "distorted-synth",
+            "heavy-kick",
+            "clap"
+          ],
+          "promptTemplate": "bass house with aggressive wobble bass, distorted synths, heavy kicks, dark energy",
+          "examples": [
+            "JAUZ",
+            "Joyryde",
+            "AC Slater"
+          ]
+        },
+        {
+          "id": "deep-house",
+          "name": "Deep House",
+          "nameKo": "딥하우스",
+          "description": "깊고 그루비한 하우스",
+          "bpm": {
+            "min": 120,
+            "max": 125,
+            "default": 122
+          },
+          "mood": [
+            "deep",
+            "groovy",
+            "atmospheric",
+            "smooth"
+          ],
+          "instruments": [
+            "deep-bass",
+            "jazzy-chords",
+            "soft-pads",
+            "smooth-percussion"
+          ],
+          "promptTemplate": "deep house with deep bass lines, jazzy chords, atmospheric pads, smooth groovy feel",
+          "examples": [
+            "Kerri Chandler",
+            "Larry Heard",
+            "Dixon"
+          ]
+        },
+        {
+          "id": "tech-house",
+          "name": "Tech House",
+          "nameKo": "테크하우스",
+          "description": "테크노 + 하우스, 미니멀",
+          "bpm": {
+            "min": 125,
+            "max": 130,
+            "default": 127
+          },
+          "mood": [
+            "minimal",
+            "groovy",
+            "hypnotic",
+            "underground"
+          ],
+          "instruments": [
+            "minimal-kick",
+            "rolling-bass",
+            "percussion-loops",
+            "tech-synth"
+          ],
+          "promptTemplate": "tech house with minimal grooves, rolling bass, hypnotic percussion, underground vibe",
+          "examples": [
+            "Green Velvet",
+            "Fisher",
+            "Patrick Topping"
+          ]
+        },
+        {
+          "id": "tropical-house",
+          "name": "Tropical House",
+          "nameKo": "트로피컬하우스",
+          "description": "밝고 여름 감성의 하우스",
+          "bpm": {
+            "min": 100,
+            "max": 115,
+            "default": 110
+          },
+          "mood": [
+            "tropical",
+            "relaxed",
+            "summery",
+            "melodic"
+          ],
+          "instruments": [
+            "steel-drums",
+            "marimba",
+            "flute",
+            "relaxed-kick"
+          ],
+          "promptTemplate": "tropical house with steel drums, marimba, flute melodies, relaxed summer vibes",
+          "examples": [
+            "Kygo",
+            "Thomas Jack",
+            "Matoma"
+          ]
+        },
+        {
+          "id": "trance",
+          "name": "Trance",
+          "nameKo": "트랜스",
+          "description": "반복적이고 황홀한 전자음악",
+          "bpm": {
+            "min": 130,
+            "max": 145,
+            "default": 138
+          },
+          "mood": [
+            "euphoric",
+            "uplifting",
+            "energetic",
+            "hypnotic"
+          ],
+          "instruments": [
+            "arpeggiated-synth",
+            "acid-bass",
+            "uplifting-lead",
+            "driving-kick"
+          ],
+          "promptTemplate": "trance with euphoric melodies, arpeggiated synths, uplifting atmosphere, driving energy",
+          "examples": [
+            "Armin van Buuren",
+            "Paul van Dyk",
+            "Tiësto"
+          ]
+        },
+        {
+          "id": "psytrance",
+          "name": "Psytrance",
+          "nameKo": "사이트랜스",
+          "description": "사이키델릭 트랜스, 빠르고 강렬",
+          "bpm": {
+            "min": 140,
+            "max": 150,
+            "default": 145
+          },
+          "mood": [
+            "psychedelic",
+            "intense",
+            "fast",
+            "trippy"
+          ],
+          "instruments": [
+            "acid-bass",
+            "psychedelic-fx",
+            "fast-kick",
+            "hypnotic-lead"
+          ],
+          "promptTemplate": "psytrance with fast tempo, psychedelic effects, acid bass, trippy hypnotic atmosphere",
+          "examples": [
+            "Infected Mushroom",
+            "Astrix",
+            "Vini Vici"
+          ]
+        },
+        {
+          "id": "hard-trance",
+          "name": "Hard Trance",
+          "nameKo": "하드트랜스",
+          "description": "강하고 빠른 트랜스",
+          "bpm": {
+            "min": 140,
+            "max": 150,
+            "default": 145
+          },
+          "mood": [
+            "hard",
+            "energetic",
+            "aggressive",
+            "fast"
+          ],
+          "instruments": [
+            "hard-kick",
+            "screaming-lead",
+            "aggressive-bass",
+            "hard-clap"
+          ],
+          "promptTemplate": "hard trance with aggressive kicks, screaming synth leads, fast tempo, hard energy",
+          "examples": [
+            "Scot Project",
+            "Yoji Biomehanika",
+            "Lab 4"
+          ]
+        },
+        {
+          "id": "dubstep",
+          "name": "Dubstep",
+          "nameKo": "덥스텝",
+          "description": "헤비한 베이스 드롭, 워블 베이스",
+          "bpm": {
+            "min": 140,
+            "max": 150,
+            "default": 140
+          },
+          "mood": [
+            "heavy",
+            "aggressive",
+            "bass-driven",
+            "dark"
+          ],
+          "instruments": [
+            "wobble-bass",
+            "sub-bass",
+            "snare",
+            "atmospheric-pad"
+          ],
+          "promptTemplate": "dubstep with heavy wobble bass drops, sub bass, half-time drums, dark atmosphere",
+          "examples": [
+            "Skrillex",
+            "Excision",
+            "Zomboy"
+          ]
+        },
+        {
+          "id": "future-bass",
+          "name": "Future Bass",
+          "nameKo": "퓨처베이스",
+          "description": "감성적이고 부드러운 EDM",
+          "bpm": {
+            "min": 130,
+            "max": 170,
+            "default": 150
+          },
+          "mood": [
+            "emotional",
+            "melodic",
+            "uplifting",
+            "modern"
+          ],
+          "instruments": [
+            "supersaws",
+            "vocal-chops",
+            "808-bass",
+            "bright-chords"
+          ],
+          "promptTemplate": "future bass with emotional melodies, supersaw synths, vocal chops, uplifting vibes",
+          "examples": [
+            "Flume",
+            "Illenium",
+            "San Holo"
+          ]
+        },
+        {
+          "id": "trap-edm",
+          "name": "Trap EDM",
+          "nameKo": "트랩EDM",
+          "description": "트랩 비트 + EDM 프로덕션",
+          "bpm": {
+            "min": 140,
+            "max": 160,
+            "default": 150
+          },
+          "mood": [
+            "energetic",
+            "heavy",
+            "festival",
+            "modern"
+          ],
+          "instruments": [
+            "808-bass",
+            "rapid-hi-hats",
+            "synth-lead",
+            "snare-rolls"
+          ],
+          "promptTemplate": "trap edm with heavy 808 bass, rapid hi-hats, festival energy, modern production",
+          "examples": [
+            "RL Grime",
+            "Baauer",
+            "Flosstradamus"
+          ]
+        },
+        {
+          "id": "drum-and-bass",
+          "name": "Drum and Bass",
+          "nameKo": "드럼앤베이스",
+          "description": "빠른 드럼 + 무거운 베이스",
+          "bpm": {
+            "min": 160,
+            "max": 180,
+            "default": 170
+          },
+          "mood": [
+            "fast",
+            "energetic",
+            "bass-heavy",
+            "intense"
+          ],
+          "instruments": [
+            "fast-breakbeat",
+            "sub-bass",
+            "reese-bass",
+            "amen-break"
+          ],
+          "promptTemplate": "drum and bass with fast breakbeats, heavy sub bass, energetic tempo, complex rhythms",
+          "examples": [
+            "Pendulum",
+            "Netsky",
+            "Andy C"
+          ]
+        },
+        {
+          "id": "liquid-dnb",
+          "name": "Liquid DnB",
+          "nameKo": "리퀴드드럼앤베이스",
+          "description": "부드럽고 멜로딕한 드럼앤베이스",
+          "bpm": {
+            "min": 170,
+            "max": 180,
+            "default": 174
+          },
+          "mood": [
+            "smooth",
+            "melodic",
+            "soulful",
+            "atmospheric"
+          ],
+          "instruments": [
+            "rolling-drums",
+            "smooth-bass",
+            "jazzy-chords",
+            "atmospheric-pads"
+          ],
+          "promptTemplate": "liquid drum and bass with smooth rolling drums, melodic elements, soulful atmosphere",
+          "examples": [
+            "Calibre",
+            "High Contrast",
+            "Netsky"
+          ]
+        },
+        {
+          "id": "jump-up-dnb",
+          "name": "Jump Up DnB",
+          "nameKo": "점프업드럼앤베이스",
+          "description": "신나고 통통 튀는 드럼앤베이스",
+          "bpm": {
+            "min": 170,
+            "max": 180,
+            "default": 174
+          },
+          "mood": [
+            "energetic",
+            "bouncy",
+            "fun",
+            "aggressive"
+          ],
+          "instruments": [
+            "bouncy-bass",
+            "tight-drums",
+            "energetic-sample",
+            "rolling-snare"
+          ],
+          "promptTemplate": "jump up drum and bass with bouncy bass lines, energetic samples, tight drums, fun energy",
+          "examples": [
+            "DJ Hazard",
+            "Macky Gee",
+            "Friction"
+          ]
+        },
+        {
+          "id": "neurofunk",
+          "name": "Neurofunk",
+          "nameKo": "뉴로펑크",
+          "description": "다크하고 기계적인 드럼앤베이스",
+          "bpm": {
+            "min": 170,
+            "max": 180,
+            "default": 174
+          },
+          "mood": [
+            "dark",
+            "technical",
+            "mechanical",
+            "complex"
+          ],
+          "instruments": [
+            "reese-bass",
+            "mechanical-drums",
+            "dystopian-fx",
+            "complex-rhythm"
+          ],
+          "promptTemplate": "neurofunk with dark reese bass, mechanical drums, dystopian atmosphere, complex production",
+          "examples": [
+            "Noisia",
+            "Phace",
+            "Black Sun Empire"
+          ]
+        },
+        {
+          "id": "jungle",
+          "name": "Jungle",
+          "nameKo": "정글",
+          "description": "DnB의 원조, 샘플 기반",
+          "bpm": {
+            "min": 160,
+            "max": 180,
+            "default": 170
+          },
+          "mood": [
+            "raw",
+            "sample-heavy",
+            "energetic",
+            "classic"
+          ],
+          "instruments": [
+            "amen-break",
+            "reggae-bass",
+            "jungle-sample",
+            "fast-drums"
+          ],
+          "promptTemplate": "jungle with amen breaks, reggae-influenced bass, raw samples, classic 90s energy",
+          "examples": [
+            "Goldie",
+            "LTJ Bukem",
+            "Roni Size"
+          ]
+        },
+        {
+          "id": "breakbeat",
+          "name": "Breakbeat",
+          "nameKo": "브레이크비트",
+          "description": "잘게 쪼개진 브레이크 비트",
+          "bpm": {
+            "min": 120,
+            "max": 150,
+            "default": 135
+          },
+          "mood": [
+            "energetic",
+            "funky",
+            "broken-rhythm",
+            "dynamic"
+          ],
+          "instruments": [
+            "break-sample",
+            "funky-bass",
+            "chopped-drums",
+            "synth-stabs"
+          ],
+          "promptTemplate": "breakbeat with chopped drum breaks, funky bass lines, energetic broken rhythms",
+          "examples": [
+            "The Prodigy",
+            "Fatboy Slim",
+            "The Chemical Brothers"
+          ]
+        },
+        {
+          "id": "acid-house",
+          "name": "Acid House",
+          "nameKo": "애시드하우스",
+          "description": "303 신스 스퀠치, 산성 하우스",
+          "bpm": {
+            "min": 120,
+            "max": 130,
+            "default": 125
+          },
+          "mood": [
+            "acid",
+            "hypnotic",
+            "raw",
+            "classic"
+          ],
+          "instruments": [
+            "303-bass",
+            "four-on-floor",
+            "909-drums",
+            "minimal-elements"
+          ],
+          "promptTemplate": "acid house with TB-303 squelchy bass, four-on-floor kick, hypnotic acid lines",
+          "examples": [
+            "Phuture",
+            "Josh Wink",
+            "Hardfloor"
+          ]
+        },
+        {
+          "id": "uk-garage",
+          "name": "UK Garage",
+          "nameKo": "유케이개러지",
+          "description": "영국식 개러지, 싱커페이션",
+          "bpm": {
+            "min": 130,
+            "max": 140,
+            "default": 135
+          },
+          "mood": [
+            "groovy",
+            "shuffled",
+            "uk",
+            "danceable"
+          ],
+          "instruments": [
+            "shuffled-drums",
+            "sub-bass",
+            "vocal-chop",
+            "uk-percussion"
+          ],
+          "promptTemplate": "uk garage with shuffled 2-step drums, sub bass, chopped vocals, UK street sound",
+          "examples": [
+            "MJ Cole",
+            "Todd Edwards",
+            "Artful Dodger"
+          ]
+        },
+        {
+          "id": "eurodance",
+          "name": "Eurodance",
+          "nameKo": "유로댄스",
+          "description": "유럽 스타일 댄스 팝 EDM",
+          "bpm": {
+            "min": 130,
+            "max": 150,
+            "default": 140
+          },
+          "mood": [
+            "upbeat",
+            "90s",
+            "catchy",
+            "energetic"
+          ],
+          "instruments": [
+            "euro-synth",
+            "four-on-floor",
+            "rap-vocals",
+            "catchy-hooks"
+          ],
+          "promptTemplate": "eurodance with catchy synth melodies, rap and sung vocals, 90s euro energy",
+          "examples": [
+            "2 Unlimited",
+            "Snap!",
+            "Haddaway"
+          ]
+        },
+        {
+          "id": "jersey-club",
+          "name": "Jersey Club",
+          "nameKo": "저지클럽",
+          "description": "빠른 하이햇, 보컬 샘플 클럽",
+          "bpm": {
+            "min": 135,
+            "max": 145,
+            "default": 140
+          },
+          "mood": [
+            "energetic",
+            "bouncy",
+            "club",
+            "jersey"
+          ],
+          "instruments": [
+            "bed-squeak-sample",
+            "rapid-hi-hats",
+            "vocal-chop",
+            "kick-pattern"
+          ],
+          "promptTemplate": "jersey club with bed squeak samples, rapid hi-hats, chopped vocals, club energy",
+          "examples": [
+            "DJ Sliink",
+            "R3ll",
+            "Cashmere Cat"
+          ]
+        },
+        {
+          "id": "moombahton",
+          "name": "Moombahton",
+          "nameKo": "무바톤",
+          "description": "레게톤 + 하우스 크로스오버",
+          "bpm": {
+            "min": 105,
+            "max": 115,
+            "default": 110
+          },
+          "mood": [
+            "latin",
+            "groovy",
+            "hybrid",
+            "party"
+          ],
+          "instruments": [
+            "reggaeton-rhythm",
+            "dutch-house-synth",
+            "latin-percussion",
+            "four-on-floor"
+          ],
+          "promptTemplate": "moombahton with reggaeton rhythms, dutch house synths, latin percussion, party vibes",
+          "examples": [
+            "Dillon Francis",
+            "Dave Nada",
+            "Munchi"
+          ]
+        },
+        {
+          "id": "nu-disco",
+          "name": "Nu Disco",
+          "nameKo": "뉴디스코",
+          "description": "현대적으로 재해석한 디스코",
+          "bpm": {
+            "min": 115,
+            "max": 125,
+            "default": 120
+          },
+          "mood": [
+            "funky",
+            "modern",
+            "groovy",
+            "retro"
+          ],
+          "instruments": [
+            "funk-bass",
+            "disco-strings",
+            "modern-synth",
+            "four-on-floor"
+          ],
+          "promptTemplate": "nu disco with modern production, funky bass lines, disco strings, groovy feel",
+          "examples": [
+            "Daft Punk",
+            "Disclosure",
+            "Purple Disco Machine"
+          ]
+        },
+        {
+          "id": "hardstyle",
+          "name": "Hardstyle",
+          "nameKo": "하드스타일",
+          "description": "강렬한 킥드럼의 레이브 음악",
+          "bpm": {
+            "min": 145,
+            "max": 155,
+            "default": 150
+          },
+          "mood": [
+            "hard",
+            "energetic",
+            "aggressive",
+            "rave"
+          ],
+          "instruments": [
+            "reverse-bass",
+            "distorted-kick",
+            "euphoric-lead",
+            "screeching-synth"
+          ],
+          "promptTemplate": "hardstyle with reverse bass kicks, distorted drums, euphoric melodies, rave energy",
+          "examples": [
+            "Headhunterz",
+            "Brennan Heart",
+            "Wildstylez"
+          ]
+        },
+        {
+          "id": "happy-hardcore",
+          "name": "Happy Hardcore",
+          "nameKo": "해피하드코어",
+          "description": "빠르고 신나는 레이브",
+          "bpm": {
+            "min": 160,
+            "max": 180,
+            "default": 170
+          },
+          "mood": [
+            "happy",
+            "fast",
+            "energetic",
+            "rave"
+          ],
+          "instruments": [
+            "fast-kick",
+            "piano-stab",
+            "high-vocals",
+            "rave-synth"
+          ],
+          "promptTemplate": "happy hardcore with extremely fast tempo, piano stabs, high-pitched vocals, happy rave energy",
+          "examples": [
+            "Scott Brown",
+            "Dune",
+            "Hixxy"
+          ]
+        },
+        {
+          "id": "glitch",
+          "name": "Glitch",
+          "nameKo": "글리치",
+          "description": "디지털 오류음 기반 전자음악",
+          "bpm": {
+            "min": 80,
+            "max": 160,
+            "default": 120
+          },
+          "mood": [
+            "experimental",
+            "digital",
+            "abstract",
+            "glitchy"
+          ],
+          "instruments": [
+            "digital-artifacts",
+            "glitch-fx",
+            "chopped-beats",
+            "granular-synth"
+          ],
+          "promptTemplate": "glitch with digital artifacts, cut-up beats, abstract soundscapes, experimental production",
+          "examples": [
+            "Autechre",
+            "Aphex Twin",
+            "Oval"
+          ]
+        },
+        {
+          "id": "glitch-hop",
+          "name": "Glitch Hop",
+          "nameKo": "글리치홉",
+          "description": "글리치 + 힙합 비트",
+          "bpm": {
+            "min": 80,
+            "max": 110,
+            "default": 95
+          },
+          "mood": [
+            "glitchy",
+            "groovy",
+            "experimental",
+            "bass-heavy"
+          ],
+          "instruments": [
+            "glitch-bass",
+            "hip-hop-drums",
+            "digital-fx",
+            "wobble"
+          ],
+          "promptTemplate": "glitch hop with glitchy bass, hip hop beats, digital effects, experimental groove",
+          "examples": [
+            "Pretty Lights",
+            "The Glitch Mob",
+            "Gramatik"
+          ]
+        },
+        {
+          "id": "idm",
+          "name": "IDM",
+          "nameKo": "IDM",
+          "description": "지적이고 실험적인 전자음악",
+          "bpm": {
+            "min": 80,
+            "max": 180,
+            "default": 130
+          },
+          "mood": [
+            "intelligent",
+            "experimental",
+            "complex",
+            "cerebral"
+          ],
+          "instruments": [
+            "complex-rhythm",
+            "abstract-synth",
+            "glitch-element",
+            "ambient-texture"
+          ],
+          "promptTemplate": "IDM with complex rhythms, abstract synthesis, experimental structures, intelligent production",
+          "examples": [
+            "Aphex Twin",
+            "Boards of Canada",
+            "Squarepusher"
+          ]
+        },
+        {
+          "id": "chillout-electronic",
+          "name": "Chillout Electronic",
+          "nameKo": "칠아웃일렉트로닉",
+          "description": "느긋하고 편안한 전자음악",
+          "bpm": {
+            "min": 80,
+            "max": 110,
+            "default": 95
+          },
+          "mood": [
+            "relaxed",
+            "chill",
+            "atmospheric",
+            "smooth"
+          ],
+          "instruments": [
+            "smooth-synth",
+            "soft-drums",
+            "ambient-pad",
+            "mellow-bass"
+          ],
+          "promptTemplate": "chillout electronic with relaxed tempo, smooth synths, atmospheric pads, mellow vibes",
+          "examples": [
+            "Tycho",
+            "Bonobo",
+            "Emancipator"
+          ]
+        },
+        {
+          "id": "downtempo",
+          "name": "Downtempo",
+          "nameKo": "다운템포",
+          "description": "느린 템포의 일렉트로닉",
+          "bpm": {
+            "min": 70,
+            "max": 110,
+            "default": 90
+          },
+          "mood": [
+            "slow",
+            "atmospheric",
+            "moody",
+            "ambient"
+          ],
+          "instruments": [
+            "slow-beats",
+            "atmospheric-synth",
+            "deep-bass",
+            "texture"
+          ],
+          "promptTemplate": "downtempo with slow beats, atmospheric synths, deep bass, moody ambient textures",
+          "examples": [
+            "Thievery Corporation",
+            "Nightmares on Wax",
+            "Kruder & Dorfmeister"
+          ]
+        },
+        {
+          "id": "dariacore",
+          "name": "Dariacore",
+          "nameKo": "다리아코어",
+          "description": "극단적으로 가속된 보컬 샘플",
+          "bpm": {
+            "min": 180,
+            "max": 250,
+            "default": 200
+          },
+          "mood": [
+            "chaotic",
+            "hyper",
+            "meme",
+            "extreme"
+          ],
+          "instruments": [
+            "sped-up-vocals",
+            "distorted-samples",
+            "fast-drums",
+            "chaotic-edits"
+          ],
+          "promptTemplate": "dariacore with extremely sped up vocals, chaotic edits, meme samples, hyper energy",
+          "examples": [
+            "Jane Remover",
+            "Leroy",
+            "Census Designated"
+          ]
+        },
+        {
+          "id": "chiptune",
+          "name": "Chiptune",
+          "nameKo": "칩튠",
+          "description": "게임기 사운드칩 기반 음악",
+          "bpm": {
+            "min": 120,
+            "max": 180,
+            "default": 150
+          },
+          "mood": [
+            "8-bit",
+            "retro",
+            "nostalgic",
+            "videogame"
+          ],
+          "instruments": [
+            "8-bit-synth",
+            "square-wave",
+            "triangle-wave",
+            "noise-channel"
+          ],
+          "promptTemplate": "chiptune with 8-bit synthesizers, retro game sounds, square waves, nostalgic videogame vibes",
+          "examples": [
+            "Anamanaguchi",
+            "Chipzel",
+            "Sabrepulse"
+          ]
+        },
+        {
+          "id": "synthwave",
+          "name": "Synthwave",
+          "nameKo": "신스웨이브",
+          "description": "80년대 신스 복고 사운드",
+          "bpm": {
+            "min": 100,
+            "max": 130,
+            "default": 115
+          },
+          "mood": [
+            "retro",
+            "80s",
+            "nostalgic",
+            "neon"
+          ],
+          "instruments": [
+            "analog-synth",
+            "80s-drums",
+            "arpeggiated-bass",
+            "reverb"
+          ],
+          "promptTemplate": "synthwave with 80s analog synths, retro drums, neon atmosphere, nostalgic retrofuturism",
+          "examples": [
+            "Kavinsky",
+            "Perturbator",
+            "The Midnight"
+          ]
+        },
+        {
+          "id": "darkwave",
+          "name": "Darkwave",
+          "nameKo": "다크웨이브",
+          "description": "어둡고 신스 중심의 포스트펑크",
+          "bpm": {
+            "min": 100,
+            "max": 130,
+            "default": 115
+          },
+          "mood": [
+            "dark",
+            "gothic",
+            "moody",
+            "cold"
+          ],
+          "instruments": [
+            "dark-synth",
+            "minimal-drums",
+            "cold-bass",
+            "atmospheric-pad"
+          ],
+          "promptTemplate": "darkwave with dark synthesizers, cold atmosphere, minimal drums, gothic mood",
+          "examples": [
+            "Clan of Xymox",
+            "Lebanon Hanover",
+            "She Past Away"
+          ]
+        },
+        {
+          "id": "coldwave",
+          "name": "Coldwave",
+          "nameKo": "콜드웨이브",
+          "description": "냉소적이고 미니멀한 전자음악",
+          "bpm": {
+            "min": 100,
+            "max": 130,
+            "default": 115
+          },
+          "mood": [
+            "cold",
+            "minimal",
+            "detached",
+            "stark"
+          ],
+          "instruments": [
+            "cold-synth",
+            "stark-drums",
+            "monotone-bass",
+            "minimal-elements"
+          ],
+          "promptTemplate": "coldwave with cold detached atmosphere, minimal synths, stark drums, emotionally distant",
+          "examples": [
+            "Deux",
+            "Marquis de Sade",
+            "Kas Product"
+          ]
+        },
+        {
+          "id": "ethereal-wave",
+          "name": "Ethereal Wave",
+          "nameKo": "에테리얼웨이브",
+          "description": "몽환적이고 대기적인 웨이브 음악",
+          "bpm": {
+            "min": 90,
+            "max": 120,
+            "default": 105
+          },
+          "mood": [
+            "ethereal",
+            "dreamy",
+            "atmospheric",
+            "heavenly"
+          ],
+          "instruments": [
+            "ethereal-vocals",
+            "shimmering-synth",
+            "reverb-heavy",
+            "atmospheric-texture"
+          ],
+          "promptTemplate": "ethereal wave with dreamy vocals, shimmering synths, heavy reverb, heavenly atmosphere",
+          "examples": [
+            "Cocteau Twins",
+            "Dead Can Dance",
+            "This Mortal Coil"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ambient-new-age",
+      "name": "AMBIENT/NEW AGE 앰비언트·뉴에이지",
+      "emoji": "🌿",
+      "description": "배경음악, 명상, 힐링 중심. 멜로디보다 분위기가 핵심입니다.",
+      "count": 9,
+      "genres": [
+        {
+          "id": "dark-ambient",
+          "name": "Dark Ambient",
+          "nameKo": "다크앰비언트",
+          "description": "어둡고 긴장감 있는 앰비언트",
+          "bpm": {
+            "min": 0,
+            "max": 80,
+            "default": 60
+          },
+          "mood": [
+            "dark",
+            "ominous",
+            "atmospheric",
+            "tension"
+          ],
+          "instruments": [
+            "drone",
+            "dark-pad",
+            "field-recording",
+            "subtle-noise"
+          ],
+          "promptTemplate": "dark ambient with ominous drones, atmospheric textures, tension-building soundscapes",
+          "examples": [
+            "Lustmord",
+            "Atrium Carceri",
+            "Raison d'être"
+          ]
+        },
+        {
+          "id": "drone-ambient",
+          "name": "Drone Ambient",
+          "nameKo": "드론앰비언트",
+          "description": "지속음 중심의 드론 사운드",
+          "bpm": {
+            "min": 0,
+            "max": 60,
+            "default": 0
+          },
+          "mood": [
+            "sustained",
+            "meditative",
+            "hypnotic",
+            "minimal"
+          ],
+          "instruments": [
+            "long-tones",
+            "organ-drone",
+            "string-sustain",
+            "minimal-movement"
+          ],
+          "promptTemplate": "drone ambient with sustained tones, minimal movement, hypnotic sustained notes, meditative",
+          "examples": [
+            "Stars of the Lid",
+            "Tim Hecker",
+            "William Basinski"
+          ]
+        },
+        {
+          "id": "space-ambient",
+          "name": "Space Ambient",
+          "nameKo": "스페이스앰비언트",
+          "description": "우주적 감성의 앰비언트",
+          "bpm": {
+            "min": 0,
+            "max": 80,
+            "default": 60
+          },
+          "mood": [
+            "cosmic",
+            "vast",
+            "ethereal",
+            "expansive"
+          ],
+          "instruments": [
+            "cosmic-synth",
+            "space-fx",
+            "reverb-pad",
+            "expansive-texture"
+          ],
+          "promptTemplate": "space ambient with cosmic atmosphere, vast soundscapes, ethereal synths, interstellar vibes",
+          "examples": [
+            "Steve Roach",
+            "Carbon Based Lifeforms",
+            "Solar Fields"
+          ]
+        },
+        {
+          "id": "new-age",
+          "name": "New Age",
+          "nameKo": "뉴에이지",
+          "description": "힐링, 명상, 자연 감성",
+          "bpm": {
+            "min": 60,
+            "max": 100,
+            "default": 80
+          },
+          "mood": [
+            "healing",
+            "peaceful",
+            "natural",
+            "spiritual"
+          ],
+          "instruments": [
+            "nature-sounds",
+            "soft-synth",
+            "acoustic-instruments",
+            "gentle-piano"
+          ],
+          "promptTemplate": "new age with healing atmosphere, nature sounds, gentle instrumentation, peaceful spirituality",
+          "examples": [
+            "Enya",
+            "Yanni",
+            "Kitaro"
+          ]
+        },
+        {
+          "id": "celtic-new-age",
+          "name": "Celtic New Age",
+          "nameKo": "켈틱뉴에이지",
+          "description": "켈틱 악기 + 뉴에이지",
+          "bpm": {
+            "min": 70,
+            "max": 100,
+            "default": 85
+          },
+          "mood": [
+            "celtic",
+            "mystical",
+            "peaceful",
+            "traditional"
+          ],
+          "instruments": [
+            "celtic-harp",
+            "tin-whistle",
+            "uilleann-pipes",
+            "bodhran"
+          ],
+          "promptTemplate": "celtic new age with traditional Irish instruments, mystical atmosphere, peaceful energy",
+          "examples": [
+            "Enya",
+            "Clannad",
+            "Loreena McKennitt"
+          ]
+        },
+        {
+          "id": "meditation-music",
+          "name": "Meditation Music",
+          "nameKo": "명상음악",
+          "description": "명상용 음악",
+          "bpm": {
+            "min": 50,
+            "max": 80,
+            "default": 60
+          },
+          "mood": [
+            "meditative",
+            "calm",
+            "centered",
+            "mindful"
+          ],
+          "instruments": [
+            "singing-bowl",
+            "chimes",
+            "drone",
+            "nature-sounds"
+          ],
+          "promptTemplate": "meditation music with singing bowls, gentle chimes, calming drones, mindful atmosphere",
+          "examples": [
+            "Deuter",
+            "Anugama",
+            "Karunesh"
+          ]
+        },
+        {
+          "id": "yoga-music",
+          "name": "Yoga Music",
+          "nameKo": "요가음악",
+          "description": "요가, 호흡 중심 음악",
+          "bpm": {
+            "min": 60,
+            "max": 90,
+            "default": 75
+          },
+          "mood": [
+            "flowing",
+            "breathwork",
+            "balanced",
+            "centered"
+          ],
+          "instruments": [
+            "indian-instruments",
+            "soft-percussion",
+            "flute",
+            "ambient-pad"
+          ],
+          "promptTemplate": "yoga music with flowing rhythm, breathwork-friendly tempo, balanced energy, centering sounds",
+          "examples": [
+            "Deva Premal",
+            "Krishna Das",
+            "Jai Uttal"
+          ]
+        },
+        {
+          "id": "spa-music",
+          "name": "Spa Music",
+          "nameKo": "스파음악",
+          "description": "편안하고 부드러운 스파 음악",
+          "bpm": {
+            "min": 60,
+            "max": 90,
+            "default": 75
+          },
+          "mood": [
+            "relaxing",
+            "gentle",
+            "soothing",
+            "luxurious"
+          ],
+          "instruments": [
+            "soft-piano",
+            "water-sounds",
+            "gentle-strings",
+            "ambient-texture"
+          ],
+          "promptTemplate": "spa music with gentle piano, water sounds, soothing atmosphere, luxurious relaxation",
+          "examples": [
+            "Spa Music Series",
+            "Spa Relaxation",
+            "Massage Music"
+          ]
+        },
+        {
+          "id": "lounge",
+          "name": "Lounge",
+          "nameKo": "라운지",
+          "description": "세련되고 여유로운 배경음악",
+          "bpm": {
+            "min": 90,
+            "max": 120,
+            "default": 105
+          },
+          "mood": [
+            "sophisticated",
+            "relaxed",
+            "elegant",
+            "background"
+          ],
+          "instruments": [
+            "smooth-jazz-elements",
+            "soft-electronic",
+            "chill-beats",
+            "ambient-fx"
+          ],
+          "promptTemplate": "lounge music with sophisticated atmosphere, smooth jazz elements, elegant background vibes",
+          "examples": [
+            "Thievery Corporation",
+            "Zero 7",
+            "Air"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "jazz",
+      "name": "JAZZ 재즈",
+      "emoji": "🎷",
+      "description": "즉흥 연주와 스윙감이 핵심. 시대와 스타일에 따라 폭이 넓습니다.",
+      "count": 5,
+      "genres": [
+        {
+          "id": "smooth-jazz",
+          "name": "Smooth Jazz",
+          "nameKo": "스무스재즈",
+          "description": "부드럽고 편안한 팝 재즈",
+          "bpm": {
+            "min": 80,
+            "max": 120,
+            "default": 100
+          },
+          "mood": [
+            "smooth",
+            "relaxed",
+            "mellow",
+            "commercial"
+          ],
+          "instruments": [
+            "saxophone",
+            "electric-piano",
+            "smooth-guitar",
+            "soft-drums"
+          ],
+          "promptTemplate": "smooth jazz with mellow saxophone, relaxed tempo, commercial appeal, easy listening",
+          "examples": [
+            "Kenny G",
+            "George Benson",
+            "Grover Washington Jr."
+          ]
+        },
+        {
+          "id": "nu-jazz",
+          "name": "Nu Jazz",
+          "nameKo": "뉴재즈",
+          "description": "현대적으로 재해석한 재즈",
+          "bpm": {
+            "min": 90,
+            "max": 140,
+            "default": 115
+          },
+          "mood": [
+            "modern",
+            "fusion",
+            "electronic",
+            "experimental"
+          ],
+          "instruments": [
+            "electronic-elements",
+            "jazz-instruments",
+            "samples",
+            "modern-production"
+          ],
+          "promptTemplate": "nu jazz with modern electronic elements, jazz improvisation, fusion of styles, experimental",
+          "examples": [
+            "St Germain",
+            "Jazzanova",
+            "Bugge Wesseltoft"
+          ]
+        },
+        {
+          "id": "jazz-fusion",
+          "name": "Jazz Fusion",
+          "nameKo": "재즈퓨전",
+          "description": "재즈 + 록/펑크/일렉트로닉",
+          "bpm": {
+            "min": 100,
+            "max": 160,
+            "default": 130
+          },
+          "mood": [
+            "energetic",
+            "complex",
+            "fusion",
+            "technical"
+          ],
+          "instruments": [
+            "electric-guitar",
+            "synthesizer",
+            "electric-bass",
+            "complex-drums"
+          ],
+          "promptTemplate": "jazz fusion with electric instruments, complex harmonies, rock energy, technical proficiency",
+          "examples": [
+            "Weather Report",
+            "Return to Forever",
+            "Mahavishnu Orchestra"
+          ]
+        },
+        {
+          "id": "bebop",
+          "name": "Bebop",
+          "nameKo": "비밥",
+          "description": "빠르고 기교적인 클래식 재즈",
+          "bpm": {
+            "min": 180,
+            "max": 280,
+            "default": 220
+          },
+          "mood": [
+            "fast",
+            "technical",
+            "improvisational",
+            "classic"
+          ],
+          "instruments": [
+            "saxophone",
+            "trumpet",
+            "piano",
+            "upright-bass",
+            "swing-drums"
+          ],
+          "promptTemplate": "bebop with fast tempo, complex improvisation, technical virtuosity, classic jazz swing",
+          "examples": [
+            "Charlie Parker",
+            "Dizzy Gillespie",
+            "Thelonious Monk"
+          ]
+        },
+        {
+          "id": "big-band",
+          "name": "Big Band",
+          "nameKo": "빅밴드",
+          "description": "대형 오케스트라 편성 스윙 재즈",
+          "bpm": {
+            "min": 120,
+            "max": 200,
+            "default": 160
+          },
+          "mood": [
+            "swinging",
+            "orchestral",
+            "energetic",
+            "classic"
+          ],
+          "instruments": [
+            "brass-section",
+            "saxophone-section",
+            "rhythm-section",
+            "big-band-arrangement"
+          ],
+          "promptTemplate": "big band with large orchestral arrangement, swinging rhythm, brass and saxophone sections",
+          "examples": [
+            "Duke Ellington",
+            "Count Basie",
+            "Glenn Miller"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "latin-world",
+      "name": "LATIN/WORLD 라틴·월드뮤직",
+      "emoji": "🌍",
+      "description": "전 세계 각 지역의 고유한 리듬과 문화가 담긴 음악들.",
+      "count": 25,
+      "genres": [
+        {
+          "id": "reggaeton",
+          "name": "Reggaeton",
+          "nameKo": "레게톤",
+          "description": "라틴 힙합, 뎀보우 리듬",
+          "bpm": {
+            "min": 85,
+            "max": 105,
+            "default": 95
+          },
+          "mood": [
+            "urban",
+            "latin",
+            "danceable",
+            "rhythmic"
+          ],
+          "instruments": [
+            "dembow-rhythm",
+            "808",
+            "latin-percussion",
+            "reggaeton-vocals"
+          ],
+          "promptTemplate": "reggaeton with dembow rhythm pattern, 808 bass, latin percussion, urban danceable energy",
+          "examples": [
+            "Daddy Yankee",
+            "Bad Bunny",
+            "J Balvin"
+          ]
+        },
+        {
+          "id": "dembow",
+          "name": "Dembow",
+          "nameKo": "뎀보우",
+          "description": "레게톤의 원조 리듬 패턴",
+          "bpm": {
+            "min": 95,
+            "max": 115,
+            "default": 105
+          },
+          "mood": [
+            "rhythmic",
+            "caribbean",
+            "danceable",
+            "raw"
+          ],
+          "instruments": [
+            "dembow-pattern",
+            "caribbean-percussion",
+            "bass",
+            "minimal-melody"
+          ],
+          "promptTemplate": "dembow with signature rhythm pattern, caribbean percussion, raw production, danceable energy",
+          "examples": [
+            "El Alfa",
+            "Chimbala",
+            "Rochy RD"
+          ]
+        },
+        {
+          "id": "latin-trap",
+          "name": "Latin Trap",
+          "nameKo": "라틴트랩",
+          "description": "라틴 + 트랩",
+          "bpm": {
+            "min": 130,
+            "max": 160,
+            "default": 145
+          },
+          "mood": [
+            "urban",
+            "modern",
+            "latin",
+            "trap"
+          ],
+          "instruments": [
+            "808-bass",
+            "latin-percussion",
+            "hi-hats",
+            "spanish-vocals"
+          ],
+          "promptTemplate": "latin trap with 808 bass, rapid hi-hats, latin flavor, modern urban sound",
+          "examples": [
+            "Anuel AA",
+            "Ozuna",
+            "Lunay"
+          ]
+        },
+        {
+          "id": "regional-mexican",
+          "name": "Regional Mexican",
+          "nameKo": "멕시칸지역음악",
+          "description": "멕시코 지역 전통 음악",
+          "bpm": {
+            "min": 100,
+            "max": 140,
+            "default": 120
+          },
+          "mood": [
+            "traditional",
+            "mexican",
+            "folk",
+            "authentic"
+          ],
+          "instruments": [
+            "accordion",
+            "bajo-sexto",
+            "brass",
+            "regional-percussion"
+          ],
+          "promptTemplate": "regional mexican with accordion, bajo sexto, brass section, authentic traditional sound",
+          "examples": [
+            "Vicente Fernández",
+            "Los Tigres del Norte",
+            "Banda MS"
+          ]
+        },
+        {
+          "id": "corridos",
+          "name": "Corridos",
+          "nameKo": "코리도스",
+          "description": "멕시코 이야기 형식 민요",
+          "bpm": {
+            "min": 90,
+            "max": 130,
+            "default": 110
+          },
+          "mood": [
+            "narrative",
+            "traditional",
+            "storytelling",
+            "mexican"
+          ],
+          "instruments": [
+            "acoustic-guitar",
+            "accordion",
+            "bajo-sexto",
+            "narrative-vocals"
+          ],
+          "promptTemplate": "corridos with narrative storytelling, acoustic guitar, accordion, traditional mexican ballad style",
+          "examples": [
+            "Los Tucanes de Tijuana",
+            "Chalino Sánchez",
+            "Los Tigres del Norte"
+          ]
+        },
+        {
+          "id": "bachata",
+          "name": "Bachata",
+          "nameKo": "바차타",
+          "description": "도미니카 기타 기반 댄스 음악",
+          "bpm": {
+            "min": 110,
+            "max": 140,
+            "default": 125
+          },
+          "mood": [
+            "romantic",
+            "danceable",
+            "guitar-driven",
+            "dominican"
+          ],
+          "instruments": [
+            "acoustic-guitar",
+            "bongo",
+            "guira",
+            "romantic-vocals"
+          ],
+          "promptTemplate": "bachata with romantic guitar, bongo drums, güira percussion, danceable dominican rhythm",
+          "examples": [
+            "Romeo Santos",
+            "Prince Royce",
+            "Aventura"
+          ]
+        },
+        {
+          "id": "salsa",
+          "name": "Salsa",
+          "nameKo": "살사",
+          "description": "카리브해 리듬의 댄스 음악",
+          "bpm": {
+            "min": 140,
+            "max": 220,
+            "default": 180
+          },
+          "mood": [
+            "energetic",
+            "danceable",
+            "caribbean",
+            "festive"
+          ],
+          "instruments": [
+            "conga",
+            "timbales",
+            "brass-section",
+            "piano",
+            "clave"
+          ],
+          "promptTemplate": "salsa with energetic caribbean rhythm, conga and timbales, brass section, clave pattern",
+          "examples": [
+            "Celia Cruz",
+            "Marc Anthony",
+            "Willie Colón"
+          ]
+        },
+        {
+          "id": "merengue",
+          "name": "Merengue",
+          "nameKo": "메렝게",
+          "description": "빠른 도미니카 댄스 음악",
+          "bpm": {
+            "min": 120,
+            "max": 180,
+            "default": 150
+          },
+          "mood": [
+            "fast",
+            "energetic",
+            "danceable",
+            "festive"
+          ],
+          "instruments": [
+            "accordion",
+            "tambora",
+            "guira",
+            "saxophone"
+          ],
+          "promptTemplate": "merengue with fast 2/4 rhythm, accordion, tambora drum, güira, energetic dance tempo",
+          "examples": [
+            "Juan Luis Guerra",
+            "Johnny Ventura",
+            "Wilfrido Vargas"
+          ]
+        },
+        {
+          "id": "mariachi",
+          "name": "Mariachi",
+          "nameKo": "마리아치",
+          "description": "멕시코 전통 밴드 음악",
+          "bpm": {
+            "min": 80,
+            "max": 140,
+            "default": 110
+          },
+          "mood": [
+            "traditional",
+            "festive",
+            "passionate",
+            "mexican"
+          ],
+          "instruments": [
+            "trumpet",
+            "violin",
+            "vihuela",
+            "guitarrón",
+            "mariachi-vocals"
+          ],
+          "promptTemplate": "mariachi with trumpet and violin, traditional mexican instruments, passionate vocals, festive energy",
+          "examples": [
+            "Vicente Fernández",
+            "Pedro Infante",
+            "Jorge Negrete"
+          ]
+        },
+        {
+          "id": "tango",
+          "name": "Tango",
+          "nameKo": "탱고",
+          "description": "아르헨티나 정열의 댄스 음악",
+          "bpm": {
+            "min": 60,
+            "max": 120,
+            "default": 90
+          },
+          "mood": [
+            "passionate",
+            "dramatic",
+            "sensual",
+            "argentine"
+          ],
+          "instruments": [
+            "bandoneon",
+            "violin",
+            "piano",
+            "double-bass"
+          ],
+          "promptTemplate": "tango with passionate bandoneon, violin, dramatic piano, sensual argentine dance rhythm",
+          "examples": [
+            "Astor Piazzolla",
+            "Carlos Gardel",
+            "Aníbal Troilo"
+          ]
+        },
+        {
+          "id": "kizomba",
+          "name": "Kizomba",
+          "nameKo": "키좀바",
+          "description": "앙골라 기원의 감성적 댄스",
+          "bpm": {
+            "min": 85,
+            "max": 100,
+            "default": 92
+          },
+          "mood": [
+            "sensual",
+            "romantic",
+            "smooth",
+            "african"
+          ],
+          "instruments": [
+            "electronic-percussion",
+            "synth",
+            "romantic-vocals",
+            "zouk-influence"
+          ],
+          "promptTemplate": "kizomba with smooth sensual rhythm, romantic vocals, electronic production, african-portuguese fusion",
+          "examples": [
+            "C4 Pedro",
+            "Nelson Freitas",
+            "Anselmo Ralph"
+          ]
+        },
+        {
+          "id": "bossa-nova",
+          "name": "Bossa Nova",
+          "nameKo": "보사노바",
+          "description": "브라질 보사노바, 재즈+삼바",
+          "bpm": {
+            "min": 110,
+            "max": 150,
+            "default": 130
+          },
+          "mood": [
+            "smooth",
+            "jazzy",
+            "tropical",
+            "sophisticated"
+          ],
+          "instruments": [
+            "nylon-guitar",
+            "soft-percussion",
+            "jazz-piano",
+            "smooth-vocals"
+          ],
+          "promptTemplate": "bossa nova with nylon guitar, soft samba rhythm, jazzy chords, smooth sophisticated vocals",
+          "examples": [
+            "Antônio Carlos Jobim",
+            "João Gilberto",
+            "Stan Getz"
+          ]
+        },
+        {
+          "id": "latin-rock",
+          "name": "Latin Rock",
+          "nameKo": "라틴록",
+          "description": "라틴 리듬 + 록",
+          "bpm": {
+            "min": 100,
+            "max": 140,
+            "default": 120
+          },
+          "mood": [
+            "energetic",
+            "fusion",
+            "latin",
+            "rock"
+          ],
+          "instruments": [
+            "electric-guitar",
+            "latin-percussion",
+            "organ",
+            "rock-drums"
+          ],
+          "promptTemplate": "latin rock with electric guitars, latin percussion, organ, fusion of rock and latin rhythms",
+          "examples": [
+            "Santana",
+            "Maná",
+            "Los Fabulosos Cadillacs"
+          ]
+        },
+        {
+          "id": "baile-funk",
+          "name": "Baile Funk",
+          "nameKo": "바일리펑크",
+          "description": "브라질 파벨라 클럽 음악",
+          "bpm": {
+            "min": 125,
+            "max": 140,
+            "default": 130
+          },
+          "mood": [
+            "energetic",
+            "club",
+            "brazilian",
+            "party"
+          ],
+          "instruments": [
+            "808-drums",
+            "vocal-samples",
+            "funk-bass",
+            "favela-sound"
+          ],
+          "promptTemplate": "baile funk with 808 drums, vocal samples, party energy, brazilian favela club sound",
+          "examples": [
+            "MC Kevinho",
+            "Anitta",
+            "MC Fioti"
+          ]
+        },
+        {
+          "id": "brasil-funk",
+          "name": "Brasil Funk",
+          "nameKo": "브라질펑크",
+          "description": "브라질 팝 펑크 사운드",
+          "bpm": {
+            "min": 120,
+            "max": 140,
+            "default": 130
+          },
+          "mood": [
+            "upbeat",
+            "funky",
+            "brazilian",
+            "pop"
+          ],
+          "instruments": [
+            "funk-percussion",
+            "synthesizer",
+            "brazilian-vocals",
+            "pop-elements"
+          ],
+          "promptTemplate": "brasil funk with funky percussion, pop melodies, brazilian vocals, upbeat party sound",
+          "examples": [
+            "MC Zaac",
+            "MC Brinquedo",
+            "Ludmilla"
+          ]
+        },
+        {
+          "id": "brazilian-phonk",
+          "name": "Brazilian Phonk",
+          "nameKo": "브라질리안포크",
+          "description": "브라질 드리프트 포크 감성",
+          "bpm": {
+            "min": 120,
+            "max": 140,
+            "default": 130
+          },
+          "mood": [
+            "aggressive",
+            "drift",
+            "brazilian",
+            "phonk"
+          ],
+          "instruments": [
+            "808-bass",
+            "brazilian-vocals",
+            "cowbell",
+            "drift-sound"
+          ],
+          "promptTemplate": "brazilian phonk with aggressive 808s, brazilian vocal samples, drift culture, cowbell patterns",
+          "examples": [
+            "LXNGVX",
+            "DJ ARANA",
+            "Slowboy"
+          ]
+        },
+        {
+          "id": "afrobeats",
+          "name": "Afrobeats",
+          "nameKo": "아프로비츠",
+          "description": "서아프리카 기반 팝 사운드",
+          "bpm": {
+            "min": 100,
+            "max": 130,
+            "default": 115
+          },
+          "mood": [
+            "upbeat",
+            "danceable",
+            "african",
+            "pop"
+          ],
+          "instruments": [
+            "african-drums",
+            "synth",
+            "bass",
+            "african-vocals"
+          ],
+          "promptTemplate": "afrobeats with west african rhythms, modern production, catchy melodies, danceable energy",
+          "examples": [
+            "Wizkid",
+            "Burna Boy",
+            "Davido"
+          ]
+        },
+        {
+          "id": "afro-house",
+          "name": "Afro House",
+          "nameKo": "아프로하우스",
+          "description": "아프리카 리듬 + 하우스",
+          "bpm": {
+            "min": 115,
+            "max": 125,
+            "default": 120
+          },
+          "mood": [
+            "groovy",
+            "tribal",
+            "house",
+            "african"
+          ],
+          "instruments": [
+            "african-percussion",
+            "house-kick",
+            "tribal-drums",
+            "ethnic-vocals"
+          ],
+          "promptTemplate": "afro house with african percussion, house four-on-floor, tribal rhythms, ethnic vocal samples",
+          "examples": [
+            "Black Coffee",
+            "Culoe De Song",
+            "Shimza"
+          ]
+        },
+        {
+          "id": "afro-fusion",
+          "name": "Afro Fusion",
+          "nameKo": "아프로퓨전",
+          "description": "아프리카 + 다양한 장르 혼합",
+          "bpm": {
+            "min": 90,
+            "max": 130,
+            "default": 110
+          },
+          "mood": [
+            "fusion",
+            "diverse",
+            "african",
+            "contemporary"
+          ],
+          "instruments": [
+            "african-instruments",
+            "modern-production",
+            "diverse-elements",
+            "fusion-sounds"
+          ],
+          "promptTemplate": "afro fusion with blend of african rhythms, modern genres, diverse instrumentation, contemporary production",
+          "examples": [
+            "Fela Kuti",
+            "Burna Boy",
+            "Wizkid"
+          ]
+        },
+        {
+          "id": "amapiano",
+          "name": "Amapiano",
+          "nameKo": "아마피아노",
+          "description": "남아공 기원, 로그 드럼 + 재즈",
+          "bpm": {
+            "min": 110,
+            "max": 120,
+            "default": 115
+          },
+          "mood": [
+            "jazzy",
+            "groovy",
+            "south-african",
+            "piano-driven"
+          ],
+          "instruments": [
+            "log-drum",
+            "jazz-piano",
+            "deep-bass",
+            "shuffled-percussion"
+          ],
+          "promptTemplate": "amapiano with log drum percussion, jazzy piano chords, deep bass, south african grooves",
+          "examples": [
+            "Kabza De Small",
+            "DJ Maphorisa",
+            "Focalistic"
+          ]
+        },
+        {
+          "id": "dancehall",
+          "name": "Dancehall",
+          "nameKo": "댄스홀",
+          "description": "자메이카 레게 기반 댄스 음악",
+          "bpm": {
+            "min": 90,
+            "max": 110,
+            "default": 100
+          },
+          "mood": [
+            "danceable",
+            "jamaican",
+            "energetic",
+            "rhythmic"
+          ],
+          "instruments": [
+            "digital-drums",
+            "synth-bass",
+            "jamaican-vocals",
+            "riddim"
+          ],
+          "promptTemplate": "dancehall with digital riddim, synth bass, jamaican patois vocals, danceable energy",
+          "examples": [
+            "Sean Paul",
+            "Vybz Kartel",
+            "Shaggy"
+          ]
+        },
+        {
+          "id": "reggae",
+          "name": "Reggae",
+          "nameKo": "레게",
+          "description": "자메이카 루츠 레게",
+          "bpm": {
+            "min": 60,
+            "max": 90,
+            "default": 75
+          },
+          "mood": [
+            "laid-back",
+            "roots",
+            "jamaican",
+            "conscious"
+          ],
+          "instruments": [
+            "offbeat-guitar",
+            "bass",
+            "drums",
+            "organ"
+          ],
+          "promptTemplate": "reggae with offbeat guitar skank, heavy bass, one-drop drum pattern, roots consciousness",
+          "examples": [
+            "Bob Marley",
+            "Peter Tosh",
+            "Burning Spear"
+          ]
+        },
+        {
+          "id": "calypso",
+          "name": "Calypso",
+          "nameKo": "칼립소",
+          "description": "카리브해 경쾌한 민속 음악",
+          "bpm": {
+            "min": 120,
+            "max": 180,
+            "default": 150
+          },
+          "mood": [
+            "upbeat",
+            "festive",
+            "caribbean",
+            "storytelling"
+          ],
+          "instruments": [
+            "steel-pan",
+            "percussion",
+            "brass",
+            "calypso-vocals"
+          ],
+          "promptTemplate": "calypso with steel pan drums, upbeat caribbean rhythm, storytelling vocals, festive energy",
+          "examples": [
+            "Harry Belafonte",
+            "Mighty Sparrow",
+            "Lord Kitchener"
+          ]
+        },
+        {
+          "id": "flamenco",
+          "name": "Flamenco",
+          "nameKo": "플라멩코",
+          "description": "스페인 안달루시아 기타+보컬",
+          "bpm": {
+            "min": 100,
+            "max": 200,
+            "default": 150
+          },
+          "mood": [
+            "passionate",
+            "dramatic",
+            "spanish",
+            "virtuosic"
+          ],
+          "instruments": [
+            "flamenco-guitar",
+            "palmas",
+            "cajon",
+            "passionate-vocals"
+          ],
+          "promptTemplate": "flamenco with passionate guitar, hand clapping palmas, cajón percussion, dramatic spanish vocals",
+          "examples": [
+            "Paco de Lucía",
+            "Camarón de la Isla",
+            "Tomatito"
+          ]
+        },
+        {
+          "id": "arabic-pop",
+          "name": "Arabic Pop",
+          "nameKo": "아랍팝",
+          "description": "중동 감성의 팝 음악",
+          "bpm": {
+            "min": 100,
+            "max": 130,
+            "default": 115
+          },
+          "mood": [
+            "middle-eastern",
+            "melodic",
+            "pop",
+            "arabic"
+          ],
+          "instruments": [
+            "oud",
+            "qanun",
+            "darbuka",
+            "arabic-vocals"
+          ],
+          "promptTemplate": "arabic pop with traditional middle eastern instruments, modern production, melodic arabic vocals",
+          "examples": [
+            "Amr Diab",
+            "Nancy Ajram",
+            "Tamer Hosny"
+          ]
+        },
+        {
+          "id": "bollywood",
+          "name": "Bollywood",
+          "nameKo": "볼리우드",
+          "description": "인도 영화 음악 스타일",
+          "bpm": {
+            "min": 100,
+            "max": 140,
+            "default": 120
+          },
+          "mood": [
+            "dramatic",
+            "melodic",
+            "indian",
+            "cinematic"
+          ],
+          "instruments": [
+            "tabla",
+            "sitar",
+            "indian-vocals",
+            "orchestral-elements"
+          ],
+          "promptTemplate": "bollywood with indian classical instruments, dramatic melodies, cinematic production, hindi vocals",
+          "examples": [
+            "A.R. Rahman",
+            "Lata Mangeshkar",
+            "Kishore Kumar"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "soundtrack-cinematic",
+      "name": "SOUNDTRACK/CINEMATIC 사운드트랙·시네마틱",
+      "emoji": "🎬",
+      "description": "영화, 게임, 애니메이션 등 영상 미디어를 위한 음악. 장면과 감정을 극대화하는 편곡이 특징입니다.",
+      "count": 10,
+      "genres": [
+        {
+          "id": "epic-orchestral",
+          "name": "Epic Orchestral",
+          "nameKo": "에픽오케스트라",
+          "description": "웅장하고 스케일 큰 오케스트라",
+          "bpm": {
+            "min": 60,
+            "max": 140,
+            "default": 100
+          },
+          "mood": [
+            "epic",
+            "grand",
+            "heroic",
+            "powerful"
+          ],
+          "instruments": [
+            "full-orchestra",
+            "choir",
+            "brass",
+            "timpani",
+            "strings"
+          ],
+          "promptTemplate": "epic orchestral with full orchestra, massive choir, powerful brass, heroic themes, cinematic scope",
+          "examples": [
+            "Two Steps from Hell",
+            "Hans Zimmer",
+            "Thomas Bergersen"
+          ]
+        },
+        {
+          "id": "cinematic-orchestral",
+          "name": "Cinematic Orchestral",
+          "nameKo": "시네마틱오케스트라",
+          "description": "영화 감성의 오케스트라",
+          "bpm": {
+            "min": 60,
+            "max": 120,
+            "default": 90
+          },
+          "mood": [
+            "emotional",
+            "dramatic",
+            "cinematic",
+            "storytelling"
+          ],
+          "instruments": [
+            "orchestra",
+            "piano",
+            "strings",
+            "emotional-brass"
+          ],
+          "promptTemplate": "cinematic orchestral with emotional storytelling, dramatic swells, film score aesthetics",
+          "examples": [
+            "John Williams",
+            "James Horner",
+            "Alan Silvestri"
+          ]
+        },
+        {
+          "id": "trailer-music",
+          "name": "Trailer Music",
+          "nameKo": "트레일러뮤직",
+          "description": "예고편용 긴장감·임팩트 음악",
+          "bpm": {
+            "min": 70,
+            "max": 140,
+            "default": 100
+          },
+          "mood": [
+            "intense",
+            "building",
+            "impactful",
+            "trailer"
+          ],
+          "instruments": [
+            "hybrid-orchestra",
+            "percussion-hits",
+            "braams",
+            "tension-elements"
+          ],
+          "promptTemplate": "trailer music with intense build-ups, massive percussion hits, braams, high impact moments",
+          "examples": [
+            "Audiomachine",
+            "Immediate Music",
+            "X-Ray Dog"
+          ]
+        },
+        {
+          "id": "hybrid-orchestral",
+          "name": "Hybrid Orchestral",
+          "nameKo": "하이브리드오케스트라",
+          "description": "오케스트라 + 전자음악 혼합",
+          "bpm": {
+            "min": 80,
+            "max": 140,
+            "default": 110
+          },
+          "mood": [
+            "modern",
+            "epic",
+            "hybrid",
+            "powerful"
+          ],
+          "instruments": [
+            "orchestra",
+            "electronic-elements",
+            "synth",
+            "hybrid-percussion"
+          ],
+          "promptTemplate": "hybrid orchestral blending orchestra with electronic elements, modern epic sound, powerful production",
+          "examples": [
+            "Hans Zimmer",
+            "Junkie XL",
+            "Steve Jablonsky"
+          ]
+        },
+        {
+          "id": "fantasy-orchestral",
+          "name": "Fantasy Orchestral",
+          "nameKo": "판타지오케스트라",
+          "description": "판타지 세계관 오케스트라",
+          "bpm": {
+            "min": 70,
+            "max": 130,
+            "default": 100
+          },
+          "mood": [
+            "magical",
+            "adventurous",
+            "fantasy",
+            "mystical"
+          ],
+          "instruments": [
+            "orchestra",
+            "choir",
+            "celtic-instruments",
+            "mystical-elements"
+          ],
+          "promptTemplate": "fantasy orchestral with magical atmosphere, adventurous themes, mystical elements, celtic influences",
+          "examples": [
+            "Howard Shore",
+            "Jeremy Soule",
+            "Austin Wintory"
+          ]
+        },
+        {
+          "id": "ambient-orchestral",
+          "name": "Ambient Orchestral",
+          "nameKo": "앰비언트오케스트라",
+          "description": "잔잔하고 대기적인 오케스트라",
+          "bpm": {
+            "min": 0,
+            "max": 90,
+            "default": 60
+          },
+          "mood": [
+            "atmospheric",
+            "gentle",
+            "ambient",
+            "emotional"
+          ],
+          "instruments": [
+            "strings",
+            "soft-brass",
+            "piano",
+            "ambient-orchestra"
+          ],
+          "promptTemplate": "ambient orchestral with gentle strings, atmospheric textures, emotional piano, soft dynamics",
+          "examples": [
+            "Max Richter",
+            "Ólafur Arnalds",
+            "Dustin O'Halloran"
+          ]
+        },
+        {
+          "id": "horror-soundtrack",
+          "name": "Horror Soundtrack",
+          "nameKo": "호러사운드트랙",
+          "description": "공포 영화 사운드트랙",
+          "bpm": {
+            "min": 60,
+            "max": 120,
+            "default": 90
+          },
+          "mood": [
+            "scary",
+            "tense",
+            "dark",
+            "unsettling"
+          ],
+          "instruments": [
+            "dissonant-strings",
+            "horror-fx",
+            "tension-elements",
+            "dark-ambience"
+          ],
+          "promptTemplate": "horror soundtrack with dissonant strings, unsettling ambience, tension building, scary sound design",
+          "examples": [
+            "John Carpenter",
+            "Bernard Herrmann",
+            "Goblin"
+          ]
+        },
+        {
+          "id": "sci-fi-soundtrack",
+          "name": "Sci Fi Soundtrack",
+          "nameKo": "공상과학사운드트랙",
+          "description": "SF 장르 사운드트랙",
+          "bpm": {
+            "min": 80,
+            "max": 140,
+            "default": 110
+          },
+          "mood": [
+            "futuristic",
+            "space",
+            "technological",
+            "epic"
+          ],
+          "instruments": [
+            "electronic-orchestra",
+            "synth",
+            "sci-fi-fx",
+            "hybrid-elements"
+          ],
+          "promptTemplate": "sci-fi soundtrack with futuristic synths, electronic orchestra, space atmosphere, technological sounds",
+          "examples": [
+            "Vangelis",
+            "Hans Zimmer",
+            "John Williams"
+          ]
+        },
+        {
+          "id": "comedy-soundtrack",
+          "name": "Comedy Soundtrack",
+          "nameKo": "코미디사운드트랙",
+          "description": "코미디 장르 경쾌한 사운드트랙",
+          "bpm": {
+            "min": 100,
+            "max": 180,
+            "default": 140
+          },
+          "mood": [
+            "playful",
+            "upbeat",
+            "funny",
+            "lighthearted"
+          ],
+          "instruments": [
+            "light-orchestra",
+            "quirky-instruments",
+            "comedic-timing",
+            "bouncy-rhythm"
+          ],
+          "promptTemplate": "comedy soundtrack with playful melodies, quirky instrumentation, bouncy rhythms, comedic timing",
+          "examples": [
+            "Danny Elfman",
+            "Randy Newman",
+            "Alan Silvestri"
+          ]
+        },
+        {
+          "id": "anime-score",
+          "name": "Anime Score",
+          "nameKo": "애니메이션스코어",
+          "description": "일본 애니메이션 OST 스타일",
+          "bpm": {
+            "min": 90,
+            "max": 180,
+            "default": 135
+          },
+          "mood": [
+            "dramatic",
+            "emotional",
+            "anime",
+            "japanese"
+          ],
+          "instruments": [
+            "orchestra",
+            "japanese-instruments",
+            "anime-vocals",
+            "emotional-strings"
+          ],
+          "promptTemplate": "anime score with dramatic orchestration, emotional melodies, japanese influences, anime aesthetics",
+          "examples": [
+            "Yoko Kanno",
+            "Hiroyuki Sawano",
+            "Joe Hisaishi"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gospel-christian",
+      "name": "GOSPEL/CHRISTIAN 가스펠·크리스천",
+      "emoji": "✝️",
+      "description": "신앙과 예배 중심의 음악. 강한 보컬 하모니와 감동적인 편곡이 특징입니다.",
+      "count": 3,
+      "genres": [
+        {
+          "id": "gospel",
+          "name": "Gospel",
+          "nameKo": "가스펠",
+          "description": "흑인 교회 기반, 파워풀한 코러스",
+          "bpm": {
+            "min": 70,
+            "max": 140,
+            "default": 105
+          },
+          "mood": [
+            "uplifting",
+            "powerful",
+            "spiritual",
+            "joyful"
+          ],
+          "instruments": [
+            "organ",
+            "choir",
+            "piano",
+            "tambourine",
+            "powerful-vocals"
+          ],
+          "promptTemplate": "gospel with powerful choir harmonies, church organ, uplifting spirit, joyful celebration",
+          "examples": [
+            "Kirk Franklin",
+            "Mahalia Jackson",
+            "Aretha Franklin"
+          ]
+        },
+        {
+          "id": "contemporary-christian",
+          "name": "Contemporary Christian",
+          "nameKo": "컨템포러리크리스천",
+          "description": "현대적인 크리스천 팝 사운드",
+          "bpm": {
+            "min": 80,
+            "max": 130,
+            "default": 105
+          },
+          "mood": [
+            "worshipful",
+            "modern",
+            "uplifting",
+            "accessible"
+          ],
+          "instruments": [
+            "acoustic-guitar",
+            "electric-guitar",
+            "drums",
+            "keyboards",
+            "worship-vocals"
+          ],
+          "promptTemplate": "contemporary christian with modern pop production, worshipful lyrics, accessible melodies",
+          "examples": [
+            "Chris Tomlin",
+            "Hillsong",
+            "MercyMe"
+          ]
+        },
+        {
+          "id": "christmas-music",
+          "name": "Christmas Music",
+          "nameKo": "크리스마스뮤직",
+          "description": "크리스마스 시즌 음악 전반",
+          "bpm": {
+            "min": 80,
+            "max": 140,
+            "default": 110
+          },
+          "mood": [
+            "festive",
+            "joyful",
+            "traditional",
+            "warm"
+          ],
+          "instruments": [
+            "bells",
+            "orchestral-instruments",
+            "choir",
+            "sleigh-bells"
+          ],
+          "promptTemplate": "christmas music with festive bells, warm orchestration, joyful spirit, holiday atmosphere",
+          "examples": [
+            "Mariah Carey",
+            "Bing Crosby",
+            "Trans-Siberian Orchestra"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "classical",
+      "name": "CLASSICAL 클래시컬",
+      "emoji": "🎻",
+      "description": "클래식 음악 계열. 오케스트라와 정통 클래식 기법 중심.",
+      "count": 8,
+      "genres": [
+        {
+          "id": "classical",
+          "name": "Classical",
+          "nameKo": "클래시컬",
+          "description": "전통 클래식 음악",
+          "bpm": {
+            "min": 40,
+            "max": 200,
+            "default": 100
+          },
+          "mood": [
+            "elegant",
+            "refined",
+            "timeless",
+            "sophisticated"
+          ],
+          "instruments": [
+            "orchestra",
+            "piano",
+            "strings",
+            "woodwinds",
+            "brass"
+          ],
+          "promptTemplate": "classical music with traditional orchestration, elegant composition, timeless sophistication",
+          "examples": [
+            "Mozart",
+            "Beethoven",
+            "Bach"
+          ]
+        },
+        {
+          "id": "contemporary-classical",
+          "name": "Contemporary Classical",
+          "nameKo": "컨템포러리클래시컬",
+          "description": "현대 클래식, 실험적",
+          "bpm": {
+            "min": 40,
+            "max": 180,
+            "default": 90
+          },
+          "mood": [
+            "modern",
+            "experimental",
+            "avant-garde",
+            "innovative"
+          ],
+          "instruments": [
+            "extended-techniques",
+            "modern-orchestra",
+            "electronics",
+            "unconventional-instruments"
+          ],
+          "promptTemplate": "contemporary classical with modern composition techniques, experimental approaches, innovative sounds",
+          "examples": [
+            "Philip Glass",
+            "Steve Reich",
+            "John Adams"
+          ]
+        },
+        {
+          "id": "baroque",
+          "name": "Baroque",
+          "nameKo": "바로크",
+          "description": "바로크 시대 음악 (바흐, 헨델 등)",
+          "bpm": {
+            "min": 60,
+            "max": 140,
+            "default": 100
+          },
+          "mood": [
+            "ornate",
+            "contrapuntal",
+            "baroque",
+            "elaborate"
+          ],
+          "instruments": [
+            "harpsichord",
+            "baroque-strings",
+            "recorder",
+            "baroque-trumpet"
+          ],
+          "promptTemplate": "baroque music with ornate melodies, contrapuntal writing, period instruments, elaborate ornamentation",
+          "examples": [
+            "J.S. Bach",
+            "Handel",
+            "Vivaldi"
+          ]
+        },
+        {
+          "id": "romantic",
+          "name": "Romantic",
+          "nameKo": "로맨틱",
+          "description": "낭만주의 시대 클래식",
+          "bpm": {
+            "min": 40,
+            "max": 180,
+            "default": 90
+          },
+          "mood": [
+            "emotional",
+            "expressive",
+            "dramatic",
+            "romantic"
+          ],
+          "instruments": [
+            "large-orchestra",
+            "piano",
+            "expressive-strings",
+            "romantic-brass"
+          ],
+          "promptTemplate": "romantic era classical with emotional expression, dramatic dynamics, lush orchestration",
+          "examples": [
+            "Chopin",
+            "Tchaikovsky",
+            "Brahms"
+          ]
+        },
+        {
+          "id": "impressionist",
+          "name": "Impressionist",
+          "nameKo": "인상주의",
+          "description": "인상주의 클래식 음악",
+          "bpm": {
+            "min": 40,
+            "max": 120,
+            "default": 80
+          },
+          "mood": [
+            "atmospheric",
+            "colorful",
+            "evocative",
+            "dreamy"
+          ],
+          "instruments": [
+            "orchestra",
+            "harp",
+            "impressionistic-harmony",
+            "colorful-orchestration"
+          ],
+          "promptTemplate": "impressionist classical with atmospheric colors, evocative harmonies, dreamy soundscapes",
+          "examples": [
+            "Debussy",
+            "Ravel",
+            "Satie"
+          ]
+        },
+        {
+          "id": "minimalist",
+          "name": "Minimalist",
+          "nameKo": "미니멀리스트",
+          "description": "미니멀리즘 클래식",
+          "bpm": {
+            "min": 60,
+            "max": 140,
+            "default": 100
+          },
+          "mood": [
+            "repetitive",
+            "hypnotic",
+            "minimal",
+            "meditative"
+          ],
+          "instruments": [
+            "repetitive-patterns",
+            "piano",
+            "strings",
+            "minimal-orchestra"
+          ],
+          "promptTemplate": "minimalist classical with repetitive patterns, gradual changes, hypnotic simplicity",
+          "examples": [
+            "Philip Glass",
+            "Steve Reich",
+            "Terry Riley"
+          ]
+        },
+        {
+          "id": "chamber-music",
+          "name": "Chamber Music",
+          "nameKo": "실내악",
+          "description": "소규모 앙상블 클래식",
+          "bpm": {
+            "min": 50,
+            "max": 180,
+            "default": 100
+          },
+          "mood": [
+            "intimate",
+            "refined",
+            "conversational",
+            "elegant"
+          ],
+          "instruments": [
+            "string-quartet",
+            "piano-trio",
+            "woodwind-quintet",
+            "small-ensemble"
+          ],
+          "promptTemplate": "chamber music with intimate small ensemble, refined interplay, conversational musicality",
+          "examples": [
+            "Beethoven Quartets",
+            "Schubert",
+            "Brahms"
+          ]
+        },
+        {
+          "id": "opera",
+          "name": "Opera",
+          "nameKo": "오페라",
+          "description": "오페라 아리아와 합창",
+          "bpm": {
+            "min": 40,
+            "max": 160,
+            "default": 90
+          },
+          "mood": [
+            "dramatic",
+            "operatic",
+            "theatrical",
+            "powerful"
+          ],
+          "instruments": [
+            "full-orchestra",
+            "operatic-vocals",
+            "choir",
+            "dramatic-brass"
+          ],
+          "promptTemplate": "opera with dramatic orchestration, powerful operatic vocals, theatrical expression",
+          "examples": [
+            "Verdi",
+            "Puccini",
+            "Mozart"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "world-kids",
+      "name": "WORLD/KIDS 월드뮤직·키즈",
+      "emoji": "🌏",
+      "description": "국경을 넘는 세계 음악과 어린이를 위한 음악.",
+      "count": 2,
+      "genres": [
+        {
+          "id": "world-music",
+          "name": "World Music",
+          "nameKo": "월드뮤직",
+          "description": "특정 지역에 국한되지 않는 퓨전 세계 음악",
+          "bpm": {
+            "min": 80,
+            "max": 140,
+            "default": 110
+          },
+          "mood": [
+            "global",
+            "fusion",
+            "diverse",
+            "cultural"
+          ],
+          "instruments": [
+            "diverse-world-instruments",
+            "fusion-elements",
+            "ethnic-percussion",
+            "global-vocals"
+          ],
+          "promptTemplate": "world music with diverse global instruments, cultural fusion, ethnic rhythms, international flavors",
+          "examples": [
+            "Peter Gabriel",
+            "Youssou N'Dour",
+            "Ravi Shankar"
+          ]
+        },
+        {
+          "id": "kids-music",
+          "name": "Kid's Music",
+          "nameKo": "키즈뮤직",
+          "description": "어린이를 위한 밝고 단순한 음악",
+          "bpm": {
+            "min": 100,
+            "max": 140,
+            "default": 120
+          },
+          "mood": [
+            "playful",
+            "educational",
+            "simple",
+            "fun"
+          ],
+          "instruments": [
+            "bright-instruments",
+            "simple-melodies",
+            "kid-friendly-sounds",
+            "educational-lyrics"
+          ],
+          "promptTemplate": "kids music with simple melodies, playful atmosphere, educational value, fun energy",
+          "examples": [
+            "Raffi",
+            "The Wiggles",
+            "Sesame Street"
+          ]
+        }
+      ]
+    }
+  ]
+}

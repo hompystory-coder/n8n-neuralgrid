@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suno Music Generator Pro - AI 음악 생성 플랫폼</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .credits-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 20px;
+            margin-top: 10px;
+            font-size: 1.1em;
+        }
+
+        .stats-bar {
+            background: white;
+            border-radius: 15px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item .number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-item .label {
+            color: #666;
+            font-size: 0.85em;
+            margin-top: 3px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1.2fr 2fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+            font-size: 1.4em;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.9em;
+        }
+
+        .form-group .label-info {
+            color: #999;
+            font-weight: normal;
+            font-size: 0.85em;
+            margin-left: 5px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .advanced-toggle {
+            cursor: pointer;
+            color: #667eea;
+            font-weight: 600;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .advanced-toggle:hover {
+            color: #764ba2;
+        }
+
+        .advanced-options {
+            display: none;
+            border: 2px dashed #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 15px;
+            background: #f8f9fa;
+        }
+
+        .advanced-options.show {
+            display: block;
+        }
+
+        .slider-group {
+            margin-bottom: 15px;
+        }
+
+        .slider-group label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .slider-value {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 5px;
+            background: #e0e0e0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 13px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-lyrics {
+            background: #28a745;
+            color: white;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn-lyrics:hover {
+            background: #218838;
+        }
+
+        .jobs-list {
+            max-height: 650px;
+            overflow-y: auto;
+        }
+
+        .job-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            border-left: 4px solid #667eea;
+        }
+
+        .job-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .job-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.05em;
+        }
+
+        .job-status {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-queued {
+            background: #ffd93d;
+            color: #856404;
+        }
+
+        .status-processing {
+            background: #6bcfff;
+            color: #004085;
+        }
+
+        .status-completed {
+            background: #6dd47e;
+            color: #155724;
+        }
+
+        .status-failed {
+            background: #ff6b6b;
+            color: #721c24;
+        }
+
+        .job-info {
+            color: #666;
+            font-size: 0.88em;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .job-badge {
+            display: inline-block;
+            background: #e9ecef;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            margin-right: 6px;
+            margin-top: 4px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+            border-radius: 10px;
+        }
+
+        .job-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-play {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-download {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-extend {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-separate {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-video {
+            background: #e83e8c;
+            color: white;
+        }
+
+        .btn-play-all {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 1.1em;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-bottom: 20px;
+            width: 100%;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-play-all:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-play-all:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .now-playing {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border: 2px solid #667eea !important;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            }
+            50% {
+                box-shadow: 0 10px 40px rgba(102, 126, 234, 0.6);
+            }
+        }
+
+        .btn-small:hover {
+            transform: scale(1.05);
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 18px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 1000;
+            min-width: 300px;
+            max-width: 400px;
+            display: none;
+        }
+
+        .toast.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab:hover {
+            color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .model-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .model-option {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .model-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .model-option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .model-name {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .model-desc {
+            font-size: 0.8em;
+            margin-top: 4px;
+            opacity: 0.8;
+        }
+
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2196f3;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+
+        .success-box {
+            background: #e7ffe7;
+            border-left: 4px solid #4caf50;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+
+        /* YouTube 정보 스타일 */
+        .youtube-info-section {
+            margin-bottom: 25px;
+        }
+
+        .youtube-info-section h3 {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .youtube-info-section .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid #ff0000;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+            line-height: 1.6;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .btn-copy {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn-copy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-copy:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎵 Suno Music Generator Pro</h1>
+            <p class="subtitle">AI 기반 프로페셔널 음악 생성 플랫폼</p>
+            <div class="credits-badge">
+                💎 Credits: <strong id="credits-display">--</strong>
+            </div>
+        </header>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="number" id="stat-waiting">0</div>
+                <div class="label">대기 중</div>
+            </div>
+            <div class="stat-item">
+                <div class="number" id="stat-active">0</div>
+                <div class="label">생성 중</div>
+            </div>
+            <div class="stat-item">
+                <div class="number" id="stat-completed">0</div>
+                <div class="label">완료됨</div>
+            </div>
+            <div class="stat-item">
+                <div class="number" id="stat-failed">0</div>
+                <div class="label">실패</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div>
+                <div class="card">
+                    <h2>🎼 음악 생성</h2>
+                    
+                    <form id="generateForm">
+                        <!-- 모델 선택 -->
+                        <div class="form-group">
+                            <label>AI 모델 선택</label>
+                            <div class="model-selector">
+                                <div class="model-option selected" data-model="V5">
+                                    <div class="model-name">V5</div>
+                                    <div class="model-desc">최신 모델</div>
+                                </div>
+                                <div class="model-option" data-model="V5_5">
+                                    <div class="model-name">V5.5</div>
+                                    <div class="model-desc">음성 커스텀</div>
+                                </div>
+                                <div class="model-option" data-model="V4_5PLUS">
+                                    <div class="model-name">V4.5+</div>
+                                    <div class="model-desc">풍부한 음색</div>
+                                </div>
+                                <div class="model-option" data-model="V4_5ALL">
+                                    <div class="model-name">V4.5</div>
+                                    <div class="model-desc">곡 구조</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 기본 정보 -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="title">곡 제목 <span class="label-info">(최대 100자)</span></label>
+                                <input type="text" id="title" placeholder="예: Summer Vibes" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="style">장르/스타일 <span class="label-info">(최대 1000자)</span></label>
+                                <input type="text" id="style" placeholder="예: Pop, Electronic" required>
+                            </div>
+                        </div>
+
+                        <!-- 프롬프트 -->
+                        <div class="form-group">
+                            <label for="prompt">음악 설명 <span class="label-info">(최대 5000자)</span></label>
+                            <textarea id="prompt" placeholder="예: 밝고 경쾌한 팝 음악, 기타와 신디사이저" required></textarea>
+                        </div>
+
+                        <!-- Instrumental 체크박스 -->
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="instrumental">
+                                Instrumental 모드 (보컬 없음)
+                            </label>
+                        </div>
+
+                        <!-- 가사 자동 생성 버튼 -->
+                        <button type="button" class="btn btn-lyrics" onclick="generateLyrics()">
+                            ✨ 가사 자동 생성
+                        </button>
+
+                        <!-- 고급 옵션 토글 -->
+                        <div class="advanced-toggle" onclick="toggleAdvanced()">
+                            <span id="advanced-arrow">▶</span>
+                            <span>고급 옵션</span>
+                        </div>
+
+                        <div class="advanced-options" id="advanced-options">
+                            <div class="info-box">
+                                💡 고급 옵션으로 더 세밀한 제어가 가능합니다
+                            </div>
+
+                            <!-- 보컬 성별 -->
+                            <div class="form-group">
+                                <label for="vocalGender">보컬 성별</label>
+                                <select id="vocalGender">
+                                    <option value="">자동</option>
+                                    <option value="m">남성 (Male)</option>
+                                    <option value="f">여성 (Female)</option>
+                                </select>
+                            </div>
+
+                            <!-- 슬라이더들 -->
+                            <div class="slider-group">
+                                <label>
+                                    <span>스타일 강도 (Style Weight)</span>
+                                    <span class="slider-value" id="styleWeightValue">0.65</span>
+                                </label>
+                                <input type="range" id="styleWeight" min="0" max="1" step="0.05" value="0.65" 
+                                       oninput="updateSlider('styleWeight')">
+                            </div>
+
+                            <div class="slider-group">
+                                <label>
+                                    <span>창의성 (Weirdness)</span>
+                                    <span class="slider-value" id="weirdnessValue">0.65</span>
+                                </label>
+                                <input type="range" id="weirdness" min="0" max="1" step="0.05" value="0.65" 
+                                       oninput="updateSlider('weirdness')">
+                            </div>
+
+                            <div class="slider-group">
+                                <label>
+                                    <span>오디오 가중치 (Audio Weight)</span>
+                                    <span class="slider-value" id="audioWeightValue">0.65</span>
+                                </label>
+                                <input type="range" id="audioWeight" min="0" max="1" step="0.05" value="0.65" 
+                                       oninput="updateSlider('audioWeight')">
+                            </div>
+
+                            <!-- Negative Tags -->
+                            <div class="form-group">
+                                <label for="negativeTags">제외할 요소 (Negative Tags)</label>
+                                <input type="text" id="negativeTags" 
+                                       placeholder="예: Heavy Metal, Screaming">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="generateBtn">
+                            🎵 음악 생성 시작
+                        </button>
+                    </form>
+                </div>
+
+                <!-- 🎤 오디오 업로드로 스타일 생성 카드 -->
+                <div class="card" style="margin-top: 20px;">
+                    <h2>🎤 오디오 업로드로 스타일 생성</h2>
+                    <div class="info-box" style="margin-bottom: 15px;">
+                        💡 짧은 오디오를 업로드하면 그 스타일을 학습해서 새로운 음악을 생성합니다!
+                    </div>
+                    
+                    <form id="uploadAudioForm" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="audioFile">오디오 파일 선택 <span class="label-info">(MP3, WAV 등, 최대 10MB)</span></label>
+                            <input type="file" id="audioFile" accept="audio/*" required 
+                                   style="padding: 8px; border: 2px dashed #667eea; background: #f8f9ff;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="uploadTitle">생성할 음악 제목</label>
+                            <input type="text" id="uploadTitle" placeholder="예: Style Matched Music" value="Style Matched Music">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="uploadStyle">추가 스타일 설명 (선택)</label>
+                            <input type="text" id="uploadStyle" placeholder="예: upbeat, energetic" value="match the uploaded audio style">
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="uploadInstrumental">
+                                Instrumental 모드 (보컬 없음)
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="uploadAudioBtn">
+                            📤 오디오 업로드 & 생성 시작
+                        </button>
+
+                        <div id="uploadProgress" style="display: none; margin-top: 15px;">
+                            <div class="info-box">
+                                <strong>🔄 처리 중...</strong>
+                                <div id="uploadStatus">파일 업로드 중...</div>
+                            </div>
+                        </div>
+
+                        <div id="uploadResult" style="display: none; margin-top: 15px;">
+                            <div class="success-box">
+                                <strong>✅ 업로드 완료!</strong>
+                                <div>Task ID: <span id="uploadTaskId"></span></div>
+                                <button type="button" class="btn" onclick="checkUploadStatus()" style="margin-top: 10px;">
+                                    🔍 생성 상태 확인
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div>
+                <div class="card">
+                    <h2>📋 생성 목록</h2>
+                    <button class="btn-play-all" id="playAllBtn" onclick="playAllMusic()">
+                        ▶️ 전체 재생 (0곡)
+                    </button>
+                    <div id="jobsList" class="jobs-list">
+                        <div class="empty-state">
+                            <div style="font-size: 3.5em; opacity: 0.3;">🎵</div>
+                            <p>생성된 음악이 없습니다</p>
+                            <p style="font-size: 0.9em; margin-top: 10px;">왼쪽 폼에서 음악 생성을 시작하세요!</p>
+                        </div>
+                    </div>
+                    <!-- 맨 아래에도 전체 재생 버튼 추가 -->
+                    <button class="btn-play-all" id="playAllBtnBottom" onclick="playAllMusic()" style="margin-top: 20px;">
+                        ▶️ 전체 재생 (0곡)
+                    </button>
+                </div>
+
+                <!-- YouTube 업로드 정보 카드 -->
+                <div class="card" id="youtubeInfoCard" style="display: none; margin-top: 20px;">
+                    <h2>📺 YouTube 업로드 정보</h2>
+                    
+                    <div class="youtube-info-section">
+                        <h3>🎬 제목</h3>
+                        <div class="info-box" id="youtubeTitle">
+                            𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | 이 노래 들으면 하루가 좋아져요☀️ 기분 up 되는 봄 감성 팝🌸 lofi cafe music
+                        </div>
+                        <button class="btn-copy" onclick="copyToClipboard('youtubeTitle', '제목')">
+                            📋 제목 복사
+                        </button>
+                    </div>
+
+                    <div class="youtube-info-section">
+                        <h3>📝 설명</h3>
+                        <div class="info-box" id="youtubeDescription" style="white-space: pre-wrap; text-align: left;">🎧 듣는 순간 기분이 좋아지는 봄날의 플레이리스트
+
+✨ 이 노래를 들으면:
+  • 하루가 더 밝아집니다 ☀️
+  • 자연스럽게 미소가 지어집니다 😊
+  • 봄의 설렘이 느껴집니다 🌸
+  • 마음이 편안해집니다 💚
+
+🎵 Tracklist:
+[곡 정보가 여기에 표시됩니다]
+
+📍 Perfect for:
+• 봄날 카페에서 ☕️
+• 작업할 때 집중력 UP 💻
+• 드라이브 할 때 🚗
+• 여유로운 주말 오후 🌿</div>
+                        <button class="btn-copy" onclick="copyToClipboard('youtubeDescription', '설명')">
+                            📋 설명 복사
+                        </button>
+                    </div>
+
+                    <div class="youtube-info-section">
+                        <h3>📌 해시태그 (설명란용)</h3>
+                        <div class="info-box" id="youtubeHashtags">
+#봄노래 #감성팝 #로파이 #카페음악 #기분전환 #플레이리스트 #힐링음악 #봄감성 #lofi #cafemusic #springplaylist #acousticpop #chillvibes #feelgoodmusic #workmusic #studymusic #봄플레이리스트 #감성음악
+                        </div>
+                        <button class="btn-copy" onclick="copyToClipboard('youtubeHashtags', '해시태그')">
+                            📋 해시태그 복사
+                        </button>
+                    </div>
+
+                    <div class="youtube-info-section">
+                        <h3>🏷️ 태그 (태그 입력란용)</h3>
+                        <div class="info-box" id="youtubeTags">
+봄노래, 감성팝, 로파이, 카페음악, 기분전환, 플레이리스트, 힐링음악, 봄감성, lofi, cafe music, spring playlist, acoustic pop, chill vibes, feel good music, work music, study music, 봄플레이리스트, 감성음악
+                        </div>
+                        <button class="btn-copy" onclick="copyToClipboard('youtubeTags', '태그')">
+                            📋 태그 복사
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+    <script>
+        const API_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:5000' 
+            : window.location.origin;
+        
+        const socket = io(API_URL);
+        let jobs = [];
+        let selectedModel = 'V5';
+        let currentPlayingIndex = -1;
+        let isPlayingAll = false;
+        let audioElements = [];
+
+        // Socket.IO 이벤트
+        socket.on('connect', () => {
+            console.log('Connected to server');
+            loadJobs();
+            loadStats();
+            loadCredits();
+        });
+
+        socket.on('job:started', (data) => {
+            showToast(`음악 생성 시작: ${data.params.title}`);
+            loadJobs();
+        });
+
+        socket.on('job:progress', (data) => {
+            updateJobProgress(data.jobId, data.progress);
+        });
+
+        socket.on('job:completed', (data) => {
+            showToast(`✅ 완료: ${data.result.params.title}`, 'success');
+            loadJobs();
+            loadStats();
+        });
+
+        socket.on('job:failed', (data) => {
+            showToast(`❌ 실패: ${data.error}`, 'error');
+            loadJobs();
+            loadStats();
+        });
+
+        // 모델 선택
+        document.querySelectorAll('.model-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.model-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedModel = this.dataset.model;
+            });
+        });
+
+        // 슬라이더 업데이트
+        function updateSlider(name) {
+            const value = document.getElementById(name).value;
+            document.getElementById(name + 'Value').textContent = value;
+        }
+
+        // 고급 옵션 토글
+        function toggleAdvanced() {
+            const options = document.getElementById('advanced-options');
+            const arrow = document.getElementById('advanced-arrow');
+            options.classList.toggle('show');
+            arrow.textContent = options.classList.contains('show') ? '▼' : '▶';
+        }
+
+        // 폼 제출
+        document.getElementById('generateForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = document.getElementById('generateBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"></span> 생성 중...';
+
+            const data = {
+                model: selectedModel,
+                customMode: true,
+                title: document.getElementById('title').value,
+                style: document.getElementById('style').value,
+                prompt: document.getElementById('prompt').value,
+                instrumental: document.getElementById('instrumental').checked
+            };
+
+            // 고급 옵션 추가
+            if (document.getElementById('advanced-options').classList.contains('show')) {
+                const vocalGender = document.getElementById('vocalGender').value;
+                if (vocalGender) data.vocalGender = vocalGender;
+                
+                data.styleWeight = parseFloat(document.getElementById('styleWeight').value);
+                data.weirdnessConstraint = parseFloat(document.getElementById('weirdness').value);
+                data.audioWeight = parseFloat(document.getElementById('audioWeight').value);
+                
+                const negativeTags = document.getElementById('negativeTags').value;
+                if (negativeTags) data.negativeTags = negativeTags;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/api/music/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-User-ID': getUserId()
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('✅ 음악 생성 작업이 큐에 추가되었습니다!', 'success');
+                    document.getElementById('generateForm').reset();
+                    document.querySelectorAll('.model-option')[0].click(); // Reset model selection
+                    loadJobs();
+                    loadStats();
+                    loadCredits();
+                } else {
+                    showToast('❌ 오류: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showToast('❌ 네트워크 오류: ' + error.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '🎵 음악 생성 시작';
+            }
+        });
+
+        // 가사 자동 생성
+        async function generateLyrics() {
+            const prompt = document.getElementById('prompt').value;
+            if (!prompt) {
+                showToast('⚠️ 먼저 음악 설명을 입력하세요', 'warning');
+                return;
+            }
+
+            const lyricsBtn = document.querySelector('.btn-lyrics');
+            lyricsBtn.disabled = true;
+            lyricsBtn.innerHTML = '<span class="loading"></span> 가사 생성 중...';
+
+            try {
+                // 가사 생성 시작
+                const response = await fetch(`${API_URL}/api/music/lyrics`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ prompt })
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    showToast('❌ 가사 생성 실패: ' + result.error, 'error');
+                    lyricsBtn.disabled = false;
+                    lyricsBtn.innerHTML = '✨ 가사 자동 생성';
+                    return;
+                }
+
+                const taskId = result.taskId;
+                showToast('📝 가사 생성 중... 잠시만 기다려주세요', 'info');
+
+                // 폴링으로 완료 대기
+                let attempts = 0;
+                const maxAttempts = 60; // 5분
+                const checkInterval = 5000; // 5초
+
+                const checkStatus = async () => {
+                    if (attempts >= maxAttempts) {
+                        showToast('⏱️ 가사 생성 시간 초과', 'error');
+                        lyricsBtn.disabled = false;
+                        lyricsBtn.innerHTML = '✨ 가사 자동 생성';
+                        return;
+                    }
+
+                    attempts++;
+
+                    const statusResponse = await fetch(`${API_URL}/api/music/lyrics/${taskId}`);
+                    const statusResult = await statusResponse.json();
+
+                    if (statusResult.success && statusResult.status === 'SUCCESS') {
+                        // 가사 생성 완료!
+                        const lyrics = statusResult.lyrics || statusResult.data?.response?.data?.[0]?.text;
+                        
+                        if (lyrics) {
+                            document.getElementById('prompt').value = lyrics;
+                            showToast('✅ 가사가 생성되어 입력되었습니다!', 'success');
+                        } else {
+                            showToast('⚠️ 가사를 찾을 수 없습니다', 'warning');
+                        }
+
+                        lyricsBtn.disabled = false;
+                        lyricsBtn.innerHTML = '✨ 가사 자동 생성';
+                    } else if (statusResult.success && statusResult.status === 'FAILED') {
+                        showToast('❌ 가사 생성 실패', 'error');
+                        lyricsBtn.disabled = false;
+                        lyricsBtn.innerHTML = '✨ 가사 자동 생성';
+                    } else {
+                        // 아직 진행 중
+                        setTimeout(checkStatus, checkInterval);
+                    }
+                };
+
+                // 첫 상태 확인
+                setTimeout(checkStatus, checkInterval);
+
+            } catch (error) {
+                showToast('❌ 네트워크 오류: ' + error.message, 'error');
+                lyricsBtn.disabled = false;
+                lyricsBtn.innerHTML = '✨ 가사 자동 생성';
+            }
+        }
+
+        // 작업 목록 로드
+        async function loadJobs() {
+            try {
+                const response = await fetch(`${API_URL}/api/music/history?limit=50`, {
+                    headers: {
+                        'X-User-ID': getUserId()
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    jobs = result.jobs;
+                    renderJobs();
+                }
+            } catch (error) {
+                console.error('Load jobs error:', error);
+            }
+        }
+
+        // 전체 재생 기능
+        function playAllMusic() {
+            const completedJobs = jobs.filter(job => job.status === 'completed' && job.audioUrl);
+            
+            if (completedJobs.length === 0) {
+                showToast('⚠️ 재생할 수 있는 곡이 없습니다', 'warning');
+                return;
+            }
+
+            const playAllBtn = document.getElementById('playAllBtn');
+            const playAllBtnBottom = document.getElementById('playAllBtnBottom');
+            
+            if (isPlayingAll) {
+                // 전체 재생 중지
+                stopAllMusic();
+                if (playAllBtn) playAllBtn.innerHTML = `▶️ 전체 재생 (${completedJobs.length}곡)`;
+                if (playAllBtnBottom) playAllBtnBottom.innerHTML = `▶️ 전체 재생 (${completedJobs.length}곡)`;
+            } else {
+                // 전체 재생 시작
+                isPlayingAll = true;
+                currentPlayingIndex = 0;
+                if (playAllBtn) playAllBtn.innerHTML = `⏸️ 전체 재생 중지`;
+                if (playAllBtnBottom) playAllBtnBottom.innerHTML = `⏸️ 전체 재생 중지`;
+                
+                // 모든 오디오 요소 수집
+                audioElements = Array.from(document.querySelectorAll('audio'));
+                
+                if (audioElements.length > 0) {
+                    playNextTrack();
+                }
+            }
+        }
+
+        function playNextTrack() {
+            if (!isPlayingAll || currentPlayingIndex >= audioElements.length) {
+                stopAllMusic();
+                return;
+            }
+
+            // 모든 곡 일시정지
+            audioElements.forEach(audio => audio.pause());
+            
+            // 모든 job-item에서 now-playing 클래스 제거
+            document.querySelectorAll('.job-item').forEach(item => {
+                item.classList.remove('now-playing');
+            });
+
+            // 현재 곡 재생
+            const currentAudio = audioElements[currentPlayingIndex];
+            const currentJobItem = currentAudio.closest('.job-item');
+            
+            if (currentJobItem) {
+                currentJobItem.classList.add('now-playing');
+                
+                // 스크롤하여 현재 재생 중인 곡 표시
+                currentJobItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
+            currentAudio.currentTime = 0;
+            
+            // 재생 시도
+            const playPromise = currentAudio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        console.log(`재생 중: ${currentPlayingIndex + 1}/${audioElements.length}`);
+                    })
+                    .catch(error => {
+                        console.error('재생 오류:', error);
+                        // 오류 발생 시 다음 곡으로
+                        currentPlayingIndex++;
+                        setTimeout(playNextTrack, 500);
+                    });
+            }
+
+            // 곡이 끝나면 다음 곡 재생
+            currentAudio.onended = () => {
+                currentPlayingIndex++;
+                playNextTrack();
+            };
+        }
+
+        function stopAllMusic() {
+            isPlayingAll = false;
+            currentPlayingIndex = -1;
+            
+            // 모든 곡 일시정지
+            audioElements.forEach(audio => {
+                audio.pause();
+                audio.onended = null;
+            });
+            
+            // 하이라이트 제거
+            document.querySelectorAll('.job-item').forEach(item => {
+                item.classList.remove('now-playing');
+            });
+            
+            const completedJobs = jobs.filter(job => job.status === 'completed' && job.audioUrl);
+            const buttonText = `▶️ 전체 재생 (${completedJobs.length}곡)`;
+            
+            // 상단과 하단 버튼 모두 업데이트
+            const playAllBtn = document.getElementById('playAllBtn');
+            const playAllBtnBottom = document.getElementById('playAllBtnBottom');
+            
+            if (playAllBtn) {
+                playAllBtn.innerHTML = buttonText;
+            }
+            if (playAllBtnBottom) {
+                playAllBtnBottom.innerHTML = buttonText;
+            }
+        }
+
+        // 작업 렌더링
+        function renderJobs() {
+            const container = document.getElementById('jobsList');
+            
+            if (jobs.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div style="font-size: 3.5em; opacity: 0.3;">🎵</div>
+                        <p>생성된 음악이 없습니다</p>
+                        <p style="font-size: 0.9em; margin-top: 10px;">왼쪽 폼에서 음악 생성을 시작하세요!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = jobs.map(job => {
+                const progress = job.progress || 0;
+                const statusClass = `status-${job.status}`;
+                const model = job.params.model || 'V5';
+                
+                return `
+                    <div class="job-item" data-job-id="${job.jobId}">
+                        <div class="job-header">
+                            <div class="job-title">🎵 ${job.params.title}</div>
+                            <div class="job-status ${statusClass}">${getStatusText(job.status)}</div>
+                        </div>
+                        <div class="job-info">
+                            <span class="job-badge">🎨 ${job.params.style}</span>
+                            <span class="job-badge">🤖 ${model}</span>
+                            ${job.params.instrumental ? '<span class="job-badge">🎹 Instrumental</span>' : '<span class="job-badge">🎤 Vocal</span>'}
+                            <br>
+                            <small style="opacity: 0.7;">${new Date(job.createdAt).toLocaleString('ko-KR')}</small>
+                        </div>
+                        ${job.status === 'processing' ? `
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progress}%"></div>
+                            </div>
+                            <div style="text-align: center; font-size: 0.9em; color: #667eea; margin-top: 5px;">
+                                ${Math.round(progress)}% 완료
+                            </div>
+                        ` : ''}
+                        ${job.status === 'completed' && job.audioUrl ? `
+                            <audio controls>
+                                <source src="${API_URL}${job.audioUrl}" type="audio/mpeg">
+                            </audio>
+                            <div class="job-actions">
+                                <button class="btn-small btn-download" onclick="downloadMusic('${job.audioUrl}', '${job.params.title}')">
+                                    💾 다운로드
+                                </button>
+                                <button class="btn-small btn-extend" onclick="extendMusic('${job.jobId}')">
+                                    🔄 연장하기
+                                </button>
+                                <button class="btn-small btn-separate" onclick="separateVocals('${job.jobId}')">
+                                    🎤 보컬 분리
+                                </button>
+                                <button class="btn-small btn-video" onclick="createVideo('${job.jobId}')">
+                                    🎬 비디오 생성
+                                </button>
+                                <button class="btn-small btn-delete" onclick="deleteJob('${job.jobId}')">
+                                    🗑️ 삭제
+                                </button>
+                            </div>
+                        ` : ''}
+                        ${job.status === 'failed' ? `
+                            <div style="color: #dc3545; margin-top: 10px; font-size: 0.9em;">
+                                ❌ ${job.error || '생성 실패'}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+            
+            // 전체 재생 버튼 업데이트 (상단과 하단 모두)
+            const playAllBtn = document.getElementById('playAllBtn');
+            const playAllBtnBottom = document.getElementById('playAllBtnBottom');
+            const completedJobs = jobs.filter(job => job.status === 'completed' && job.audioUrl);
+            
+            const buttonText = completedJobs.length > 0 
+                ? `▶️ 전체 재생 (${completedJobs.length}곡)`
+                : `▶️ 전체 재생 (완료된 곡 없음)`;
+            
+            const isDisabled = completedJobs.length === 0;
+            
+            if (playAllBtn) {
+                playAllBtn.style.display = 'block';
+                if (!isPlayingAll) {
+                    playAllBtn.innerHTML = buttonText;
+                }
+                playAllBtn.disabled = isDisabled;
+            }
+            
+            if (playAllBtnBottom) {
+                playAllBtnBottom.style.display = 'block';
+                if (!isPlayingAll) {
+                    playAllBtnBottom.innerHTML = buttonText;
+                }
+                playAllBtnBottom.disabled = isDisabled;
+            }
+
+            // YouTube 정보 카드 표시/숨김 및 타임스탬프 업데이트
+            updateYouTubeInfo(completedJobs);
+        }
+
+        // YouTube 정보 업데이트 함수
+        function updateYouTubeInfo(completedJobs) {
+            const youtubeCard = document.getElementById('youtubeInfoCard');
+            
+            if (completedJobs.length === 0) {
+                // 완료된 곡이 없으면 숨김
+                youtubeCard.style.display = 'none';
+                return;
+            }
+            
+            // 완료된 곡이 있으면 표시
+            youtubeCard.style.display = 'block';
+            
+            // 총 재생 시간 계산
+            let totalDuration = 0;
+            completedJobs.forEach(job => {
+                totalDuration += job.duration || 210; // 기본 210초
+            });
+            const totalMinutes = Math.floor(totalDuration / 60);
+            
+            // 타임스탬프 생성
+            let tracklist = '';
+            let currentTime = 0;
+            
+            completedJobs.forEach((job, index) => {
+                const minutes = Math.floor(currentTime / 60);
+                const seconds = currentTime % 60;
+                const timestamp = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                tracklist += `${timestamp} – ${job.params.title}\n`;
+                
+                // 다음 곡 시작 시간
+                const duration = job.duration || 210;
+                currentTime += duration;
+            });
+            
+            // 제목 생성 (OOOffi 스타일 - 곡수/시간 제외)
+            const youtubeTitle = `𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | 이 노래 들으면 하루가 좋아져요☀️ 기분 up 감성 음악 🎧`;
+            
+            // 설명 생성
+            const youtubeDescription = `🎧 듣는 순간 기분이 좋아지는 플레이리스트
+
+✨ 이 노래를 들으면:
+  • 하루가 더 밝아집니다 ☀️
+  • 자연스럽게 미소가 지어집니다 😊
+  • 마음이 편안해집니다 💚
+  • 새로운 에너지가 느껴집니다 ⚡
+
+━━━━━━━━━━━━━━━━━━━━━━
+📋 Tracklist:
+━━━━━━━━━━━━━━━━━━━━━━
+
+${tracklist}
+━━━━━━━━━━━━━━━━━━━━━━
+⏱️ Total Duration: ${totalMinutes}분 (${trackCount} tracks)
+━━━━━━━━━━━━━━━━━━━━━━
+
+📍 Perfect for:
+• 카페에서 작업할 때 ☕️
+• 집중력이 필요할 때 💻
+• 드라이브 할 때 🚗
+• 여유로운 주말 오후 🌿`;
+
+            // 해시태그 생성
+            const youtubeHashtags = `#플레이리스트 #감성음악 #카페음악 #집중음악 #기분전환 #힐링음악 #lofi #chillvibes #playlist #studymusic #workmusic #cafemusic #feelgoodmusic #moodbooster`;
+            
+            // 태그 생성 (콤마로 구분)
+            const youtubeTags = `플레이리스트, 감성음악, 카페음악, 집중음악, 기분전환, 힐링음악, lofi, chill vibes, playlist, study music, work music, cafe music, feel good music, mood booster`;
+            
+            // DOM 업데이트
+            document.getElementById('youtubeTitle').textContent = youtubeTitle;
+            document.getElementById('youtubeDescription').textContent = youtubeDescription;
+            document.getElementById('youtubeHashtags').textContent = youtubeHashtags;
+            document.getElementById('youtubeTags').textContent = youtubeTags;
+        }
+
+        // 클립보드 복사 함수
+        function copyToClipboard(elementId, label) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent || element.innerText;
+            
+            // Clipboard API 사용
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text)
+                    .then(() => {
+                        showToast(`✅ ${label} 복사 완료!`, 'success');
+                    })
+                    .catch(err => {
+                        // Fallback 방식
+                        fallbackCopy(text, label);
+                    });
+            } else {
+                // Fallback 방식
+                fallbackCopy(text, label);
+            }
+        }
+
+        // Fallback 복사 방식
+        function fallbackCopy(text, label) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                showToast(`✅ ${label} 복사 완료!`, 'success');
+            } catch (err) {
+                showToast(`❌ 복사 실패: ${err}`, 'error');
+            }
+            
+            document.body.removeChild(textarea);
+        }
+
+        // 통계 로드
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_URL}/api/queue/stats`);
+                const result = await response.json();
+
+                if (result.success) {
+                    document.getElementById('stat-waiting').textContent = result.stats.waiting;
+                    document.getElementById('stat-active').textContent = result.stats.active;
+                    document.getElementById('stat-completed').textContent = result.stats.completed;
+                    document.getElementById('stat-failed').textContent = result.stats.failed;
+                }
+            } catch (error) {
+                console.error('Load stats error:', error);
+            }
+        }
+
+        // 크레딧 로드
+        async function loadCredits() {
+            try {
+                const response = await fetch(`${API_URL}/api/status/suno`);
+                const result = await response.json();
+
+                if (result.success && result.suno.credits !== undefined) {
+                    document.getElementById('credits-display').textContent = result.suno.credits;
+                } else {
+                    document.getElementById('credits-display').textContent = 'N/A';
+                }
+            } catch (error) {
+                console.error('Load credits error:', error);
+                document.getElementById('credits-display').textContent = '--';
+            }
+        }
+
+        // 진행률 업데이트
+        function updateJobProgress(jobId, progress) {
+            const jobElement = document.querySelector(`[data-job-id="${jobId}"]`);
+            if (jobElement) {
+                const progressBar = jobElement.querySelector('.progress-fill');
+                if (progressBar) {
+                    progressBar.style.width = progress + '%';
+                    const progressText = jobElement.querySelector('.progress-bar').nextElementSibling;
+                    if (progressText) {
+                        progressText.textContent = `${Math.round(progress)}% 완료`;
+                    }
+                }
+            }
+        }
+
+        // 음악 다운로드
+        function downloadMusic(url, title) {
+            const a = document.createElement('a');
+            a.href = API_URL + url;
+            a.download = `${title}.mp3`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            showToast('다운로드 시작!', 'success');
+        }
+
+        // 음악 연장
+        function extendMusic(jobId) {
+            showToast('🔄 음악 연장 기능 (곧 지원 예정)', 'info');
+            // TODO: 연장 기능 구현
+        }
+
+        // 보컬 분리
+        function separateVocals(jobId) {
+            showToast('🎤 보컬 분리 기능 (곧 지원 예정)', 'info');
+            // TODO: 보컬 분리 구현
+        }
+
+        // 비디오 생성
+        function createVideo(jobId) {
+            showToast('🎬 비디오 생성 기능 (곧 지원 예정)', 'info');
+            // TODO: 비디오 생성 구현
+        }
+
+        // 작업 삭제
+        async function deleteJob(jobId) {
+            if (!confirm('이 음악을 삭제하시겠습니까?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/api/music/${jobId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-User-ID': getUserId()
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('✅ 삭제되었습니다', 'success');
+                    loadJobs();
+                    loadStats();
+                } else {
+                    showToast('❌ 삭제 실패: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showToast('❌ 오류: ' + error.message, 'error');
+            }
+        }
+
+        // 유틸리티 함수
+        function getUserId() {
+            let userId = localStorage.getItem('userId');
+            if (!userId) {
+                userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('userId', userId);
+            }
+            return userId;
+        }
+
+        function getStatusText(status) {
+            const texts = {
+                'queued': '대기 중',
+                'processing': '생성 중',
+                'completed': '완료',
+                'failed': '실패'
+            };
+            return texts[status] || status;
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast show';
+            
+            setTimeout(() => {
+                toast.className = 'toast';
+            }, 3000);
+        }
+
+        // 자동 새로고침
+        setInterval(() => {
+            loadStats();
+        }, 10000);
+
+        // 크레딧 자동 새로고침
+        setInterval(() => {
+            loadCredits();
+        }, 30000);
+
+        // 초기 로드
+        loadJobs();
+        loadStats();
+        loadCredits();
+
+        // ==================== 오디오 업로드 관련 함수 ====================
+        let currentUploadTaskId = null;
+
+        // 오디오 업로드 폼 제출
+        document.getElementById('uploadAudioForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const fileInput = document.getElementById('audioFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showToast('❌ 파일을 선택해주세요', 'error');
+                return;
+            }
+
+            const title = document.getElementById('uploadTitle').value;
+            const style = document.getElementById('uploadStyle').value;
+            const instrumental = document.getElementById('uploadInstrumental').checked;
+
+            // UI 업데이트
+            document.getElementById('uploadAudioBtn').disabled = true;
+            document.getElementById('uploadProgress').style.display = 'block';
+            document.getElementById('uploadResult').style.display = 'none';
+            document.getElementById('uploadStatus').textContent = '파일 업로드 중...';
+
+            try {
+                // FormData 생성
+                const formData = new FormData();
+                formData.append('audio', file);
+                formData.append('title', title);
+                formData.append('style', style);
+                formData.append('instrumental', instrumental);
+
+                // 파일 업로드 및 음악 생성 시작
+                const response = await fetch(`${API_URL}/api/music/upload-audio`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || '업로드 실패');
+                }
+
+                currentUploadTaskId = result.taskId;
+
+                // UI 업데이트
+                document.getElementById('uploadProgress').style.display = 'none';
+                document.getElementById('uploadResult').style.display = 'block';
+                document.getElementById('uploadTaskId').textContent = result.taskId;
+
+                showToast('✅ 업로드 완료! 음악 생성 중...', 'success');
+
+                // 자동으로 상태 확인 시작
+                setTimeout(() => checkUploadStatus(), 3000);
+
+            } catch (error) {
+                console.error('Upload error:', error);
+                showToast('❌ 업로드 실패: ' + error.message, 'error');
+                document.getElementById('uploadProgress').style.display = 'none';
+            } finally {
+                document.getElementById('uploadAudioBtn').disabled = false;
+            }
+        });
+
+        // 업로드된 음악 생성 상태 확인
+        async function checkUploadStatus() {
+            if (!currentUploadTaskId) {
+                showToast('❌ Task ID가 없습니다', 'error');
+                return;
+            }
+
+            try {
+                document.getElementById('uploadStatus').textContent = '생성 상태 확인 중...';
+                document.getElementById('uploadProgress').style.display = 'block';
+
+                const response = await fetch(`${API_URL}/api/music/status/${currentUploadTaskId}`);
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || '상태 확인 실패');
+                }
+
+                document.getElementById('uploadStatus').textContent = `상태: ${result.status}`;
+
+                if (result.status === 'completed') {
+                    showToast('🎉 음악 생성 완료!', 'success');
+                    document.getElementById('uploadProgress').style.display = 'none';
+                    
+                    // 생성 목록 새로고침
+                    loadJobs();
+
+                    // 스타일 추출 옵션 표시
+                    if (confirm('음악이 생성되었습니다! 이 음악에서 스타일을 추출하시겠습니까?')) {
+                        extractStyleFromMusic(currentUploadTaskId);
+                    }
+                } else if (result.status === 'failed') {
+                    showToast('❌ 음악 생성 실패', 'error');
+                    document.getElementById('uploadProgress').style.display = 'none';
+                } else {
+                    // 계속 확인
+                    setTimeout(() => checkUploadStatus(), 5000);
+                }
+
+            } catch (error) {
+                console.error('Status check error:', error);
+                showToast('❌ 상태 확인 실패: ' + error.message, 'error');
+                document.getElementById('uploadProgress').style.display = 'none';
+            }
+        }
+
+        // 생성된 음악에서 스타일 추출
+        async function extractStyleFromMusic(taskId) {
+            try {
+                const styleName = prompt('스타일 이름을 입력하세요:', `Style_${Date.now()}`);
+                if (!styleName) return;
+
+                const description = prompt('스타일 설명을 입력하세요 (선택):', '오디오에서 추출한 스타일');
+
+                showToast('🎨 스타일 추출 중...', 'info');
+
+                const response = await fetch(`${API_URL}/api/music/extract-style`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        taskId: taskId,
+                        styleName: styleName,
+                        description: description
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || '스타일 추출 실패');
+                }
+
+                showToast('✅ 스타일 추출 완료!', 'success');
+                
+                // 스타일 정보 표시
+                console.log('추출된 스타일:', result.styleCode);
+                
+                // 스타일 태그를 스타일 입력란에 자동 입력
+                const styleInput = document.getElementById('style');
+                if (styleInput && result.styleCode.tags) {
+                    styleInput.value = result.styleCode.tags;
+                    showToast('💡 스타일이 입력란에 추가되었습니다!', 'info');
+                }
+
+            } catch (error) {
+                console.error('Extract style error:', error);
+                showToast('❌ 스타일 추출 실패: ' + error.message, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

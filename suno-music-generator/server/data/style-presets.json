@@ -1,0 +1,519 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-22",
+  "description": "빠른 선택을 위한 스타일 프리셋 (20개)",
+  "presets": [
+    {
+      "id": "emotional-ballad",
+      "name": "감성 발라드",
+      "nameEn": "Emotional Ballad",
+      "emoji": "😢",
+      "description": "눈물 나는 감성 발라드",
+      "genre": "pop-ballad",
+      "bpm": 75,
+      "mood": [
+        "emotional",
+        "romantic",
+        "sad",
+        "powerful"
+      ],
+      "instruments": [
+        "piano",
+        "strings",
+        "emotional-vocals"
+      ],
+      "style": "Emotional ballad with powerful vocals, dramatic piano, orchestral strings"
+    },
+    {
+      "id": "upbeat-dance-pop",
+      "name": "신나는 댄스팝",
+      "nameEn": "Upbeat Dance Pop",
+      "emoji": "💃",
+      "description": "클럽에서 춤추기 좋은 팝",
+      "genre": "dance-pop",
+      "bpm": 125,
+      "mood": [
+        "upbeat",
+        "energetic",
+        "party",
+        "danceable"
+      ],
+      "instruments": [
+        "synth",
+        "electronic-drums",
+        "bass"
+      ],
+      "style": "Upbeat dance pop with four-on-the-floor beat, catchy synth hooks, party energy"
+    },
+    {
+      "id": "chill-lofi",
+      "name": "칠 로파이",
+      "nameEn": "Chill Lo-fi",
+      "emoji": "☕",
+      "description": "공부하거나 카페에서 듣기 좋은",
+      "genre": "lo-fi-hip-hop",
+      "bpm": 80,
+      "mood": [
+        "chill",
+        "relaxed",
+        "study",
+        "nostalgic"
+      ],
+      "instruments": [
+        "vinyl-crackle",
+        "jazz-samples",
+        "mellow-drums"
+      ],
+      "style": "Chill lo-fi hip hop with vinyl crackle, jazzy samples, study-friendly atmosphere"
+    },
+    {
+      "id": "dark-trap",
+      "name": "다크 트랩",
+      "nameEn": "Dark Trap",
+      "emoji": "🖤",
+      "description": "어둡고 강렬한 트랩 비트",
+      "genre": "trap",
+      "bpm": 140,
+      "mood": [
+        "dark",
+        "aggressive",
+        "heavy",
+        "modern"
+      ],
+      "instruments": [
+        "808-bass",
+        "hi-hats",
+        "dark-synth"
+      ],
+      "style": "Dark trap with heavy 808 bass, rapid hi-hats, aggressive energy, modern production"
+    },
+    {
+      "id": "rock-anthem",
+      "name": "록 앤썸",
+      "nameEn": "Rock Anthem",
+      "emoji": "🤘",
+      "description": "열정적인 록 음악",
+      "genre": "classic-rock",
+      "bpm": 120,
+      "mood": [
+        "energetic",
+        "powerful",
+        "anthemic",
+        "guitar-driven"
+      ],
+      "instruments": [
+        "electric-guitar",
+        "drums",
+        "bass"
+      ],
+      "style": "Rock anthem with powerful guitar riffs, driving drums, anthemic vocals"
+    },
+    {
+      "id": "indie-acoustic",
+      "name": "인디 어쿠스틱",
+      "nameEn": "Indie Acoustic",
+      "emoji": "🎸",
+      "description": "따뜻한 어쿠스틱 감성",
+      "genre": "acoustic-pop",
+      "bpm": 95,
+      "mood": [
+        "warm",
+        "intimate",
+        "indie",
+        "organic"
+      ],
+      "instruments": [
+        "acoustic-guitar",
+        "light-drums",
+        "warm-vocals"
+      ],
+      "style": "Indie acoustic with warm guitar, intimate vocals, organic production"
+    },
+    {
+      "id": "edm-festival",
+      "name": "EDM 페스티벌",
+      "nameEn": "EDM Festival",
+      "emoji": "🎆",
+      "description": "페스티벌 메인스테이지 느낌",
+      "genre": "big-room-house",
+      "bpm": 128,
+      "mood": [
+        "massive",
+        "festival",
+        "euphoric",
+        "energetic"
+      ],
+      "instruments": [
+        "huge-synth",
+        "massive-kick",
+        "festival-elements"
+      ],
+      "style": "EDM festival with massive drops, euphoric melodies, huge crowd energy"
+    },
+    {
+      "id": "jazz-lounge",
+      "name": "재즈 라운지",
+      "nameEn": "Jazz Lounge",
+      "emoji": "🎷",
+      "description": "세련된 재즈 바 분위기",
+      "genre": "smooth-jazz",
+      "bpm": 100,
+      "mood": [
+        "smooth",
+        "sophisticated",
+        "relaxed",
+        "jazzy"
+      ],
+      "instruments": [
+        "saxophone",
+        "piano",
+        "upright-bass"
+      ],
+      "style": "Jazz lounge with smooth saxophone, sophisticated piano, relaxed atmosphere"
+    },
+    {
+      "id": "kpop-energy",
+      "name": "K-POP 에너지",
+      "nameEn": "K-POP Energy",
+      "emoji": "⭐",
+      "description": "역동적인 K-POP 사운드",
+      "genre": "k-pop",
+      "bpm": 128,
+      "mood": [
+        "energetic",
+        "catchy",
+        "polished",
+        "dynamic"
+      ],
+      "instruments": [
+        "synth",
+        "drums",
+        "bass",
+        "rap-sections"
+      ],
+      "style": "K-POP with dynamic vocals, catchy hooks, polished production, rap sections"
+    },
+    {
+      "id": "latin-party",
+      "name": "라틴 파티",
+      "nameEn": "Latin Party",
+      "emoji": "🌶️",
+      "description": "라틴 리듬의 파티 음악",
+      "genre": "reggaeton",
+      "bpm": 95,
+      "mood": [
+        "party",
+        "latin",
+        "danceable",
+        "energetic"
+      ],
+      "instruments": [
+        "dembow-rhythm",
+        "latin-percussion",
+        "808"
+      ],
+      "style": "Latin party with reggaeton dembow rhythm, latin percussion, party energy"
+    },
+    {
+      "id": "cinematic-epic",
+      "name": "시네마틱 에픽",
+      "nameEn": "Cinematic Epic",
+      "emoji": "🎬",
+      "description": "영화 같은 웅장한 사운드",
+      "genre": "epic-orchestral",
+      "bpm": 100,
+      "mood": [
+        "epic",
+        "cinematic",
+        "heroic",
+        "powerful"
+      ],
+      "instruments": [
+        "full-orchestra",
+        "choir",
+        "brass",
+        "timpani"
+      ],
+      "style": "Cinematic epic with full orchestra, massive choir, heroic themes, powerful brass"
+    },
+    {
+      "id": "ambient-meditation",
+      "name": "앰비언트 명상",
+      "nameEn": "Ambient Meditation",
+      "emoji": "🧘",
+      "description": "명상과 힐링을 위한 음악",
+      "genre": "meditation-music",
+      "bpm": 60,
+      "mood": [
+        "calm",
+        "meditative",
+        "healing",
+        "peaceful"
+      ],
+      "instruments": [
+        "singing-bowl",
+        "nature-sounds",
+        "drone"
+      ],
+      "style": "Ambient meditation with singing bowls, nature sounds, calming atmosphere"
+    },
+    {
+      "id": "synthwave-retro",
+      "name": "신스웨이브 레트로",
+      "nameEn": "Synthwave Retro",
+      "emoji": "🌆",
+      "description": "80년대 네온 느낌",
+      "genre": "synthwave",
+      "bpm": 115,
+      "mood": [
+        "retro",
+        "80s",
+        "nostalgic",
+        "neon"
+      ],
+      "instruments": [
+        "analog-synth",
+        "80s-drums",
+        "arpeggiated-bass"
+      ],
+      "style": "Synthwave with 80s analog synths, retro drums, neon nostalgic atmosphere"
+    },
+    {
+      "id": "drill-street",
+      "name": "드릴 스트릿",
+      "nameEn": "Drill Street",
+      "emoji": "🏙️",
+      "description": "거리 감성의 드릴 비트",
+      "genre": "uk-drill",
+      "bpm": 142,
+      "mood": [
+        "dark",
+        "aggressive",
+        "street",
+        "cold"
+      ],
+      "instruments": [
+        "808-bass",
+        "sliding-hi-hats",
+        "dark-piano"
+      ],
+      "style": "UK drill with icy beats, sliding 808 patterns, dark piano, street narrative"
+    },
+    {
+      "id": "country-folk",
+      "name": "컨트리 포크",
+      "nameEn": "Country Folk",
+      "emoji": "🤠",
+      "description": "따뜻한 컨트리 감성",
+      "genre": "classic-country",
+      "bpm": 110,
+      "mood": [
+        "warm",
+        "storytelling",
+        "authentic",
+        "rustic"
+      ],
+      "instruments": [
+        "acoustic-guitar",
+        "fiddle",
+        "harmonica"
+      ],
+      "style": "Country folk with storytelling lyrics, acoustic guitar, fiddle, authentic warmth"
+    },
+    {
+      "id": "afrobeats-vibes",
+      "name": "아프로비츠 바이브",
+      "nameEn": "Afrobeats Vibes",
+      "emoji": "🌍",
+      "description": "서아프리카 리듬의 팝",
+      "genre": "afrobeats",
+      "bpm": 115,
+      "mood": [
+        "groovy",
+        "african",
+        "danceable",
+        "upbeat"
+      ],
+      "instruments": [
+        "african-drums",
+        "synth",
+        "bass"
+      ],
+      "style": "Afrobeats with west african rhythms, modern production, danceable energy"
+    },
+    {
+      "id": "metal-heavy",
+      "name": "헤비 메탈",
+      "nameEn": "Heavy Metal",
+      "emoji": "⚡",
+      "description": "강렬한 메탈 사운드",
+      "genre": "metal",
+      "bpm": 150,
+      "mood": [
+        "heavy",
+        "aggressive",
+        "powerful",
+        "intense"
+      ],
+      "instruments": [
+        "distorted-guitar",
+        "double-bass-drums",
+        "powerful-vocals"
+      ],
+      "style": "Heavy metal with powerful riffs, aggressive drums, intense vocals"
+    },
+    {
+      "id": "future-bass-emotional",
+      "name": "퓨처베이스 감성",
+      "nameEn": "Emotional Future Bass",
+      "emoji": "🌈",
+      "description": "감성적인 퓨처베이스",
+      "genre": "future-bass",
+      "bpm": 150,
+      "mood": [
+        "emotional",
+        "melodic",
+        "uplifting",
+        "modern"
+      ],
+      "instruments": [
+        "supersaws",
+        "vocal-chops",
+        "emotional-lead"
+      ],
+      "style": "Future bass with emotional melodies, supersaw synths, vocal chops, uplifting vibes"
+    },
+    {
+      "id": "bossa-nova-chill",
+      "name": "보사노바 칠",
+      "nameEn": "Bossa Nova Chill",
+      "emoji": "🌴",
+      "description": "여유로운 보사노바",
+      "genre": "bossa-nova",
+      "bpm": 130,
+      "mood": [
+        "relaxed",
+        "jazzy",
+        "tropical",
+        "smooth"
+      ],
+      "instruments": [
+        "nylon-guitar",
+        "soft-percussion",
+        "smooth-vocals"
+      ],
+      "style": "Bossa nova with nylon guitar, soft samba rhythm, jazzy chords, tropical smoothness"
+    },
+    {
+      "id": "hyperpop-chaos",
+      "name": "하이퍼팝 카오스",
+      "nameEn": "Hyperpop Chaos",
+      "emoji": "🌟",
+      "description": "극단적이고 디지털한 팝",
+      "genre": "hyper-pop",
+      "bpm": 160,
+      "mood": [
+        "chaotic",
+        "hyper",
+        "digital",
+        "extreme"
+      ],
+      "instruments": [
+        "distorted-vocals",
+        "glitchy-synth",
+        "aggressive-bass"
+      ],
+      "style": "Hyperpop with distorted vocals, chaotic production, exaggerated sounds, digital chaos"
+    },
+    {
+      "id": "old-pop-classics",
+      "name": "올드팝 클래식",
+      "nameEn": "Old Pop Classics",
+      "emoji": "📻",
+      "description": "향수를 불러일으키는 60-80년대 팝",
+      "genre": "old-pop",
+      "bpm": 100,
+      "mood": [
+        "nostalgic",
+        "vintage",
+        "romantic",
+        "timeless"
+      ],
+      "instruments": [
+        "acoustic-guitar",
+        "piano",
+        "strings",
+        "warm-vocals"
+      ],
+      "style": "Vintage pop from 60s-80s era with nostalgic melodies, warm analog production, classic songwriting"
+    },
+    {
+      "id": "easy-listening-pop",
+      "name": "이지 리스닝 팝",
+      "nameEn": "Easy Listening Pop",
+      "emoji": "🎧",
+      "description": "편안하게 듣기 좋은 팝",
+      "genre": "easy-pop",
+      "bpm": 95,
+      "mood": [
+        "relaxing",
+        "comfortable",
+        "easy-listening",
+        "mellow"
+      ],
+      "instruments": [
+        "acoustic-guitar",
+        "piano",
+        "soft-synth",
+        "smooth-vocals"
+      ],
+      "style": "Easy listening pop with soft melodies, comfortable tempo, relaxing atmosphere"
+    },
+    {
+      "id": "jazzy-hip-hop",
+      "name": "재즈 힙합",
+      "nameEn": "Jazz Hip-Hop",
+      "emoji": "🎷",
+      "description": "재즈 샘플이 어우러진 힙합",
+      "genre": "jazz-hip-hop",
+      "bpm": 90,
+      "mood": [
+        "sophisticated",
+        "laid-back",
+        "smooth",
+        "jazzy"
+      ],
+      "instruments": [
+        "jazz-samples",
+        "saxophone",
+        "piano",
+        "vinyl-drums",
+        "rap-vocals"
+      ],
+      "style": "Jazz hip-hop with smooth jazz samples, boom-bap drums, saxophone melodies, laid-back flow"
+    },
+    {
+      "id": "emotional-rap",
+      "name": "감성 힙합",
+      "nameEn": "Emotional Hip-Hop",
+      "emoji": "💔",
+      "description": "서정적이고 감성적인 힙합",
+      "genre": "emotional-hip-hop",
+      "bpm": 80,
+      "mood": [
+        "emotional",
+        "melancholic",
+        "introspective",
+        "heartfelt"
+      ],
+      "instruments": [
+        "piano",
+        "acoustic-guitar",
+        "strings",
+        "soft-drums",
+        "melodic-vocals"
+      ],
+      "style": "Emotional hip-hop with piano melodies, heartfelt lyrics, melodic rap, introspective atmosphere"
+    }
+  ]
+}

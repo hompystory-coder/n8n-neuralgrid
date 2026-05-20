@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>이미지 업스케일 테스트</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    
+    h1 {
+      color: #667eea;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    
+    .test-image {
+      position: relative;
+      width: 100%;
+      max-width: 360px;
+      margin: 0 auto 24px;
+      cursor: pointer;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transition: transform 0.3s;
+    }
+    
+    .test-image:hover {
+      transform: scale(1.02);
+    }
+    
+    .test-image img {
+      width: 100%;
+      display: block;
+    }
+    
+    .status {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.9em;
+      font-weight: 600;
+    }
+    
+    .log {
+      background: #f3f4f6;
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85em;
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 24px;
+    }
+    
+    .log-entry {
+      margin-bottom: 8px;
+      padding: 4px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .spinning {
+      display: inline-block;
+      animation: spin 1s linear infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🖼️ 이미지 클릭 업스케일 테스트</h1>
+    
+    <div class="test-image" id="testImage" onclick="handleImageClick()">
+      <img src="https://cdn1.suno.ai/image_4c30c1dc-b88b-44fe-85cd-4ea16ba4be3a.jpeg" alt="Test Image">
+      <div class="status" id="status">🖼️ 클릭하여 업스케일</div>
+    </div>
+    
+    <div class="log" id="log">
+      <div class="log-entry">💡 이미지를 클릭하면 업스케일이 시작됩니다...</div>
+    </div>
+  </div>
+  
+  <script>
+    const log = document.getElementById('log');
+    const statusDiv = document.getElementById('status');
+    
+    function addLog(message, type = 'info') {
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      const timestamp = new Date().toLocaleTimeString('ko-KR');
+      const icon = type === 'error' ? '❌' : type === 'success' ? '✅' : '📝';
+      entry.innerHTML = `<span style="color: #6b7280;">[${timestamp}]</span> ${icon} ${message}`;
+      log.insertBefore(entry, log.firstChild);
+      log.scrollTop = 0;
+    }
+    
+    async function handleImageClick() {
+      addLog('이미지 클릭 감지!');
+      statusDiv.innerHTML = '<span class="spinning">✨</span> 업스케일 중...';
+      
+      try {
+        addLog('서버에 업스케일 요청 중...');
+        
+        const response = await fetch('/api/style/upscale-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            imageUrl: 'https://cdn1.suno.ai/image_4c30c1dc-b88b-44fe-85cd-4ea16ba4be3a.jpeg',
+            title: 'Test Song',
+            style: 'cozy-lofi emotional',
+            lyrics: 'Test lyrics for image upscaling'
+          })
+        });
+        
+        addLog(`서버 응답: ${response.status} ${response.statusText}`);
+        
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || '업스케일 실패');
+        }
+        
+        const data = await response.json();
+        addLog('업스케일 완료!', 'success');
+        addLog(`YouTube 썸네일: ${data.youtubeUrl}`, 'success');
+        addLog(`앨범 커버: ${data.albumUrl}`, 'success');
+        
+        statusDiv.innerHTML = '<span style="color: #22c55e;">✅</span> 업스케일 완료!';
+        
+        // 결과 표시
+        showResults(data);
+        
+      } catch (error) {
+        addLog(`업스케일 실패: ${error.message}`, 'error');
+        statusDiv.innerHTML = '<span style="color: #ef4444;">❌</span> 실패';
+        
+        setTimeout(() => {
+          statusDiv.innerHTML = '🖼️ 클릭하여 업스케일';
+        }, 3000);
+      }
+    }
+    
+    function showResults(data) {
+      const container = document.querySelector('.container');
+      const resultsDiv = document.createElement('div');
+      resultsDiv.style.cssText = 'margin-top: 24px; border-top: 2px solid #e5e7eb; padding-top: 24px;';
+      resultsDiv.innerHTML = `
+        <h2 style="color: #667eea; margin-bottom: 16px;">✨ 업스케일 결과</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div>
+            <h3 style="font-size: 0.9em; margin-bottom: 8px;">📺 YouTube (1280×720)</h3>
+            <img src="${data.youtubeUrl}" style="width: 100%; border-radius: 8px;">
+            <button onclick="window.open('${data.youtubeUrl}', '_blank')" 
+                    style="width: 100%; margin-top: 8px; padding: 8px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer;">
+              📥 다운로드
+            </button>
+          </div>
+          <div>
+            <h3 style="font-size: 0.9em; margin-bottom: 8px;">💿 앨범 커버 (3000×3000)</h3>
+            <img src="${data.albumUrl}" style="width: 100%; border-radius: 8px;">
+            <button onclick="window.open('${data.albumUrl}', '_blank')" 
+                    style="width: 100%; margin-top: 8px; padding: 8px; background: #8b5cf6; color: white; border: none; border-radius: 8px; cursor: pointer;">
+              📥 다운로드
+            </button>
+          </div>
+        </div>
+      `;
+      container.appendChild(resultsDiv);
+    }
+  </script>
+</body>
+</html>

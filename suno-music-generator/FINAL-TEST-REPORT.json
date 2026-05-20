@@ -1,0 +1,156 @@
+{
+  "timestamp": "2026-04-27T12:51:22.973Z",
+  "testDate": "2026. 4. 27.",
+  "testTime": "오후 12:51:23",
+  "summary": {
+    "totalSongs": 15,
+    "targetSongs": 15,
+    "lyricsUnique": 15,
+    "lyricsDuplicate": 0,
+    "lyricsSimilar": 0,
+    "imageUpscaled": 3,
+    "metadataGenerated": false,
+    "downloadTested": 0
+  },
+  "songs": [
+    {
+      "id": "song-0",
+      "title": "Test Song 1",
+      "lyrics": "[Intro]\nTest lyrics for song 1\n\n[Verse 1]\nLine 1\nLine 2\n\n[Chorus]\nChorus line 0\nAnother chorus line\n\n[Verse 2]\nSecond verse line 0\nMore lyrics here 0",
+      "duration": 180,
+      "imageUrl": "https://cdn2.suno.ai/image_0.jpeg",
+      "audioUrl": "https://cdn1.suno.ai/audio_0.mp3"
+    },
+    {
+      "id": "song-1",
+      "title": "Test Song 2",
+      "lyrics": "[Intro]\nTest lyrics for song 2\n\n[Verse 1]\nLine 11\nLine 12\n\n[Chorus]\nChorus line 1\nAnother chorus line\n\n[Verse 2]\nSecond verse line 1\nMore lyrics here 1",
+      "duration": 185,
+      "imageUrl": "https://cdn2.suno.ai/image_1.jpeg",
+      "audioUrl": "https://cdn1.suno.ai/audio_1.mp3"
+    },
+    {
+      "id": "song-2",
+      "title": "Test Song 3",
+      "lyrics": "[Intro]\nTest lyrics for song 3\n\n[Verse 1]\nLine 21\nLine 22\n\n[Chorus]\nChorus line 2\nAnother chorus line\n\n[Verse 2]\nSecond verse line 2\nMore lyrics here 2",
+      "duration": 190,
+      "imageUrl": "https://cdn2.suno.ai/image_2.jpeg",
+      "audioUrl": "https://cdn1.suno.ai/audio_2.mp3"
+    },
+    {
+      "id": "song-3",
+      "title": "Test Song 4",
+      "lyrics": "[Intro]\nTest lyrics for song 4\n\n[Verse 1]\nLine 31\nLine 32\n\n[Chorus]\nChorus line 3\nAnother chorus line\n\n[Verse 2]\nSecond verse line 3\nMore lyrics here 3",
+      "duration": 195,
+      "imageUrl": "https://cdn2.suno.ai/image_3.jpeg",
+      "audioUrl": "https://cdn1.suno.ai/audio_3.mp3"
+    },
+    {
+      "id": "song-4",
+      "title": "Test Song 5",
+      "lyrics": "[Intro]\nTest lyrics for song 5\n\n[Verse 1]\nLine 41\nLine 42\n\n[Chorus]\nChorus line 4\nAnother chorus line\n\n[Verse 2]\nSecond verse line 4\nMore lyrics here 4",
+      "duration": 200,
+      "imageUrl": "https://cdn2.suno.ai/image_4.jpeg",
+      "audioUrl": "https://cdn1.suno.ai/audio_4.mp3"
+    },
+    {
+      "id": "song-5",
+      "title": "Test Song 6",
+      "lyrics": "[Intro]\nTest lyrics for song 6\n\n[Verse 1]\nLine 51\nLine 52\n\n[Chorus]\nChorus line 5\nAnother chorus line\n\n[Verse 2]\nSecond verse line 5\nMore lyrics here 5",
+      "duration": 205,
+      "imageUrl": "https://cdn2.suno.ai/image_5.jpeg",
+      "audioUrl": "https://cdn1.suno.ai/audio_5.mp3"
+    },
+    {
+      "id": "song-6",
+      "title": "Test Song 7",
+      "lyrics": "[Intro]\nTest lyrics for song 7\n\n[Verse 1]\nLine 61\nLine 62\n\n[Chorus]\nChorus line 6\nAnother chorus line\n\n[Verse 2]\nSecond verse line 6\nMore lyrics here 6",
+      "duration": 210,
+      "imageUrl": "https://cdn2.suno.ai/image_6.jpeg",
+      "audioUrl": "https://cdn1.suno.ai/audio_6.mp3"
+    },
+    {
+      "id": "song-7",
+      "title": "Test Song 8",
+      "lyrics": "[Intro]\nTest lyrics for song 8\n\n[Verse 1]\nLine 71\nLine 72\n\n[Chorus]\nChorus line 7\nAnother chorus line\n\n[Verse 2]\nSecond verse line 7\nMore lyrics here 7",
+      "duration": 215,
+      "imageUrl": "https://cdn2.suno.ai/image_7.jpeg",
+      "audioUrl": "https://cdn1.suno.ai/audio_7.mp3"
+    },
+    {
+      "id": "song-8",
+      "title": "Test Song 9",
+      "lyrics": "[Intro]\nTest lyrics for song 9\n\n[Verse 1]\nLine 81\nLine 82\n\n[Chorus]\nChorus line 8\nAnother chorus line\n\n[Verse 2]\nSecond verse line 8\nMore lyrics here 8",
+      "duration": 220,
+      "imageUrl": "https://cdn2.suno.ai/image_8.jpeg",
+      "audioUrl": "https://cdn1.suno.ai/audio_8.mp3"
+    },
+    {
+      "id": "song-9",
+      "title": "Test Song 10",
+      "lyrics": "[Intro]\nTest lyrics for song 10\n\n[Verse 1]\nLine 91\nLine 92\n\n[Chorus]\nChorus line 9\nAnother chorus line\n\n[Verse 2]\nSecond verse line 9\nMore lyrics here 9",
+      "duration": 225,
+      "imageUrl": "https://cdn2.suno.ai/image_9.jpeg",
+      "audioUrl": "https://cdn1.suno.ai/audio_9.mp3"
+    },
+    {
+      "id": "song-10",
+      "title": "Test Song 11",
+      "lyrics": "[Intro]\nTest lyrics for song 11\n\n[Verse 1]\nLine 101\nLine 102\n\n[Chorus]\nChorus line 10\nAnother chorus line\n\n[Verse 2]\nSecond verse line 10\nMore lyrics here 10",
+      "duration": 230,
+      "imageUrl": "https://cdn2.suno.ai/image_10.jpeg",
+      "audioUrl": "https://cdn1.suno.ai/audio_10.mp3"
+    },
+    {
+      "id": "song-11",
+      "title": "Test Song 12",
+      "lyrics": "[Intro]\nTest lyrics for song 12\n\n[Verse 1]\nLine 111\nLine 112\n\n[Chorus]\nChorus line 11\nAnother chorus line\n\n[Verse 2]\nSecond verse line 11\nMore lyrics here 11",
+      "duration": 235,
+      "imageUrl": "https://cdn2.suno.ai/image_11.jpeg",
+      "audioUrl": "https://cdn1.suno.ai/audio_11.mp3"
+    },
+    {
+      "id": "song-12",
+      "title": "Test Song 13",
+      "lyrics": "[Intro]\nTest lyrics for song 13\n\n[Verse 1]\nLine 121\nLine 122\n\n[Chorus]\nChorus line 12\nAnother chorus line\n\n[Verse 2]\nSecond verse line 12\nMore lyrics here 12",
+      "duration": 240,
+      "imageUrl": "https://cdn2.suno.ai/image_12.jpeg",
+      "audioUrl": "https://cdn1.suno.ai/audio_12.mp3"
+    },
+    {
+      "id": "song-13",
+      "title": "Test Song 14",
+      "lyrics": "[Intro]\nTest lyrics for song 14\n\n[Verse 1]\nLine 131\nLine 132\n\n[Chorus]\nChorus line 13\nAnother chorus line\n\n[Verse 2]\nSecond verse line 13\nMore lyrics here 13",
+      "duration": 245,
+      "imageUrl": "https://cdn2.suno.ai/image_13.jpeg",
+      "audioUrl": "https://cdn1.suno.ai/audio_13.mp3"
+    },
+    {
+      "id": "song-14",
+      "title": "Test Song 15",
+      "lyrics": "[Intro]\nTest lyrics for song 15\n\n[Verse 1]\nLine 141\nLine 142\n\n[Chorus]\nChorus line 14\nAnother chorus line\n\n[Verse 2]\nSecond verse line 14\nMore lyrics here 14",
+      "duration": 250,
+      "imageUrl": "https://cdn2.suno.ai/image_14.jpeg",
+      "audioUrl": "https://cdn1.suno.ai/audio_14.mp3"
+    }
+  ],
+  "lyricsAnalysis": {
+    "duplicates": [],
+    "similarPairs": [],
+    "uniqueCount": 15,
+    "totalCount": 15
+  },
+  "imageUpscale": [
+    {
+      "title": "Test Song 1"
+    },
+    {
+      "title": "Test Song 8"
+    },
+    {
+      "title": "Test Song 15"
+    }
+  ],
+  "metadata": null,
+  "download": []
+}
