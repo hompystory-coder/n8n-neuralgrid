@@ -1,16 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const OpenAIService = require('../services/openaiService');
-
-// OpenAI 서비스 인스턴스 (lazy initialization)
-let openaiService = null;
-
-function getOpenAIService() {
-  if (!openaiService) {
-    openaiService = new OpenAIService();
-  }
-  return openaiService;
-}
+const { generateLyrics, generateTitle, generateWithLLM } = require('../services/lyricsGenerator');
 
 /**
  * 1단계: 가사 생성 API
@@ -36,6 +26,7 @@ router.post('/generate-from-prompt', async (req, res) => {
     }
 
     console.log(`📝 Generating ${quantity} lyrics from prompt:`, prompt);
+    console.log(`   🔑 Using: Gemini 2.0 Flash (비용: $0)`);
     console.log(`   System Prompt: ${systemPrompt ? 'Custom' : 'Default'}`);
     console.log(`   Title Strategy: ${titleStrategy}, Count: ${titleCount}`);
     if (referenceLyrics.length > 0) {
@@ -45,32 +36,62 @@ router.post('/generate-from-prompt', async (req, res) => {
       console.log(`   🎸 Genre: ${genreInfo.genre.nameKo} (${genreInfo.genre.name})`);
     }
 
-    // OpenAI로 가사 생성
-    const ai = getOpenAIService();
-    const lyrics = await ai.generateLyrics(
-      prompt,
-      systemPrompt,
-      {
-        quantity,
-        duration,
-        titleStrategy,
-        titleCount,
-        referenceLyrics, // 🔥 레퍼런스 가사 전달
-        genreInfo // 🔥 장르 정보 전달
+    // ✅ Gemini로 가사 생성 (간단한 프롬프트 방식)
+    const allLyrics = [];
+    const previousLyricsArray = [];
+    
+    for (let i = 0; i < quantity; i++) {
+      // 프롬프트 구성
+      let fullPrompt = prompt;
+      if (genreInfo) {
+        fullPrompt = `${genreInfo.genre.nameKo} (${genreInfo.genre.name}) 장르로 다음 주제의 가사 작성: ${prompt}`;
       }
-    );
+      
+      // 레퍼런스 가사가 있으면 추가
+      if (referenceLyrics && referenceLyrics.length > 0) {
+        fullPrompt += `\n\n참고 가사 스타일:\n${referenceLyrics.slice(0, 2).join('\n\n---\n\n')}`;
+      }
+      
+      const lyricsText = await generateWithLLM(
+        systemPrompt || '당신은 전문 작사가입니다. 감성적이고 완성도 높은 가사를 작성합니다.',
+        fullPrompt,
+        0.9,
+        1000  // 최적화된 토큰 수
+      );
+      
+      // 제목 생성
+      const titleText = await generateWithLLM(
+        '당신은 음악 제목 전문가입니다. 가사를 읽고 완벽한 제목을 3개 제안합니다.',
+        `다음 가사에 어울리는 ${titleStrategy} 스타일의 제목 ${titleCount}개를 생성하세요:\n\n${lyricsText}`,
+        0.7,
+        100
+      );
+      
+      const titles = titleText.split('\n').filter(t => t.trim()).slice(0, titleCount);
+      
+      allLyrics.push({
+        id: Date.now() + i,
+        title: titles[0] || `Song ${i + 1}`,
+        lyrics: lyricsText,
+        suggestedTitles: titles,
+        createdAt: new Date().toISOString()
+      });
+      
+      previousLyricsArray.push(lyricsText);
+    }
 
     res.json({
       success: true,
-      count: lyrics.length,
-      lyrics: lyrics,
+      count: allLyrics.length,
+      lyrics: allLyrics,
       metadata: {
         systemPromptUsed: !!systemPrompt,
         titleStrategy: titleStrategy,
         titleCount: titleCount,
         referenceCount: referenceLyrics.length, // 🔥 추가
         genre: genreInfo ? `${genreInfo.genre.nameKo} (${genreInfo.genre.name})` : null, // 🔥 추가
-        aiModel: 'gpt-4o-mini'
+        aiModel: 'gemini-2.0-flash-exp',
+        cost: '$0.00 (Gemini Free Tier)'
       }
     });
 
@@ -93,18 +114,46 @@ router.post('/generate-from-sample', async (req, res) => {
     }
 
     console.log(`📄 Analyzing sample lyrics and generating ${quantity} variations`);
+    console.log(`   🔑 Using: Gemini 2.0 Flash (비용: $0)`);
 
-    // OpenAI로 샘플 분석 및 가사 생성
-    const ai = getOpenAIService();
-    const lyrics = await ai.generateFromSample(sampleLyrics, quantity);
+    // ✅ Gemini로 샘플 분석 및 가사 생성
+    const allLyrics = [];
+    
+    for (let i = 0; i < quantity; i++) {
+      const prompt = `다음 샘플 가사의 스타일을 분석하고 유사한 새로운 가사를 작성하세요:\n\n${sampleLyrics}`;
+      
+      const lyricsText = await generateWithLLM(
+        '당신은 전문 작사가입니다. 샘플 가사의 스타일, 구조, 분위기를 분석하고 유사한 새로운 가사를 생성합니다.',
+        prompt,
+        0.9,
+        1000
+      );
+      
+      // 제목 생성
+      const titleText = await generateWithLLM(
+        '당신은 음악 제목 전문가입니다.',
+        `다음 가사에 어울리는 제목을 생성하세요:\n\n${lyricsText}`,
+        0.7,
+        50
+      );
+      
+      allLyrics.push({
+        id: Date.now() + i,
+        title: titleText.split('\n')[0].trim() || `Variation ${i + 1}`,
+        lyrics: lyricsText,
+        sourceType: 'sample',
+        createdAt: new Date().toISOString()
+      });
+    }
 
     res.json({
       success: true,
-      count: lyrics.length,
-      lyrics: lyrics,
+      count: allLyrics.length,
+      lyrics: allLyrics,
       metadata: {
-        aiModel: 'gpt-4o-mini',
-        sourceType: 'sample'
+        aiModel: 'gemini-2.0-flash-exp',
+        sourceType: 'sample',
+        cost: '$0.00 (Gemini Free Tier)'
       }
     });
 
@@ -172,19 +221,50 @@ router.post('/generate-batch', async (req, res) => {
     }
 
     console.log(`🎯 Generating ${count} lyrics variations on theme: ${mainTheme}`);
+    console.log(`   🔑 Using: Gemini 2.0 Flash (비용: $0)`);
+    console.log(`   Genres: ${genres.join(', ')}`);
 
-    // OpenAI로 배치 가사 생성
-    const ai = getOpenAIService();
-    const lyrics = await ai.generateBatch(mainTheme, count, genres);
+    // ✅ Gemini로 배치 가사 생성
+    const allLyrics = [];
+    
+    for (let i = 0; i < count; i++) {
+      const genreHint = genres.length > 0 ? `장르: ${genres[i % genres.length]}` : '';
+      const prompt = `주제: ${mainTheme}\n${genreHint}\n\n위 주제로 감성적이고 완성도 높은 가사를 작성하세요. ${i + 1}번째 곡이므로 다른 관점의 이야기를 담아주세요.`;
+      
+      const lyricsText = await generateWithLLM(
+        '당신은 전문 작사가입니다. 주어진 주제와 장르에 맞는 독창적인 가사를 작성합니다.',
+        prompt,
+        0.9,
+        1000
+      );
+      
+      // 제목 생성
+      const titleText = await generateWithLLM(
+        '당신은 음악 제목 전문가입니다.',
+        `다음 가사에 어울리는 감성적인 제목을 생성하세요:\n\n${lyricsText}`,
+        0.7,
+        50
+      );
+      
+      allLyrics.push({
+        id: Date.now() + i,
+        title: titleText.split('\n')[0].trim() || `${mainTheme} ${i + 1}`,
+        lyrics: lyricsText,
+        theme: mainTheme,
+        genre: genres[i % genres.length] || 'pop',
+        createdAt: new Date().toISOString()
+      });
+    }
 
     res.json({
       success: true,
       mainTheme: mainTheme,
-      count: lyrics.length,
-      lyrics: lyrics,
+      count: allLyrics.length,
+      lyrics: allLyrics,
       metadata: {
-        aiModel: 'gpt-4o-mini',
-        batchGeneration: true
+        aiModel: 'gemini-2.0-flash-exp',
+        batchGeneration: true,
+        cost: '$0.00 (Gemini Free Tier)'
       }
     });
 
@@ -465,8 +545,8 @@ router.post('/generate', async (req, res) => {
     } = req.body;
 
     console.log(`🎵 통합 가사 생성 시작: method=${method}, quantity=${quantity}, lang=${lyricsLang}`);
+    console.log(`   🔑 Using: Gemini 2.0 Flash (비용: $0)`);
 
-    const ai = getOpenAIService();
     let allLyrics = [];
 
     // YouTube 스타일 기반 생성
@@ -511,19 +591,33 @@ Song ${i + 1} should:
 - Be complete and performance-ready
 - Have a unique perspective or story (different from other songs)`;
 
-        // Promise 배열에 추가 (병렬 실행)
+        // ✅ Gemini로 병렬 생성
         lyricPromises.push(
-          ai.generateLyrics(
-            stylePrompt,  // userPrompt
-            null,  // systemPrompt
-            {
-              quantity: 1,  // 한 번에 1개만 생성
-              titleStrategy,
-              titleCount
-            }
-          ).then(lyrics => {
-            console.log(`✅ 가사 ${i + 1}/${quantity} 생성 완료`);
-            return lyrics;
+          generateWithLLM(
+            '당신은 전문 작사가입니다. YouTube 음악 스타일을 분석하여 유사한 고품질 가사를 작성합니다.',
+            stylePrompt,
+            0.9,
+            1000
+          ).then(async (lyricsText) => {
+            // 제목 생성
+            const titleText = await generateWithLLM(
+              '당신은 음악 제목 전문가입니다.',
+              `다음 가사에 어울리는 ${titleStrategy} 스타일의 제목 ${titleCount}개를 생성하세요:\n\n${lyricsText}`,
+              0.7,
+              100
+            );
+            
+            const titles = titleText.split('\n').filter(t => t.trim()).slice(0, titleCount);
+            
+            console.log(`✅ 가사 ${i + 1}/${quantity} 생성 완료 (Gemini)`);
+            
+            return [{
+              id: Date.now() + i,
+              title: titles[0] || `YouTube Style ${i + 1}`,
+              lyrics: lyricsText,
+              suggestedTitles: titles,
+              createdAt: new Date().toISOString()
+            }];
           })
         );
       }
@@ -538,33 +632,74 @@ Song ${i + 1} should:
       
       console.log(`📝 프롬프트 기반 가사 생성:`, finalPrompt);
       
-      allLyrics = await ai.generateLyrics(
-        finalPrompt,  // userPrompt
-        null,  // systemPrompt
-        {
-          quantity,
-          titleStrategy,
-          titleCount,
-          referenceLyrics: referenceLyrics || []
+      // ✅ Gemini로 가사 생성
+      for (let i = 0; i < quantity; i++) {
+        let contextPrompt = finalPrompt;
+        
+        // 레퍼런스 가사 추가
+        if (referenceLyrics && referenceLyrics.length > 0) {
+          contextPrompt += `\n\n참고 가사 스타일:\n${referenceLyrics.slice(0, 2).join('\n\n---\n\n')}`;
         }
-      );
+        
+        const lyricsText = await generateWithLLM(
+          '당신은 전문 작사가입니다. 감성적이고 완성도 높은 가사를 작성합니다.',
+          contextPrompt,
+          0.9,
+          1000
+        );
+        
+        // 제목 생성
+        const titleText = await generateWithLLM(
+          '당신은 음악 제목 전문가입니다.',
+          `다음 가사에 어울리는 ${titleStrategy} 스타일의 제목 ${titleCount}개를 생성하세요:\n\n${lyricsText}`,
+          0.7,
+          100
+        );
+        
+        const titles = titleText.split('\n').filter(t => t.trim()).slice(0, titleCount);
+        
+        allLyrics.push({
+          id: Date.now() + i,
+          title: titles[0] || `Song ${i + 1}`,
+          lyrics: lyricsText,
+          suggestedTitles: titles,
+          createdAt: new Date().toISOString()
+        });
+      }
     }
     // 샘플 기반 생성
     else if (method === 'sample' && referenceLyrics) {
       console.log(`🎼 샘플 기반 가사 생성:`, referenceLyrics.length);
       
-      const samplePrompt = `Create ${quantity} ${lyricsLang === 'korean' ? 'Korean' : 'English'} song lyrics similar to the reference samples provided`;
-      
-      allLyrics = await ai.generateLyrics(
-        samplePrompt,  // userPrompt
-        null,  // systemPrompt
-        {
-          quantity,
-          titleStrategy,
-          titleCount,
-          referenceLyrics
-        }
-      );
+      // ✅ Gemini로 샘플 기반 가사 생성
+      for (let i = 0; i < quantity; i++) {
+        const samplePrompt = `다음 레퍼런스 가사들의 스타일을 분석하고, 유사한 ${lyricsLang === 'korean' ? '한국어' : '영어'} 가사를 작성하세요:\n\n${referenceLyrics.join('\n\n---\n\n')}`;
+        
+        const lyricsText = await generateWithLLM(
+          '당신은 전문 작사가입니다. 레퍼런스 가사의 스타일, 구조, 분위기를 분석하고 유사한 새로운 가사를 생성합니다.',
+          samplePrompt,
+          0.9,
+          1000
+        );
+        
+        // 제목 생성
+        const titleText = await generateWithLLM(
+          '당신은 음악 제목 전문가입니다.',
+          `다음 가사에 어울리는 ${titleStrategy} 스타일의 제목 ${titleCount}개를 생성하세요:\n\n${lyricsText}`,
+          0.7,
+          100
+        );
+        
+        const titles = titleText.split('\n').filter(t => t.trim()).slice(0, titleCount);
+        
+        allLyrics.push({
+          id: Date.now() + i,
+          title: titles[0] || `Sample Style ${i + 1}`,
+          lyrics: lyricsText,
+          suggestedTitles: titles,
+          createdAt: new Date().toISOString()
+        });
+      }
     }
     else {
       return res.status(400).json({

@@ -6,6 +6,7 @@ const { exec } = require('child_process');
 const { promisify } = require('util');
 const execPromise = promisify(exec);
 const fetch = require('node-fetch'); // YouTube oEmbed API 호출용
+const { GoogleGenerativeAI } = require('@google/generative-ai'); // Gemini API
 
 /**
  * 🎬 유튜브 음악 분석 API
@@ -207,49 +208,21 @@ router.post('/analyze-youtube', async (req, res) => {
     // 3️⃣ 음악 분석 (AI 기반 정밀 분석)
     console.log('🔍 AI 기반 정밀 음악 분석 중...');
     
-    // GenSpark LLM API로 제목/설명 분석 (더 정밀하게)
+    // ⚠️ [비용 절감] Gemini API로 제목/설명 분석 (OpenAI 대체)
     let aiAnalysis = null;
     try {
-      const OpenAI = require('openai');
-      const fs = require('fs');
-      const yaml = require('js-yaml');
-      const os = require('os');
-      const configPath = path.join(os.homedir(), '.genspark_llm.yaml');
-      
-      // GenSpark LLM 설정 로드
-      let config = null;
-      if (fs.existsSync(configPath)) {
-        const fileContents = fs.readFileSync(configPath, 'utf8');
-        config = yaml.load(fileContents);
-      }
-      
-      // OpenAI 클라이언트 초기화
-      // 1순위: .env의 OPENAI_API_KEY (실제 OpenAI API)
-      // 2순위: 환경변수 GSK_TOKEN (GenSpark LLM Proxy)
-      // 3순위: yaml 파일
-      let apiKey = process.env.OPENAI_API_KEY || process.env.GSK_TOKEN;
-      let baseURL = 'https://api.openai.com/v1'; // OpenAI 기본 URL
-      
-      // GenSpark LLM Proxy 사용 시
-      if (process.env.GSK_TOKEN && !process.env.OPENAI_API_KEY) {
-        apiKey = process.env.GSK_TOKEN;
-        baseURL = 'https://www.genspark.ai/api/llm_proxy/v1';
-      } else if (config?.openai?.base_url) {
-        baseURL = config.openai.base_url;
-      }
-      
-      if (!apiKey && config?.openai?.api_key) {
-        // yaml에서 ${GENSPARK_TOKEN} 치환
-        apiKey = config.openai.api_key.replace('${GENSPARK_TOKEN}', process.env.GSK_TOKEN || '');
-      }
-      
-      const openai = new OpenAI({
-        apiKey: apiKey,
-        baseURL: baseURL
+      // Gemini API 초기화 (무료!)
+      const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'AIzaSyCS3nl6jkeSaWFKByCbCUJZSOjSXVQOnp4';
+      const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+      const model = genAI.getGenerativeModel({ 
+        model: "gemini-2.0-flash-exp",
+        generationConfig: {
+          temperature: 0.2,
+          maxOutputTokens: 800
+        }
       });
       
-      console.log('🔑 Using LLM API at:', baseURL);
-      console.log('🔑 API Key length:', apiKey?.length || 0);
+      console.log('🔑 Using Gemini API (비용 $0)');
       
       const analysisPrompt = `당신은 전문 음악 프로듀서, 음악학자, Suno AI 전문가입니다. 다음 YouTube 음악 정보를 분석해서 **Suno AI로 재현 가능한 수준으로 극도로 정밀하게** 파악해주세요:
 
@@ -338,24 +311,15 @@ ${videoInfo.description ? `설명: ${videoInfo.description.substring(0, 500)}` :
 4. instruments는 최대 6개까지만
 5. tags는 Suno에서 사용 가능한 영문 태그로`;
 
-      const response = await openai.chat.completions.create({
-        model: baseURL.includes('openai.com') ? 'gpt-4o-mini' : 'gpt-5-mini', // OpenAI는 gpt-4o-mini, GenSpark는 gpt-5-mini
-        messages: [
-          {
-            role: 'system',
-            content: '당신은 전문 음악 프로듀서이자 Suno AI 전문가입니다. YouTube 제목/설명을 분석하여 Suno AI 생성에 최적화된 정밀 파라미터를 JSON으로만 응답합니다. 절대 다른 텍스트를 포함하지 마세요.'
-          },
-          {
-            role: 'user',
-            content: analysisPrompt
-          }
-        ],
-        temperature: 0.2, // 더 정확한 분석을 위해 낮춤
-        max_tokens: 800 // 더 상세한 분석을 위해 증가
-      });
+      // Gemini API 호출
+      const systemPrompt = '당신은 전문 음악 프로듀서이자 Suno AI 전문가입니다. YouTube 제목/설명을 분석하여 Suno AI 생성에 최적화된 정밀 파라미터를 JSON으로만 응답합니다. 절대 다른 텍스트를 포함하지 마세요.';
+      const fullPrompt = `${systemPrompt}\n\n${analysisPrompt}`;
       
-      console.log('✅ AI 분석 응답 수신 완료');
-      const aiResponse = response.choices[0].message.content.trim();
+      const result = await model.generateContent(fullPrompt);
+      const response = await result.response;
+      
+      console.log('✅ Gemini 분석 응답 수신 완료');
+      const aiResponse = response.text().trim();
       // JSON 파싱
       const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
