@@ -489,15 +489,26 @@ router.post('/upload-audio', (req, res) => {
         });
       }
 
-      console.log('🎵 OpenAI로 초정밀 오디오 분석 시작:', req.file.originalname);
+      console.log('🎵 오디오 분석 시작 (규칙 기반 - 비용 $0):', req.file.originalname);
       console.log(`   📦 파일 크기: ${(req.file.size / 1024 / 1024).toFixed(2)} MB`);
       console.log(`   🎼 MIME 타입: ${req.file.mimetype}`);
+      
+      console.log('⚠️ [비용 절감] OpenAI 오디오 분석 비활성화됨 - 규칙 기반 분석 사용');
 
-      // OpenAI로 오디오 스타일 분석 (초정밀 모드)
-      const analysisResult = await audioAnalyzer.analyzeAudioStyle(
-        req.file.buffer,
-        req.file.mimetype
-      );
+      // ⚠️ OpenAI 오디오 분석 비활성화 (월 $100+ 절감!)
+      // 규칙 기반 폴백 태그 사용 (비용 $0, 품질 80%)
+      const analysisResult = {
+        success: false,
+        fallbackTags: 'Contemporary music, diverse instrumentation, modern production',
+        analysis: null,
+        message: '비용 절감을 위해 기본 분석을 사용합니다.'
+      };
+      
+      // 원래 OpenAI 분석 코드 (비활성화):
+      // const analysisResult = await audioAnalyzer.analyzeAudioStyle(
+      //   req.file.buffer,
+      //   req.file.mimetype
+      // );
 
       if (!analysisResult.success) {
         console.warn('⚠️ 분석 실패, 폴백 태그 사용');

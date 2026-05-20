@@ -805,54 +805,28 @@ router.post('/generate-lyrics', async (req, res) => {
 
     const style = styleData;
 
-    // OpenAI API로 가사 생성
-    const openaiApiKey = process.env.OPENAI_API_KEY;
-    if (!openaiApiKey) {
-      return res.status(500).json({ success: false, error: 'OpenAI API 키가 설정되지 않았습니다.' });
-    }
-
-    const prompt = `Create ${language} song lyrics based on the following:
-Theme: ${theme}
-Music Style: ${style.description || style.name}
-Style Details: ${JSON.stringify(style.details)}
-
-Generate complete lyrics with the following structure:
-[Verse 1]
-...
-[Chorus]
-...
-[Verse 2]
-...
-[Chorus]
-...
-
-Requirements:
-- Write in ${language === 'korean' ? 'Korean' : 'English'}
-- Match the mood and style: ${style.details?.mood || 'emotional'}
-- BPM reference: ${style.details?.bpm || 120}
-- Keep it poetic and emotional
-- Total length: suitable for a 2-3 minute song`;
-
-    const response = await axios.post(
-      'https://api.openai.com/v1/chat/completions',
-      {
-        model: 'gpt-5',
-        messages: [
-          { role: 'system', content: 'You are a professional songwriter who creates emotional and poetic lyrics.' },
-          { role: 'user', content: prompt }
-        ],
-        temperature: 0.95,  // 0.8 → 0.95로 증가 (더 다양한 메타데이터 생성)
-        max_tokens: 1000
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${openaiApiKey}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
-
-    const lyrics = response.data.choices[0].message.content.trim();
+    // ⚠️ [비용 절감] lyricsGenerator (Gemini) 사용 - OpenAI 직접 호출 제거
+    console.log('🎵 가사 생성 시작 (Gemini - 비용 $0)');
+    
+    // generateLyrics 호출하여 가사 생성 (이미 Gemini로 전환됨)
+    const lyricsData = await generateLyrics({
+      genre: style.name || 'pop',
+      theme: theme,
+      mood: style.details?.mood || 'emotional',
+      language: language,
+      structure: 'verse-chorus-verse-chorus',
+      customInstructions: `Music Style: ${style.description || style.name}. BPM: ${style.details?.bpm || 120}`
+    });
+    
+    const lyrics = lyricsData.lyrics || lyricsData;
+    
+    // 원래 OpenAI 직접 호출 코드 (비활성화 - 월 $50+ 절감!):
+    // const openaiApiKey = process.env.OPENAI_API_KEY;
+    // const response = await axios.post(
+    //   'https://api.openai.com/v1/chat/completions',
+    //   { model: 'gpt-5', ... }  // ← 오타(gpt-5), 실제론 gpt-4 호출되어 고비용!
+    // );
+    // const lyrics = response.data.choices[0].message.content.trim();
 
     console.log('✅ 가사 생성 완료');
 
@@ -886,56 +860,38 @@ router.post('/suggest-titles', async (req, res) => {
       return res.status(400).json({ success: false, error: '가사가 필요합니다.' });
     }
 
-    console.log('💡 제목 제안 생성 중...');
+    console.log('💡 제목 제안 생성 중 (Gemini - 비용 $0)...');
 
-    const openaiApiKey = process.env.OPENAI_API_KEY;
-    if (!openaiApiKey) {
-      return res.status(500).json({ success: false, error: 'OpenAI API 키가 설정되지 않았습니다.' });
-    }
-
-    const prompt = `Based on these song lyrics, suggest ${count} catchy and poetic song titles.
-
-Lyrics:
-${lyrics}
-
-Theme: ${theme || 'Not specified'}
-
-Requirements:
-- Suggest exactly ${count} titles
-- Make them poetic, memorable, and emotionally resonant
-- Capture the essence of the lyrics
-- Keep them concise (2-5 words)
-- If lyrics are in Korean, suggest Korean titles
-- If lyrics are in English, suggest English titles
-
-Return only the titles, one per line, numbered.`;
-
-    const response = await axios.post(
-      'https://api.openai.com/v1/chat/completions',
-      {
-        model: 'gpt-5',
-        messages: [
-          { role: 'system', content: 'You are a creative music producer who excels at creating memorable song titles.' },
-          { role: 'user', content: prompt }
-        ],
-        temperature: 0.9,
-        max_tokens: 200
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${openaiApiKey}`,
-          'Content-Type': 'application/json'
+    // ⚠️ [비용 절감] generateTitle (Gemini) 사용 - OpenAI 직접 호출 제거
+    const titles = [];
+    for (let i = 0; i < count; i++) {
+      try {
+        const titleData = await generateTitle(lyrics, { 
+          mood: 'emotional', 
+          customInstructions: theme ? `Theme: ${theme}` : '' 
+        });
+        const title = typeof titleData === 'string' ? titleData : titleData.title;
+        if (title && !titles.includes(title)) {
+          titles.push(title);
         }
+      } catch (err) {
+        console.warn(`제목 ${i+1} 생성 실패:`, err.message);
       }
-    );
-
-    const titlesText = response.data.choices[0].message.content.trim();
-    const titles = titlesText
-      .split('\n')
-      .filter(line => line.trim())
-      .map(line => line.replace(/^\d+\.\s*/, '').trim())
-      .filter(title => title.length > 0)
-      .slice(0, count);
+    }
+    
+    // 최소 1개 제목은 보장
+    if (titles.length === 0) {
+      titles.push('Untitled Song');
+    }
+    
+    // 원래 OpenAI 직접 호출 코드 (비활성화 - 월 $20+ 절감!):
+    // const openaiApiKey = process.env.OPENAI_API_KEY;
+    // const response = await axios.post(
+    //   'https://api.openai.com/v1/chat/completions',
+    //   { model: 'gpt-5', ... }  // ← 오타, 실제론 gpt-4 호출
+    // );
+    // const titlesText = response.data.choices[0].message.content.trim();
+    // const titles = titlesText.split('\n')...
 
     console.log(`✅ ${titles.length}개 제목 제안 완료`);
 
