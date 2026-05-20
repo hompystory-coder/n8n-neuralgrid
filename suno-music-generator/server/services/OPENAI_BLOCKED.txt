@@ -1,0 +1,15 @@
+⚠️ OpenAI API 사용 완전 차단 ⚠️
+
+날짜: 2026-05-20
+이유: 비용 발생 방지 ($244.74/month → $0/month 절감)
+
+대체 방안:
+- 가사/제목 생성: Gemini 2.0 Flash (무료)
+- 썸네일 생성: Replicate Flux Schnell ($0.003/image)
+- 오디오 분석: Rule-based analyzer (무료)
+
+차단된 파일:
+1. server/services/openaiService.js - 사용 안 함
+2. server/services/openaiImageGenerator.js - Replicate로 대체
+3. server/services/audioAnalyzer.js - 주석 처리됨
+4. .env - OPENAI_API_KEY 비활성화됨
