@@ -86,7 +86,9 @@ async function generateWithLLM(systemPrompt, userPrompt, temperature = 0.9, maxT
     return await callOpenAI(systemPrompt, userPrompt, temperature, maxTokens);
   } else {
     const model = createGeminiModel(temperature, maxTokens, systemPrompt);
-    return await model.generateContent(userPrompt);
+    const result = await model.generateContent(userPrompt);
+    const response = await result.response;
+    return response.text();  // ✅ Gemini 응답에서 텍스트 추출
   }
 }
 
