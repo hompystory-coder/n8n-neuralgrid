@@ -1013,7 +1013,7 @@ router.post('/generate-music', async (req, res) => {
  */
 router.post('/generate-simple', async (req, res) => {
   try {
-    const { style, language, gender, count } = req.body;
+    const { style, language, gender, count, options } = req.body;  // ✨ options 추가!
 
     // 입력 검증
     if (!style || !style.trim()) {
@@ -1033,6 +1033,14 @@ router.post('/generate-simple', async (req, res) => {
 
     console.log('🎨 스타일 기반 음악 생성:', { style, language, gender, count: musicCount });
     console.log('📝 AI가 2026-05-01 기준 트렌드를 분석하고 고품질 가사를 생성합니다...');
+    
+    // ✨ 옵션 로깅
+    if (options) {
+      console.log('🎛️ 고급 옵션 활성화:');
+      Object.entries(options).forEach(([key, value]) => {
+        if (value) console.log(`   ✅ ${key}`);
+      });
+    }
 
     // Suno API 호출 준비
     const sunoClient = require('../services/sunoClient');
@@ -1127,6 +1135,91 @@ router.post('/generate-simple', async (req, res) => {
         // 🔥 3단계: 스타일 설명 구성
         let styleDescription = style;  // 🎯 사용자 입력 그대로 최우선!
         
+        // ✨ NEW: 고급 옵션 처리
+        const additionalStyles = [];
+        const negativeTags = [];
+        let adjustedStyleWeight = 0.6;
+        let adjustedWeirdnessConstraint = 0.3;
+        
+        if (options) {
+          console.log(`\n🎛️ 고급 옵션 적용 중...`);
+          
+          // 볼륨 제어
+          if (options.optionSoftVolume) {
+            additionalStyles.push('soft volume', 'gentle mixing');
+            console.log(`   🔇 조용한 볼륨 추가`);
+          }
+          if (options.optionNoLoudDrums) {
+            negativeTags.push('loud drums', 'aggressive percussion');
+            console.log(`   🥁 시끄러운 드럼 제거`);
+          }
+          if (options.optionNoHeavyBass) {
+            negativeTags.push('heavy bass', 'deep bass');
+            console.log(`   🎸 강한 베이스 제거`);
+          }
+          
+          // 악기 스타일
+          if (options.optionAcoustic) {
+            additionalStyles.push('acoustic guitar');
+            console.log(`   🎸 어쿠스틱 기타 추가`);
+          }
+          if (options.optionSoftPiano) {
+            additionalStyles.push('soft piano', 'gentle piano');
+            console.log(`   🎹 부드러운 피아노 추가`);
+          }
+          if (options.optionGentleStrings) {
+            additionalStyles.push('gentle strings', 'soft violin');
+            console.log(`   🎻 부드러운 현악기 추가`);
+          }
+          
+          // 분위기
+          if (options.optionRelaxed) {
+            additionalStyles.push('relaxed', 'laid-back');
+            console.log(`   😌 편안한 분위기 추가`);
+          }
+          if (options.optionCalm) {
+            additionalStyles.push('calm', 'peaceful');
+            adjustedWeirdnessConstraint = 0.2;  // 더 안정적으로
+            console.log(`   🧘 고요한 분위기 추가`);
+          }
+          if (options.optionPeaceful) {
+            additionalStyles.push('peaceful', 'serene');
+            console.log(`   ☮️ 평화로운 분위기 추가`);
+          }
+          
+          // 특수 효과
+          if (options.optionNatureSound) {
+            additionalStyles.push('nature sounds', 'bird chirping', 'wind');
+            console.log(`   🌿 자연 소리 추가`);
+          }
+          if (options.optionCampfire) {
+            additionalStyles.push('campfire vibes', 'campfire atmosphere');
+            console.log(`   🔥 캠프파이어 분위기 추가`);
+          }
+          if (options.optionRainSound) {
+            additionalStyles.push('rain sounds', 'rainfall ambience');
+            console.log(`   🌧️ 빗소리 배경음 추가`);
+          }
+          
+          // 옵션이 많으면 스타일 준수를 강화
+          if (additionalStyles.length > 3) {
+            adjustedStyleWeight = 0.7;
+            console.log(`   🎯 옵션 많음 → styleWeight 증가: 0.6 → 0.7`);
+          }
+        }
+        
+        // 추가 스타일 적용
+        if (additionalStyles.length > 0) {
+          styleDescription += ', ' + additionalStyles.join(', ');
+          console.log(`   ✅ ${additionalStyles.length}개 스타일 옵션 적용됨`);
+        }
+        
+        // negativeTags 문자열 생성
+        const negativeTagsString = negativeTags.length > 0 ? negativeTags.join(', ') : '';
+        if (negativeTagsString) {
+          console.log(`   🚫 제외 요소: ${negativeTagsString}`);
+        }
+        
         // ⚠️ "money chord" 키워드 처리
         if (styleDescription.toLowerCase().includes('money chord')) {
           console.warn(`   ⚠️ "money chord" → "popular chord progression" 변경`);
@@ -1147,7 +1240,7 @@ router.post('/generate-simple', async (req, res) => {
         }
         
         console.log(`\n🎨 3단계: 스타일 전달 (${styleDescription.length}자)`);
-        console.log(`   🎯 원본 스타일 100% 유지: ${styleDescription}`);
+        console.log(`   🎯 최종 스타일: ${styleDescription}`);
         
         // 🔥 중요: 한국어/영어 모두 Custom Mode 사용!
         const useCustomMode = true;
@@ -1159,13 +1252,16 @@ router.post('/generate-simple', async (req, res) => {
         
         // 🎨 스타일 변주 제거! 사용자 입력 그대로 전달
         const finalStyle = styleDescription;  // 변주 없이 원본 그대로!
-        const styleWeight = 0.6;
-        const weirdnessConstraint = 0.3;
+        const styleWeight = adjustedStyleWeight;  // ✨ 옵션에 따라 조정됨
+        const weirdnessConstraint = adjustedWeirdnessConstraint;  // ✨ 옵션에 따라 조정됨
         
         // 🔥 4단계: Suno API로 음악 생성
         console.log(`\n🎼 4단계: Suno AI 음악 생성 요청...`);
         console.log(`   🎛️ styleWeight: ${styleWeight}, weirdnessConstraint: ${weirdnessConstraint}`);
         console.log(`   🎯 Suno에 전달: "${finalStyle}"`);
+        if (negativeTagsString) {
+          console.log(`   🚫 제외 요소: "${negativeTagsString}"`);
+        }
         
         // 💰 YouTube Watch Time 최적화: 곡 길이 힌트 추가
         let optimizedStyle = finalStyle;
@@ -1180,10 +1276,11 @@ router.post('/generate-simple', async (req, res) => {
           instrumental: false,
           title: title,
           prompt: lyrics,
-          style: optimizedStyle,   // 🎯 사용자 스타일 + Watch Time 최적화!
+          style: optimizedStyle,   // 🎯 사용자 스타일 + 옵션 + Watch Time 최적화!
           callBackUrl: `${callbackBaseUrl}/api/webhook/suno`,
           styleWeight: styleWeight,
-          weirdnessConstraint: weirdnessConstraint
+          weirdnessConstraint: weirdnessConstraint,
+          negativeTags: negativeTagsString || undefined  // ✨ negativeTags 추가!
         });
 
         if (result.success) {
