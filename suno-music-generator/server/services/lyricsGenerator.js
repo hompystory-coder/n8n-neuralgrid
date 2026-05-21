@@ -582,13 +582,14 @@ async function generateLyricsFromIssue(issue, style, language, gender, index, pr
     
     const systemInstruction = `당신은 전문 작사가입니다.
 
-🎯 **작사 규칙**:
-1. **필수 구조**: [Intro] → [Verse 1] → [Chorus] → [Verse 2] → [Chorus] → [Bridge] → [Outro]
-2. **각 섹션 줄 수**: Intro(2줄), Verse(3줄씩), Chorus(3줄씩), Bridge(2줄), Outro(2줄)
-3. **총 길이**: ${minChars}-${maxChars}${unit} (최소 ${minChars}자 필수!)
-4. **한 줄 길이**: 12-15자
+🎯 **작사 규칙** (3-4분 풀 트랙):
+1. **필수 구조**: [Intro] → [Verse 1] → [Pre-Chorus] → [Chorus] → [Verse 2] → [Pre-Chorus] → [Chorus] → [Bridge] → [Chorus] → [Outro]
+2. **각 섹션 줄 수**: Intro(4줄), Verse(8줄씩), Pre-Chorus(4줄씩), Chorus(8줄씩), Bridge(6줄), Outro(4줄)
+3. **총 길이**: ${Math.max(minChars * 2, 800)}-${Math.max(maxChars * 2, 1200)}${unit} (최소 800자 필수! 긴 가사 = 긴 곡)
+4. **한 줄 길이**: 12-20자
 
-🚫 **금지**: Pre-Chorus, Verse 3, Final Chorus, Verse 4 등 추가 섹션 절대 금지!
+⏱️ **목표 곡 길이**: 3-4분 (180-240초) - 가사가 길어야 곡도 길어집니다!
+🚫 **금지**: Verse 3, Verse 4, Final Chorus 같은 추가 섹션 금지 (Pre-Chorus는 허용)
 
 🎭 **작사 스타일**: ${selectedStyle.name} - ${selectedStyle.description}
 
@@ -616,37 +617,48 @@ async function generateLyricsFromIssue(issue, style, language, gender, index, pr
 🎵 음악: ${style}, ${genderText} 보컬
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
-📝 ${minChars}-${maxChars}자 가사를 다음 구조로 **완전히 끝까지** 작성하세요:
+📝 ${Math.max(minChars * 2, 800)}-${Math.max(maxChars * 2, 1200)}자 가사를 다음 구조로 **완전히 끝까지** 작성하세요:
 
 [Intro]
-(2줄, 각 12-15자)
+(4줄, 각 12-20자)
 ⚠️ **필수**: "${selectedIntroStyle.type}" 스타일로 작성!
 → ${selectedIntroStyle.hint}
 → 참고: "${selectedIntroStyle.example}" (이 예시를 그대로 쓰지 말고 이슈에 맞게 변형!)
 
 [Verse 1]
-(3줄, 각 12-15자)
+(8줄, 각 12-20자 - 이야기 시작, 상황 묘사)
+
+[Pre-Chorus]
+(4줄, 각 12-20자 - 감정 고조, 코러스 준비)
 
 [Chorus]  
-(3줄, 각 12-15자)
+(8줄, 각 12-20자 - 메인 메시지, 가장 강렬하게, 반복 가능한 후렴구)
 
 [Verse 2]
-(3줄, 각 12-15자)
+(8줄, 각 12-20자 - 이야기 전개, 새로운 각도)
+
+[Pre-Chorus]
+(4줄, 각 12-20자 - 다시 감정 고조)
 
 [Chorus]
-(3줄, 각 12-15자)
+(8줄, 각 12-20자 - 후렴 반복, 조금 변주 가능)
 
 [Bridge]
-(2줄, 각 12-15자)
+(6줄, 각 12-20자 - 전환, 클라이맥스 준비)
+
+[Chorus]
+(8줄, 각 12-20자 - 마지막 후렴, 가장 강렬하게)
 
 [Outro]
-(2줄, 각 12-15자)
+(4줄, 각 12-20자 - 여운, 마무리)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ⚠️ **필수**: 
 - [Outro]까지 **모든 섹션을 완성**하세요! (중간에 멈추지 마세요!)
-- 총 ${minChars}-${maxChars}자 (현재까지 부족하면 계속 작성!)
-- 7개 섹션 모두 작성 완료 후에만 응답 종료!
+- 총 ${Math.max(minChars * 2, 800)}-${Math.max(maxChars * 2, 1200)}자 (최소 800자! 긴 가사 = 3-4분 곡)
+- 10개 섹션 모두 작성 완료 후에만 응답 종료!
+- Pre-Chorus를 반드시 포함! (Verse와 Chorus 사이의 감정 전환)
+
 
 지금 [Intro]부터 [Outro]까지 **전체 가사**를 작성하세요:`;
 
@@ -672,15 +684,18 @@ async function generateLyricsFromIssue(issue, style, language, gender, index, pr
       console.log(`📤 Gemini 응답 (원본 ${lyrics.length}자):`);
       console.log(lyrics.substring(0, 300) + (lyrics.length > 300 ? '...' : ''));
       
-      // ✅ 완성도 검증: 모든 필수 섹션이 있는지 확인
+      // ✅ 완성도 검증: 모든 필수 섹션이 있는지 확인 (Pre-Chorus 포함)
       const hasIntro = lyrics.includes('[Intro]');
       const hasVerse1 = lyrics.includes('[Verse 1]');
+      const hasPreChorus = lyrics.includes('[Pre-Chorus]');
       const hasChorus = lyrics.includes('[Chorus]');
       const hasVerse2 = lyrics.includes('[Verse 2]');
       const hasBridge = lyrics.includes('[Bridge]');
       const hasOutro = lyrics.includes('[Outro]');
       
-      if (hasIntro && hasVerse1 && hasChorus && hasVerse2 && hasBridge && hasOutro) {
+      if (hasIntro && hasVerse1 && hasPreChorus && hasChorus && hasVerse2 && hasBridge && hasOutro) {
+        console.log('✅ 가사 구조 완전 (3-4분 풀 트랙):');
+        console.log(`   ✓ [Intro] ✓ [Verse 1] ✓ [Pre-Chorus] ✓ [Chorus] ✓ [Verse 2] ✓ [Bridge] ✓ [Outro]`);
         console.log(`✅ 완전한 가사 생성 성공! (시도 ${attempt}/${maxAttempts})`);
         console.log(`   ✓ [Intro] ✓ [Verse 1] ✓ [Chorus] ✓ [Verse 2] ✓ [Bridge] ✓ [Outro]`);
         break;
@@ -707,10 +722,11 @@ async function generateLyricsFromIssue(issue, style, language, gender, index, pr
     console.log(`🔧 가사 처리 중... (원본: ${lyrics.length}자)`);
     
     if (language === 'korean') {
-      // 1단계: Pre-Chorus, Verse 3, Final Chorus 강제 제거 (정규식 개선!)
+      // 1단계: Verse 3, Verse 4, Final Chorus 강제 제거 (Pre-Chorus는 유지!)
       lyrics = lyrics
-        .replace(/\[Pre-Chorus\][\s\S]*?(?=\[|$)/gi, '')  // Pre-Chorus 완전 제거
+        // .replace(/\[Pre-Chorus\][\s\S]*?(?=\[|$)/gi, '')  // ✅ Pre-Chorus는 이제 허용! (3-4분 곡에 필요)
         .replace(/\[Verse 3\][\s\S]*?(?=\[|$)/gi, '')    // Verse 3 완전 제거  
+        .replace(/\[Verse 4\][\s\S]*?(?=\[|$)/gi, '')    // Verse 4 완전 제거
         .replace(/\[Final Chorus\][\s\S]*?(?=\[|$)/gi, '') // Final Chorus 완전 제거
         .replace(/\n\n\n+/g, '\n\n'); // 과도한 줄바꿈 정리
       
