@@ -81,7 +81,7 @@ function createGeminiModel(temperature = 1.0, maxTokens = 8192, systemInstructio
 /**
  * 통합 LLM 호출 함수 (OpenAI 우선, Gemini fallback)
  */
-async function generateWithLLM(systemPrompt, userPrompt, temperature = 0.9, maxTokens = 2048) {
+async function generateWithLLM(systemPrompt, userPrompt, temperature = 0.9, maxTokens = 3072) {  // 2048 → 3072 (긴 가사용)
   if (USE_OPENAI && OPENAI_API_KEY) {
     return await callOpenAI(systemPrompt, userPrompt, temperature, maxTokens);
   } else {
@@ -677,7 +677,8 @@ async function generateLyricsFromIssue(issue, style, language, gender, index, pr
       console.log(`🎵 가사 생성 시도 ${attempt}/${maxAttempts}...`);
       
       // 🎨 Temperature 0.9 → 0.95로 증가 (더 창의적인 가사 생성)
-      lyrics = await generateWithLLM(systemInstruction, userPrompt, 0.95, 1024);  // 2048 → 1024 토큰
+      // 🔧 토큰 제한: 1024 → 3072 (800-1200자 긴 가사 생성 위해 필수!)
+      lyrics = await generateWithLLM(systemInstruction, userPrompt, 0.95, 3072);  // 3-4분 곡용 긴 가사
       lyrics = lyrics.trim();
       
       // 🔍 디버그: Gemini 응답 확인
