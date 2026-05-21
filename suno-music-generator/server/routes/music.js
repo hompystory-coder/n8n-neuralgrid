@@ -374,6 +374,11 @@ router.get('/status/:taskId', async (req, res) => {
         // sunoData 배열에서 첫 번째 (또는 가장 긴) 음악 선택
         const sunoData = result.data.response?.sunoData || [];
         if (sunoData.length > 0) {
+          // 🔍 디버깅: 첫 번째 트랙의 전체 구조 로깅
+          console.log('🔍 [DEBUG] Suno API 응답 - 첫 번째 트랙 구조:');
+          console.log(JSON.stringify(sunoData[0], null, 2));
+          console.log('🔍 [DEBUG] 사용 가능한 필드:', Object.keys(sunoData[0]).join(', '));
+          
           // 가장 긴 음악 선택 (보통 더 완성도가 높음)
           const selectedTrack = sunoData.reduce((prev, curr) => 
             (curr.duration > prev.duration) ? curr : prev
@@ -382,6 +387,13 @@ router.get('/status/:taskId', async (req, res) => {
           // 저장된 메타데이터 가져오기
           const metadata = generatedMusicMetadata?.get?.(taskId) || {};
           console.log(`📋 메타데이터 확인:`, metadata ? '있음' : '없음');
+          
+          // 🔍 디버깅: 제목과 duration 값 확인
+          console.log('🔍 [DEBUG] Title 필드 확인:');
+          console.log(`  - track.title: "${selectedTrack.title}"`);
+          console.log(`  - metadata.title: "${metadata.title}"`);
+          console.log('🔍 [DEBUG] Duration 필드 확인:');
+          console.log(`  - track.duration: ${selectedTrack.duration}`);
           
           data = {
             title: metadata.title || selectedTrack.title,
@@ -395,19 +407,34 @@ router.get('/status/:taskId', async (req, res) => {
             tags: selectedTrack.tags,
             lyrics: metadata.lyrics || selectedTrack.lyrics || selectedTrack.lyric || '',
             // 모든 트랙 정보 포함 (가사와 제목 모두 포함)
-            allTracks: sunoData.map(track => ({
-              id: track.id,
-              title: track.title || metadata.title, // 🔧 Suno 생성 제목 우선, fallback만 metadata
-              audioUrl: track.audioUrl || track.sourceAudioUrl,
-              imageUrl: track.sourceImageUrl || track.imageUrl, // 고해상도 원본 우선
-              imageLargeUrl: track.sourceImageUrl || track.imageUrl, // 동일하게 원본 사용
-              duration: track.duration,
-              model: track.modelName || 'V5',
-              prompt: track.prompt,
-              tags: track.tags,
-              lyrics: metadata.lyrics || track.lyrics || track.lyric || ''
-            }))
+            allTracks: sunoData.map(track => {
+              // 🔧 여러 가능한 필드명 시도 (방어적 코딩)
+              const extractedTitle = track.title || track.music_title || track.song_title || track.name || metadata.title || 'Untitled';
+              const extractedAudioUrl = track.audioUrl || track.audio_url || track.sourceAudioUrl || track.source_audio_url || track.music_url || '';
+              const extractedDuration = track.duration || track.audio_duration || track.length || track.time || 210;
+              const extractedImageUrl = track.sourceImageUrl || track.source_image_url || track.imageUrl || track.image_url || track.image_large_url || '';
+              
+              return {
+                id: track.id,
+                title: extractedTitle,
+                audioUrl: extractedAudioUrl,
+                imageUrl: extractedImageUrl,
+                imageLargeUrl: extractedImageUrl, // 동일하게 사용
+                duration: extractedDuration,
+                model: track.modelName || track.model_name || track.model || 'V5',
+                prompt: track.prompt || track.lyric || '',
+                tags: track.tags || track.style || '',
+                lyrics: metadata.lyrics || track.lyrics || track.lyric || track.prompt || ''
+              };
+            })
+
           };
+          
+          // 🔍 디버깅: 변환된 allTracks 확인
+          console.log('🔍 [DEBUG] 변환된 allTracks (처음 3개):');
+          data.allTracks.slice(0, 3).forEach((t, i) => {
+            console.log(`  [${i}] title: "${t.title}", duration: ${t.duration}초`);
+          });
         } else {
           // fallback: 직접 데이터 사용
           data = {

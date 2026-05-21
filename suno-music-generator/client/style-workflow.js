@@ -505,14 +505,32 @@ function createMusicBox(song, index) {
   box.className = 'music-mini-box';
   box.dataset.songId = `song-${index}`;
   box.dataset.songIndex = index;
-  box.dataset.duration = song.duration || 210; // ✅ duration 저장!
+  
+  // 🔧 Duration 추출 (여러 필드명 시도)
+  const duration = song.duration || song.audio_duration || song.length || song.time || 210;
+  box.dataset.duration = duration;
+  
+  // 🔍 디버깅: duration이 기본값인 경우 경고
+  if (duration === 210) {
+    console.warn(`⚠️ [Song ${index}] Duration 필드를 찾을 수 없어 기본값(210초) 사용. 제목: "${song.title}"`);
+    console.log('   사용 가능한 필드:', Object.keys(song).join(', '));
+  }
   
   // 가사 포맷팅
   const lyrics = song.lyrics || song.lyric || song.prompt || '';
   const formattedLyrics = lyrics.replace(/\n/g, '<br>');
   
+  // 🔧 제목 추출 (여러 필드명 시도)
+  const title = song.title || song.music_title || song.song_title || song.name || 'Untitled';
+  
+  // 🔍 디버깅: 제목이 비정상적으로 짧은 경우 경고
+  if (title.length < 3 && title !== 'Untitled') {
+    console.error(`❌ [Song ${index}] 비정상적으로 짧은 제목: "${title}"`);
+    console.log('   전체 song 객체:', JSON.stringify(song, null, 2).substring(0, 500));
+  }
+  
   // 썸네일 이미지 (고해상도 우선 사용)
-  const thumbnail = song.imageLargeUrl || song.image_large_url || song.imageUrl || song.image_url || '';
+  const thumbnail = song.imageLargeUrl || song.image_large_url || song.sourceImageUrl || song.source_image_url || song.imageUrl || song.image_url || '';
   
   box.style.cssText = `
     background: linear-gradient(145deg, rgba(30,30,45,0.95), rgba(20,20,35,0.95));
@@ -535,7 +553,7 @@ function createMusicBox(song, index) {
       
       <div style="margin-left: 52px;">
         <h3 style="margin: 0 0 8px 0; color: #fb923c; font-size: 1.3em; font-weight: 700; line-height: 1.3;">
-          🎵 ${song.title || 'Untitled'}
+          🎵 ${title}
         </h3>
         
         <!-- 트랙 순서 선택 박스 -->
