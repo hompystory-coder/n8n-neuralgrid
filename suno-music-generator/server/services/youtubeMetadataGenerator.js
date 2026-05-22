@@ -918,34 +918,20 @@ ${tracklist}
 
       const systemPrompt = `당신은 YouTube 음악 플레이리스트 제목 전문가입니다.
 
-**OOOffi 채널 스타일 분석:**
-OOOffi는 19.2K 구독자를 보유한 인기 플레이리스트 채널입니다.
+**후킹 제목 패턴:**
+1. 강렬한 감정적 훅 - 즉시 클릭하고 싶게 만드는 문장
+2. 이모지 2-3개 전략적 사용
+3. 구체적이고 매력적인 상황 묘사
 
-**🔥 강력한 후킹 제목 패턴:**
-1. **강렬한 감정적 훅** - 즉시 클릭하고 싶게 만드는 문장
-2. **이모지 2-3개 전략적 사용** (시선 끌기)
-3. **구체적이고 매력적인 상황 묘사**
-4. **트렌디한 키워드 + 장르 태그**
-5. **CTR 최적화 키워드 포함**
-
-**실제 OOOffi 제목 예시 (후킹 분석):**
-- "Pop Songs for a Day Where Everything Goes Right🩵" ← 후킹: "모든 게 잘 풀리는 날"
-- "Feel Good Instantly 🌸" ← 후킹: "즉시 기분 좋아지는"
-- "Wow this song is so good...🥹" ← 후킹: "와 이 노래 진짜..."
-- "Songs that make you want to leave right now 🌊☀️" ← 후킹: "지금 당장 떠나고 싶게 만드는"
-- "You'll feel the healing just by listening🌿" ← 후킹: "듣기만 해도 힐링되는"
-
-**💡 후킹 키워드 예시:**
-한국어: "지금 바로", "단번에", "진짜 미쳤다", "인생 최고", "들으면 행복해지는", "중독성 있는"
-영어: "Instantly", "Right Now", "Can't Stop Listening", "Obsessed With", "Life-Changing"
+**후킹 키워드:**
+한국어: "지금 바로", "단번에", "들으면 행복해지는", "중독성 있는"
+영어: "Instantly", "Right Now", "Can't Stop Listening", "Obsessed With"
 
 **특징:**
 - 감정을 강력하게 자극하는 훅 문장
 - 듣는 순간의 느낌을 과장되게 표현
-- 이모지는 2-3개 (🌸☕️🩵🗽✨ 등)
-- 자연스럽고 트렌디한 표현
-- 장르 태그는 끝에 간결하게
-- 클릭률(CTR)을 극대화하는 단어 선택`;
+- 이모지 2-3개
+- 클릭률(CTR) 극대화`;
 
       const userPrompt = `아래 플레이리스트에 맞는 YouTube 제목을 생성하세요:
 
@@ -983,7 +969,7 @@ OOOffi는 19.2K 구독자를 보유한 인기 플레이리스트 채널입니다
 
 ⚠️ **주의**: JSON만 출력하세요 (설명 금지)`;
 
-      const responseText = await generateWithLLM(systemPrompt, userPrompt, 0.8, 1000);  // 500 → 1000 (제목 생성용)
+      const responseText = await generateWithLLM(systemPrompt, userPrompt, 0.8, 2000);  // 1000 → 2000 (MAX_TOKENS 방지)
       const trimmedText = responseText.trim();
       
       console.log('   🤖 LLM 응답 (전체):\n' + trimmedText);

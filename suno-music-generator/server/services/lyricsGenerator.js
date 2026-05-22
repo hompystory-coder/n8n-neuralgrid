@@ -4251,8 +4251,8 @@ function extractChorusPhrase(lyrics, language = 'korean') {
 
     const isKorean = language.toLowerCase() === 'korean';
     const phrases = {};
-    const minLength = isKorean ? 4 : 8;  // 한국어: 최소 4글자, 영어: 최소 8글자
-    const maxLength = isKorean ? 15 : 30; // 한국어: 최대 15글자, 영어: 최대 30글자
+    const minLength = isKorean ? 6 : 8;  // 한국어: 최소 6글자 (한글자 제목 방지), 영어: 최소 8글자
+    const maxLength = isKorean ? 18 : 30; // 한국어: 최대 18글자 (더 완전한 제목), 영어: 최대 30글자
 
     // 모든 후렴구에서 구절 추출
     chorusMatches.forEach(chorus => {
