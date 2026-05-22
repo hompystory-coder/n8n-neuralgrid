@@ -986,7 +986,7 @@ OOOffi는 19.2K 구독자를 보유한 인기 플레이리스트 채널입니다
       const responseText = await generateWithLLM(systemPrompt, userPrompt, 0.8, 500);
       const trimmedText = responseText.trim();
       
-      console.log('   🤖 LLM 응답:', trimmedText.substring(0, 200) + (trimmedText.length > 200 ? '...' : ''));
+      console.log('   🤖 LLM 응답 (전체):\n' + trimmedText);
 
       // JSON 파싱
       const jsonMatch = trimmedText.match(/```json\s*([\s\S]*?)\s*```/) || 
@@ -994,7 +994,7 @@ OOOffi는 19.2K 구독자를 보유한 인기 플레이리스트 채널입니다
       
       if (jsonMatch) {
         const jsonStr = jsonMatch[1] || jsonMatch[0];
-        console.log('   📦 파싱된 JSON:', jsonStr.substring(0, 200));
+        console.log('   📦 파싱된 JSON:', jsonStr);
         const titles = JSON.parse(jsonStr);
         
         // 검증
@@ -1009,6 +1009,8 @@ OOOffi는 19.2K 구독자를 보유한 인기 플레이리스트 채널입니다
         }
       } else {
         console.log('   ❌ JSON 패턴 매칭 실패');
+        console.log('   🔍 응답 타입:', typeof trimmedText);
+        console.log('   🔍 응답 길이:', trimmedText.length);
       }
 
       throw new Error('LLM 응답 파싱 실패');

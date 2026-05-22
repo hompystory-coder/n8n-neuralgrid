@@ -88,6 +88,19 @@ async function generateWithLLM(systemPrompt, userPrompt, temperature = 0.9, maxT
     const model = createGeminiModel(temperature, maxTokens, systemPrompt);
     const result = await model.generateContent(userPrompt);
     const response = await result.response;
+    
+    // 🔍 디버깅: Gemini 응답 상태 확인
+    const candidates = response.candidates || [];
+    if (candidates[0]) {
+      const finishReason = candidates[0].finishReason;
+      if (finishReason && finishReason !== 'STOP') {
+        console.warn(`⚠️ Gemini 응답이 비정상적으로 종료됨: ${finishReason}`);
+        if (candidates[0].safetyRatings) {
+          console.warn(`   Safety Ratings:`, JSON.stringify(candidates[0].safetyRatings));
+        }
+      }
+    }
+    
     return response.text();  // ✅ Gemini 응답에서 텍스트 추출
   }
 }
