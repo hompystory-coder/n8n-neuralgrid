@@ -1548,6 +1548,99 @@
                             </div>
                         </div>
 
+                        <!-- ✨ NEW: 5. 고급 음악 제어 옵션 -->
+                        <div style="margin-bottom: 40px;">
+                            <label style="display: block; margin-bottom: 12px; color: #a78bfa; font-size: 1.1em; font-weight: bold;">
+                                🎛️ 5. 고급 음악 제어 옵션 <span style="font-size: 0.8em; color: #888; font-weight: normal;">(선택사항)</span>
+                            </label>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 16px;">
+                                
+                                <!-- 볼륨 제어 -->
+                                <div style="background: rgba(167, 139, 250, 0.05); padding: 16px; border-radius: 12px; border: 1px solid rgba(167, 139, 250, 0.2);">
+                                    <div style="font-weight: 600; margin-bottom: 12px; color: #a78bfa; font-size: 0.95em;">
+                                        🔇 볼륨 제어
+                                    </div>
+                                    <label style="display: flex; align-items: center; margin-bottom: 8px; font-size: 0.9em; cursor: pointer;">
+                                        <input type="checkbox" id="optionSoftVolume" style="width: 16px; height: 16px; margin-right: 8px; cursor: pointer;">
+                                        <span>조용한 볼륨</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; margin-bottom: 8px; font-size: 0.9em; cursor: pointer;">
+                                        <input type="checkbox" id="optionNoLoudDrums" style="width: 16px; height: 16px; margin-right: 8px; cursor: pointer;">
+                                        <span>시끄러운 드럼 제거</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; font-size: 0.9em; cursor: pointer;">
+                                        <input type="checkbox" id="optionNoHeavyBass" style="width: 16px; height: 16px; margin-right: 8px; cursor: pointer;">
+                                        <span>강한 베이스 제거</span>
+                                    </label>
+                                </div>
+                                
+                                <!-- 악기 스타일 -->
+                                <div style="background: rgba(167, 139, 250, 0.05); padding: 16px; border-radius: 12px; border: 1px solid rgba(167, 139, 250, 0.2);">
+                                    <div style="font-weight: 600; margin-bottom: 12px; color: #a78bfa; font-size: 0.95em;">
+                                        🎸 악기 스타일
+                                    </div>
+                                    <label style="display: flex; align-items: center; margin-bottom: 8px; font-size: 0.9em; cursor: pointer;">
+                                        <input type="checkbox" id="optionAcoustic" style="width: 16px; height: 16px; margin-right: 8px; cursor: pointer;">
+                                        <span>어쿠스틱 기타</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; margin-bottom: 8px; font-size: 0.9em; cursor: pointer;">
+                                        <input type="checkbox" id="optionSoftPiano" style="width: 16px; height: 16px; margin-right: 8px; cursor: pointer;">
+                                        <span>부드러운 피아노</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; font-size: 0.9em; cursor: pointer;">
+                                        <input type="checkbox" id="optionGentleStrings" style="width: 16px; height: 16px; margin-right: 8px; cursor: pointer;">
+                                        <span>부드러운 현악기</span>
+                                    </label>
+                                </div>
+                                
+                                <!-- 분위기 -->
+                                <div style="background: rgba(167, 139, 250, 0.05); padding: 16px; border-radius: 12px; border: 1px solid rgba(167, 139, 250, 0.2);">
+                                    <div style="font-weight: 600; margin-bottom: 12px; color: #a78bfa; font-size: 0.95em;">
+                                        🌟 분위기
+                                    </div>
+                                    <label style="display: flex; align-items: center; margin-bottom: 8px; font-size: 0.9em; cursor: pointer;">
+                                        <input type="checkbox" id="optionRelaxed" style="width: 16px; height: 16px; margin-right: 8px; cursor: pointer;">
+                                        <span>편안한</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; margin-bottom: 8px; font-size: 0.9em; cursor: pointer;">
+                                        <input type="checkbox" id="optionCalm" style="width: 16px; height: 16px; margin-right: 8px; cursor: pointer;">
+                                        <span>고요한</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; font-size: 0.9em; cursor: pointer;">
+                                        <input type="checkbox" id="optionPeaceful" style="width: 16px; height: 16px; margin-right: 8px; cursor: pointer;">
+                                        <span>평화로운</span>
+                                    </label>
+                                </div>
+                                
+                                <!-- 특수 효과 -->
+                                <div style="background: rgba(167, 139, 250, 0.05); padding: 16px; border-radius: 12px; border: 1px solid rgba(167, 139, 250, 0.2);">
+                                    <div style="font-weight: 600; margin-bottom: 12px; color: #a78bfa; font-size: 0.95em;">
+                                        ✨ 특수 효과
+                                    </div>
+                                    <label style="display: flex; align-items: center; margin-bottom: 8px; font-size: 0.9em; cursor: pointer;">
+                                        <input type="checkbox" id="optionNatureSound" style="width: 16px; height: 16px; margin-right: 8px; cursor: pointer;">
+                                        <span>자연 소리</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; margin-bottom: 8px; font-size: 0.9em; cursor: pointer;">
+                                        <input type="checkbox" id="optionCampfire" style="width: 16px; height: 16px; margin-right: 8px; cursor: pointer;">
+                                        <span>캠프파이어</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; font-size: 0.9em; cursor: pointer;">
+                                        <input type="checkbox" id="optionRainSound" style="width: 16px; height: 16px; margin-right: 8px; cursor: pointer;">
+                                        <span>빗소리</span>
+                                    </label>
+                                </div>
+                                
+                            </div>
+                            
+                            <!-- 선택된 옵션 미리보기 -->
+                            <div id="selectedOptionsPreview" style="display: none; margin-top: 16px; padding: 16px; background: rgba(167, 139, 250, 0.1); border-radius: 12px; border: 2px dashed rgba(167, 139, 250, 0.3);">
+                                <div style="font-weight: 600; color: #a78bfa; margin-bottom: 8px; font-size: 0.9em;">📋 선택된 옵션:</div>
+                                <div id="selectedOptionsText" style="color: rgba(255,255,255,0.8); line-height: 1.6; font-size: 0.9em;"></div>
+                            </div>
+                        </div>
+
                         <!-- 생성 버튼 -->
                         <button onclick="generateSimpleStyleMusic()" 
                                 style="width: 100%; padding: 20px; font-size: 1.2em; font-weight: bold; border: none; border-radius: 12px; background: linear-gradient(135deg, #fb923c 0%, #ec4899 100%); color: white; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;"
@@ -2096,6 +2189,61 @@
         // 🎵 스타일 선택기 인스턴스
         let styleSelector = null;
         let selectedStyle = null;
+        
+        // ✨ 고급 옵션 실시간 미리보기
+        const optionCheckboxIds = [
+            'optionSoftVolume', 'optionNoLoudDrums', 'optionNoHeavyBass',
+            'optionAcoustic', 'optionSoftPiano', 'optionGentleStrings',
+            'optionRelaxed', 'optionCalm', 'optionPeaceful',
+            'optionNatureSound', 'optionCampfire', 'optionRainSound'
+        ];
+        
+        const optionLabels = {
+            optionSoftVolume: '🔇 조용한 볼륨',
+            optionNoLoudDrums: '🥁 시끄러운 드럼 제거',
+            optionNoHeavyBass: '🎸 강한 베이스 제거',
+            optionAcoustic: '🎸 어쿠스틱 기타',
+            optionSoftPiano: '🎹 부드러운 피아노',
+            optionGentleStrings: '🎻 부드러운 현악기',
+            optionRelaxed: '😌 편안한 분위기',
+            optionCalm: '🧘 고요한 분위기',
+            optionPeaceful: '☮️ 평화로운 분위기',
+            optionNatureSound: '🌿 자연 소리',
+            optionCampfire: '🔥 캠프파이어 분위기',
+            optionRainSound: '🌧️ 빗소리 배경음'
+        };
+        
+        function updateOptionsPreview() {
+            const selectedOptions = [];
+            optionCheckboxIds.forEach(id => {
+                const checkbox = document.getElementById(id);
+                if (checkbox && checkbox.checked) {
+                    selectedOptions.push(optionLabels[id]);
+                }
+            });
+            
+            const preview = document.getElementById('selectedOptionsPreview');
+            const previewText = document.getElementById('selectedOptionsText');
+            
+            if (preview && previewText) {
+                if (selectedOptions.length > 0) {
+                    preview.style.display = 'block';
+                    previewText.innerHTML = selectedOptions.join('<br>');
+                } else {
+                    preview.style.display = 'none';
+                }
+            }
+        }
+        
+        // 페이지 로드 시 이벤트 리스너 추가
+        document.addEventListener('DOMContentLoaded', () => {
+            optionCheckboxIds.forEach(id => {
+                const checkbox = document.getElementById(id);
+                if (checkbox) {
+                    checkbox.addEventListener('change', updateOptionsPreview);
+                }
+            });
+        });
         
         // 🔥 각 메뉴별로 독립적인 결과 저장
         let lyricsResults = {

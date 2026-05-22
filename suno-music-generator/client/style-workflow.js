@@ -98,6 +98,28 @@ async function generateSimpleStyleMusic() {
     const language = document.querySelector('input[name="simpleLanguage"]:checked').value;
     const gender = document.querySelector('input[name="simpleGender"]:checked').value;
 
+    // ✨ NEW: 고급 옵션 가져오기
+    const options = {
+      optionSoftVolume: document.getElementById('optionSoftVolume')?.checked || false,
+      optionNoLoudDrums: document.getElementById('optionNoLoudDrums')?.checked || false,
+      optionNoHeavyBass: document.getElementById('optionNoHeavyBass')?.checked || false,
+      optionAcoustic: document.getElementById('optionAcoustic')?.checked || false,
+      optionSoftPiano: document.getElementById('optionSoftPiano')?.checked || false,
+      optionGentleStrings: document.getElementById('optionGentleStrings')?.checked || false,
+      optionRelaxed: document.getElementById('optionRelaxed')?.checked || false,
+      optionCalm: document.getElementById('optionCalm')?.checked || false,
+      optionPeaceful: document.getElementById('optionPeaceful')?.checked || false,
+      optionNatureSound: document.getElementById('optionNatureSound')?.checked || false,
+      optionCampfire: document.getElementById('optionCampfire')?.checked || false,
+      optionRainSound: document.getElementById('optionRainSound')?.checked || false
+    };
+
+    // 선택된 옵션 개수 계산
+    const selectedOptionsCount = Object.values(options).filter(v => v).length;
+    if (selectedOptionsCount > 0) {
+      console.log(`🎛️ ${selectedOptionsCount}개 고급 옵션 선택됨:`, options);
+    }
+
     // 2. 유효성 검사
     if (!styleInput) {
       alert('❌ 스타일을 입력해주세요!');
@@ -109,7 +131,7 @@ async function generateSimpleStyleMusic() {
       return;
     }
 
-    console.log('🎨 스타일 음악 생성 시작:', { styleInput, count, language, gender });
+    console.log('🎨 스타일 음악 생성 시작:', { styleInput, count, language, gender, options });
 
     // 3. UI 업데이트 - 생성 중 표시
     document.getElementById('simpleStyleGenerating').style.display = 'block';
@@ -137,7 +159,7 @@ async function generateSimpleStyleMusic() {
     currentGeneratedStyle = styleInput;
     currentGeneratedLanguage = language;
 
-    // 6. 서버에 간단 생성 요청
+    // 6. 서버에 간단 생성 요청 (✨ options 추가!)
     const response = await fetch('/api/style/generate-simple', {
       method: 'POST',
       headers: {
@@ -147,7 +169,8 @@ async function generateSimpleStyleMusic() {
         style: finalStyle,
         language: language,
         gender: gender,
-        count: count
+        count: count,
+        options: options  // ✨ 옵션 추가!
       })
     });
 
