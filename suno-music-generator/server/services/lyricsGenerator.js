@@ -4361,15 +4361,24 @@ async function generateTitle(lyrics, style, language, index = 0, issue = null) {
       ? `당신은 시인이자 전설적인 K-POP 히트곡 프로듀서입니다.
 당신이 만든 제목은 사람들이 듣는 순간 "우와!" 하고 감탄하게 만듭니다.
 
-🎯 **제목 생성 방법**:
-1. **가사 속 핵심 키워드 추출**: 가사에서 가장 인상적인 단어/구절 찾기
-2. **시적으로 재해석**: 단순 명사 → 은유적 표현으로 변환
-3. **감성 극대화**: 듣는 이의 상상력을 자극하는 표현
+🎯 **제목 생성 방법 (이슈가 있으면 이슈 우선!)**:
+1. **원본 이슈 테마/키워드 우선 활용**: 이슈가 있으면 테마/스토리를 제목에 반드시 반영
+2. **가사 속 핵심 키워드 추출**: 가사에서 가장 인상적인 단어/구절 찾기
+3. **시적으로 재해석**: 단순 명사 → 은유적 표현으로 변환
+4. **감성 극대화**: 듣는 이의 상상력을 자극하는 표현
 
 **당신의 스타일**:
+- ✅ 이슈가 있으면 이슈 테마를 제목에 반드시 포함 (예: 캠핑 → "모닥불 아래 별빛", "숲이 속삭이는 밤")
+- ✅ 이슈 키워드를 시적으로 재해석 (예: 캠프파이어 → "타오르는 순간", 별 → "별이 그린 이야기")
 - 가사 속 실제 표현을 활용 (완전히 새로 만들지 말고)
 - 시적이고 아름다운 은유와 상징 사용
 - 반드시 순수 한국어로만 제목 (영어 단어 절대 금지!)
+
+**테마 기반 제목 예시 (이슈 반영)**:
+- "별빛 아래 모닥불" (캠핑 테마 → 시각적 은유)
+- "타오르는 순간의 이야기" (캠프파이어 → 감정적 은유)
+- "숲이 속삭이는 밤" (자연 테마 → 감각적 의인화)
+- "텐트 속 별빛 추억" (캠핑 추억 → 구체적 장면)
 
 **전설적인 제목 예시**:
 - "너의 온도" (사랑 → 온도로 은유)
@@ -4384,17 +4393,25 @@ async function generateTitle(lyrics, style, language, index = 0, issue = null) {
 - "잊혀진 멜로디" (그리움 → 음악 은유)`
       : `You are a poet and legendary music producer who creates titles that make people say "Wow!"
 
-🎯 **Title Generation Method**:
-1. **Extract Key Phrase from Lyrics**: Find the most impressive words/phrases
-2. **Reinterpret Poetically**: Transform simple nouns → metaphorical expressions
-3. **Maximize Emotion**: Create expressions that stimulate listeners' imagination
+🎯 **Title Generation Method (Issue First if Provided!)**:
+1. **Prioritize Issue Theme/Keywords**: If issue exists, MUST reflect theme/story in title
+2. **Extract Key Phrase from Lyrics**: Find the most impressive words/phrases
+3. **Reinterpret Poetically**: Transform simple nouns → metaphorical expressions
+4. **Maximize Emotion**: Create expressions that stimulate listeners' imagination
 
 **Your Style**:
+- ✅ If issue exists, MUST include issue theme in title (e.g., camping → "Under the Campfire Stars", "Whispers of the Forest")
+- ✅ Reinterpret issue keywords poetically (e.g., campfire → "Burning Moments", stars → "Starlit Dreams")
 - Use actual expressions from lyrics (don't create entirely new)
 - Poetic metaphors and symbols
 - English only, deep poetic resonance
 
-**Examples**:
+**Examples with Issue Theme**:
+- "Flames Dancing Under Stars" (camping theme → poetic expression)
+- "Whispers of the Forest Night" (nature theme → sensory metaphor)
+- "Embers of Our Story" (campfire theme → emotional metaphor)
+
+**General Examples**:
 - "Your Warmth" (love → warmth metaphor)
 - "Becoming a Star" (dream → star symbol)
 - "Within Scattered Time" (memories → poetic expression)
@@ -4416,12 +4433,14 @@ async function generateTitle(lyrics, style, language, index = 0, issue = null) {
 ${lyrics}
 
 ${issue ? `━━━━━━━━━━━━━━━━━━━━━━━━━━
-📰 **원본 이슈** (참고용)
+📰 **원본 이슈 (제목에 반드시 반영!)**
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 **이슈 제목**: ${issue.title}
 **이슈 설명**: ${issue.description}
 **핵심 키워드**: ${issue.keywords.join(', ')}
+
+⚠️ CRITICAL: The title MUST reflect the issue theme/keywords above!
 
 ` : ''}━━━━━━━━━━━━━━━━━━━━━━━━━━
 🎨 **음악 스타일**
@@ -4433,10 +4452,12 @@ ${style}
 🎯 **제목 생성 단계**
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**STEP 1: 가사에서 핵심 구절 찾기**
-- 가사 속 **가장 인상적인 단어/구절** 3개 추출
+**STEP 1: ${issue ? '이슈 테마에서 핵심 키워드 추출 (최우선!)' : '가사에서 핵심 구절 찾기'}**
+${issue ? `- 이슈 키워드를 시적으로 재해석 (예: 캠프파이어 → "타오르는 순간", "모닥불 아래")
+- 이슈 감정을 자연/감각 이미지로 변환
+- 테마가 명확히 드러나는 제목 만들기` : `- 가사 속 **가장 인상적인 단어/구절** 3개 추출
 - 후렴구(Chorus)에서 **반복되는 핵심 표현** 확인
-- **감정이 가장 강렬한 순간**의 표현 포착
+- **감정이 가장 강렬한 순간**의 표현 포착`}
 
 **STEP 2: 시적으로 재해석하기**
 - 핵심 감정을 **자연 이미지**(별, 달, 바다, 바람, 빛)로 은유
@@ -4448,13 +4469,20 @@ ${style}
 ✅ 단순한 명사가 아닌 **시적 구절**인가?
 ✅ 듣는 순간 **이미지가 떠오르는가**?
 ✅ **감정이 전달되고 여운이 남는가**?
-✅ 사람들이 "우와, 제목 좋다!" 할 만한가?
+✅ ${issue ? '**이슈 테마가 명확히 드러나는가?**' : '사람들이 "우와, 제목 좋다!" 할 만한가?'}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✨ **시적 제목 변환 예시**
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-❌ "사랑" → ✅ "너라는 계절"
+${issue ? `**테마 기반 제목 (이슈 반영)**:
+❌ "캠핑" → ✅ "별빛 아래 모닥불"
+❌ "캠프파이어" → ✅ "타오르는 순간의 이야기"
+❌ "자연" → ✅ "숲이 속삭이는 밤"
+❌ "추억" → ✅ "텐트 속 별빛 추억"
+
+**일반 제목 예시**:
+` : ''}❌ "사랑" → ✅ "너라는 계절"
 ❌ "추억" → ✅ "멈춘 시간의 향기"
 ❌ "그리움" → ✅ "네가 남긴 파도"
 ❌ "이별" → ✅ "마지막 봄날"
@@ -4469,6 +4497,7 @@ ${style}
 ❌ 평범한 표현 ("사랑의 감정" 등)
 ❌ 영어 단어 절대 금지!
 ❌ 7단어 초과 (2-5단어 권장)
+${issue ? '❌ 이슈 테마를 무시하는 제목 (이슈가 있으면 반드시 반영!)' : ''}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 📝 **출력 형식**
@@ -4476,8 +4505,8 @@ ${style}
 
 제목만 출력하세요. 설명이나 따옴표 절대 금지!
 
-예: 너라는 계절`
-      : `Deeply analyze the following lyrics and create a **poetic and beautiful title that will make people say "Wow!"**
+예: ${issue ? '별빛 아래 모닥불' : '너라는 계절'}`
+      : `Deeply analyze the following lyrics${issue ? ' and issue theme' : ''} and create a **poetic and beautiful title that will make people say "Wow!"**
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 📋 **Full Lyrics** (Track ${index + 1})
@@ -4485,7 +4514,17 @@ ${style}
 
 ${lyrics}
 
+${issue ? `━━━━━━━━━━━━━━━━━━━━━━━━━━
+📰 **Original Issue (MUST Reflect in Title!)**
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+**Issue Title**: ${issue.title}
+**Issue Description**: ${issue.description}
+**Key Keywords**: ${issue.keywords.join(', ')}
+
+⚠️ CRITICAL: The title MUST reflect the issue theme/keywords above!
+
+` : ''}━━━━━━━━━━━━━━━━━━━━━━━━━━
 🎨 **Musical Style**
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -4495,10 +4534,12 @@ ${style}
 🎯 **Poetic Title Creation Guide**
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**STEP 1: Extract Core Emotion**
-- Find the **most powerful emotion** throughout
+**STEP 1: ${issue ? 'Extract Core Theme from Issue (PRIORITY!)' : 'Extract Core Emotion'}**
+${issue ? `- Reinterpret issue keywords poetically (e.g., campfire → "Burning Moments", stars → "Starlit Dreams")
+- Transform issue emotion into nature/sensory imagery
+- Create a title that clearly shows the theme` : `- Find the **most powerful emotion** throughout
 - Identify **recurring imagery** in the chorus
-- Capture the **most beautiful moment**
+- Capture the **most beautiful moment**`}
 
 **STEP 2: Elevate to Poetic Expression**
 - Use **nature imagery** (stars, moon, waves, wind, light)
@@ -4510,13 +4551,20 @@ ${style}
 ✅ Is it a **poetic phrase**, not just a noun?
 ✅ Does it create **vivid imagery**?
 ✅ Will people say "Wow, great title!"?
-✅ Does it resonate emotionally?
+✅ ${issue ? 'Does it clearly reflect the **issue theme**?' : 'Does it resonate emotionally?'}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✨ **Poetic Title Examples**
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-❌ "Love" → ✅ "The Season of You"
+${issue ? `**Theme-Based Titles (Issue Reflection)**:
+❌ "Camping" → ✅ "Stars Above the Campfire"
+❌ "Campfire" → ✅ "Flames Dancing in the Night"
+❌ "Nature" → ✅ "Whispers of the Forest"
+❌ "Memories" → ✅ "Embers of Our Story"
+
+**General Title Examples**:
+` : ''}❌ "Love" → ✅ "The Season of You"
 ❌ "Memories" → ✅ "Scent of Frozen Time"
 ❌ "Longing" → ✅ "Waves You Left Behind"
 ❌ "Farewell" → ✅ "Last Spring Day"
@@ -4530,6 +4578,7 @@ ${style}
 ❌ Simple nouns (Love, Dream, Hope)
 ❌ Generic phrases ("Feeling of Love")
 ❌ More than 7 words (2-5 recommended)
+${issue ? '❌ Ignoring the issue theme (MUST reflect issue if provided!)' : ''}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 📝 **Output Format**
@@ -4537,7 +4586,7 @@ ${style}
 
 Output only the title. No quotes or explanations!
 
-Example: The Season of You`;
+Example: ${issue ? 'Stars Above the Campfire' : 'The Season of You'}`;
 
     // 🔥 Gemini API 호출 - Temperature 0.8 → 0.9로 증가 (더 다양한 은유 표현)
     const titleText = await generateWithLLM(systemInstruction, userPrompt, 0.9, 100);  // 200 → 100 토큰 (제목은 짧음)
