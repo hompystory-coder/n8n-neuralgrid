@@ -983,7 +983,7 @@ OOOffi는 19.2K 구독자를 보유한 인기 플레이리스트 채널입니다
 
 ⚠️ **주의**: JSON만 출력하세요 (설명 금지)`;
 
-      const responseText = await generateWithLLM(systemPrompt, userPrompt, 0.8, 500);
+      const responseText = await generateWithLLM(systemPrompt, userPrompt, 0.8, 1000);  // 500 → 1000 (제목 생성용)
       const trimmedText = responseText.trim();
       
       console.log('   🤖 LLM 응답 (전체):\n' + trimmedText);
