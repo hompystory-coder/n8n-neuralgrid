@@ -1,0 +1,12 @@
+{
+  "theme": "캠핑",
+  "style": "acoustic folk",
+  "count": 2,
+  "language": "korean",
+  "advancedOptions": {
+    "instrumental": false,
+    "lyrics": false,
+    "crisp": true,
+    "clear": true
+  }
+}

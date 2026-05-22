@@ -4589,7 +4589,8 @@ Output only the title. No quotes or explanations!
 Example: ${issue ? 'Stars Above the Campfire' : 'The Season of You'}`;
 
     // 🔥 Gemini API 호출 - Temperature 0.8 → 0.9로 증가 (더 다양한 은유 표현)
-    const titleText = await generateWithLLM(systemInstruction, userPrompt, 0.9, 100);  // 200 → 100 토큰 (제목은 짧음)
+    // maxTokens 100 → 200으로 증가 (Issue 정보 포함된 긴 prompt 처리 + 여유)
+    const titleText = await generateWithLLM(systemInstruction, userPrompt, 0.9, 200);
     const trimmedTitleText = titleText.trim();
     
     // 따옴표 제거 및 정리
