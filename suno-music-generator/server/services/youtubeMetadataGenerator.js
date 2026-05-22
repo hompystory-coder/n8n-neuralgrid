@@ -918,56 +918,49 @@ ${tracklist}
 
       const systemPrompt = `당신은 YouTube 음악 플레이리스트 제목 전문가입니다.
 
-**후킹 제목 패턴:**
-1. 강렬한 감정적 훅 - 즉시 클릭하고 싶게 만드는 문장
-2. 이모지 2-3개 전략적 사용
-3. 구체적이고 매력적인 상황 묘사
+**핵심 원칙: 후킹이 전부다!**
+- 곡 수, 정보 = 절대 금지! ❌
+- 강력한 감정 + 이모지 = 필수! ✅
+- 클릭하고 싶게 만드는 마법 같은 문장!
 
-**후킹 키워드:**
-한국어: "지금 바로", "단번에", "들으면 행복해지는", "중독성 있는"
-영어: "Instantly", "Right Now", "Can't Stop Listening", "Obsessed With"
+**후킹 패턴:**
+1. 즉각적 감정 자극 ("지금 바로", "듣자마자", "instantly")
+2. 구체적 변화 약속 ("기분 100% 좋아지는", "can't stop listening")
+3. 이모지 2-3개로 시각적 임팩트
 
-**특징:**
-- 감정을 강력하게 자극하는 훅 문장
-- 듣는 순간의 느낌을 과장되게 표현
-- 이모지 2-3개
-- 클릭률(CTR) 극대화`;
+**완벽한 예시:**
+한국어: "듣자마자 기분이 확 풀리는 팝 🌸☀️💕"
+영어: "Pop Songs That Instantly Lift Your Mood 🌸☀️💕"
+
+**금지사항:**
+❌ 곡 수 언급 ("4곡", "15 tracks")
+❌ 상황 나열 ("work · cafe · study")
+❌ 플레이리스트 단어 (후킹에 집중!)
+
+**출력 형식:**
+\`\`\`json
+{
+  "korean": "강력한 후킹 문장 + 장르 🎵✨💕",
+  "english": "Strong Hooking Phrase + Genre 🎵✨💕"
+}
+\`\`\``;
 
       const userPrompt = `아래 플레이리스트에 맞는 YouTube 제목을 생성하세요:
 
 **플레이리스트 정보:**
-- 곡 수: ${tracks.length}곡
-- 전체 분위기: ${overallMood.mood}
+- 분위기: ${overallMood.mood}
 - 에너지: ${overallMood.energy}
 - 장르: ${overallMood.genre}
-- 듣기 좋은 상황: ${overallMood.situations.join(', ')}
+- 상황: ${overallMood.situations.join(', ')}
 - 키워드: ${overallMood.keywords.join(', ')}
 
 **요구사항:**
-1. OOOffi 스타일로 **한국어 제목 1개** 생성 - 강력한 후킹 필수!
-2. OOOffi 스타일로 **영어 제목 1개** 생성 - 강력한 후킹 필수!
-3. 이모지는 각 제목마다 2-3개 전략적 배치
-4. **강렬한 감정적 훅** + 구체적 상황 + 장르 태그 구조
-5. CTR 극대화 키워드 포함 ("지금 바로", "instantly", "can't stop" 등)
-6. 자연스럽고 매력적이며 **클릭하고 싶게 만드는** 표현
+1. 강력한 후킹만! (곡 수, 상황 나열 절대 금지!)
+2. 감정을 즉시 자극하는 문장
+3. 이모지 2-3개
+4. CTR 극대화 키워드 ("지금 바로", "instantly", "듣자마자" 등)
 
-**출력 형식 (JSON):**
-\`\`\`json
-{
-  "korean": "강력한 후킹 + 구체적 상황 + 장르 🎵✨💕 (이모지 2-3개)",
-  "english": "Strong Hook + Specific Situation + Genre 🎵✨💕 (2-3 emojis)"
-}
-\`\`\`
-
-**예시:**
-\`\`\`json
-{
-  "korean": "들으면 기분 100% 좋아지는 pop 플레이리스트 🌸☀️🩵 work · cafe music · 4곡",
-  "english": "Songs That Instantly Boost Your Mood 🌸☀️🩵 Pop Playlist · Work · Cafe Vibes · 4 Tracks"
-}
-\`\`\`
-
-⚠️ **주의**: JSON만 출력하세요 (설명 금지)`;
+⚠️ JSON만 출력하세요!`;
 
       const responseText = await generateWithLLM(systemPrompt, userPrompt, 0.8, 2000);  // 1000 → 2000 (MAX_TOKENS 방지)
       const trimmedText = responseText.trim();
@@ -1012,39 +1005,54 @@ ${tracklist}
   }
 
   /**
-   * 📦 폴백 제목 생성 (LLM 실패 시)
+   * 📦 폴백 제목 생성 (LLM 실패 시) - 후킹에 집중!
    */
   _generateFallbackTitles(overallMood, tracks) {
     const { mood, genre, situations, energy } = overallMood;
 
     // 이모지 선택
     const moodEmojis = {
-      'chill': ['🌸', '☕️'],
-      'happy': ['🩵', '☀️'],
-      'romantic': ['💛', '🌙'],
-      'energetic': ['⚡', '🔥'],
-      'calm': ['🍃', '🌿']
+      'chill': '🌸☕️',
+      'happy': '🩵☀️',
+      'romantic': '💛🌙',
+      'energetic': '⚡🔥',
+      'calm': '🍃🌿'
     };
-    const emoji = (moodEmojis[mood] || ['🎵', '🎧'])[0];
+    const emoji = moodEmojis[mood] || '🎵✨';
 
-    // 감정적 훅 선택
+    // 강력한 후킹 문구 (곡 수 절대 금지!)
     const hooks = {
-      'chill': ['편안한 하루를 위한', 'Feel Good Vibes'],
-      'happy': ['기분 좋아지는', 'Songs That Make You Happy'],
-      'romantic': ['설레는 순간을 위한', 'Romantic Moments'],
-      'energetic': ['에너지 충전되는', 'Energy Boost Playlist'],
-      'calm': ['평온한 시간을 위한', 'Peaceful Moments']
+      'chill': {
+        korean: '듣자마자 마음이 편안해지는',
+        english: 'Instantly Calms Your Mind'
+      },
+      'happy': {
+        korean: '기분이 확 풀리는',
+        english: 'Instantly Lifts Your Mood'
+      },
+      'romantic': {
+        korean: '설레는 순간을 더 특별하게',
+        english: 'Makes Every Moment Special'
+      },
+      'energetic': {
+        korean: '에너지가 폭발하는',
+        english: 'Energy Boost Guaranteed'
+      },
+      'calm': {
+        korean: '영혼이 힐링되는',
+        english: 'Soul-Healing Vibes'
+      }
     };
-    const hook = hooks[mood] || ['듣기 좋은', 'Good Vibes'];
+    const hook = hooks[mood] || {
+      korean: '지금 바로 듣고 싶어지는',
+      english: 'Can\'t Stop Listening'
+    };
 
-    // 상황 설명
-    const situation = situations[0] || 'music';
+    // 한국어 제목 (후킹 + 장르 + 이모지만!)
+    const korean = `${hook.korean} ${genre} ${emoji}`;
 
-    // 한국어 제목
-    const korean = `${hook[0]} ${genre} 플레이리스트 ${emoji} ${situation} · ${tracks.length}곡`;
-
-    // 영어 제목
-    const english = `${hook[1]} ${emoji} ${this._capitalize(genre)} Playlist · ${situation}`;
+    // 영어 제목 (후킹 + 장르 + 이모지만!)
+    const english = `${hook.english} ${this._capitalize(genre)} ${emoji}`;
 
     return { korean, english };
   }
