@@ -1,0 +1,12 @@
+{
+  "style": "pop",
+  "theme": "캠핑",
+  "language": "korean",
+  "count": 3,
+  "advancedOptions": {
+    "softVolume": true,
+    "acoustic": true,
+    "warmEmotional": true,
+    "naturalSound": true
+  }
+}
