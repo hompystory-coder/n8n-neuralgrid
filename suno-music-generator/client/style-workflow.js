@@ -94,6 +94,7 @@ async function generateSimpleStyleMusic() {
   try {
     // 1. 입력값 가져오기
     const styleInput = document.getElementById('simpleStyleInput').value.trim();
+    const themeInput = document.getElementById('themeInput')?.value.trim() || '';  // ✨ 테마 추가
     const count = parseInt(document.getElementById('simpleStyleCount').value) || 2;
     const language = document.querySelector('input[name="simpleLanguage"]:checked').value;
     const gender = document.querySelector('input[name="simpleGender"]:checked').value;
@@ -119,6 +120,11 @@ async function generateSimpleStyleMusic() {
     if (selectedOptionsCount > 0) {
       console.log(`🎛️ ${selectedOptionsCount}개 고급 옵션 선택됨:`, options);
     }
+    
+    // ✨ 테마 입력 확인
+    if (themeInput) {
+      console.log(`🎨 테마 입력: "${themeInput}" - AI가 이 테마로 다양한 이야기를 생성합니다`);
+    }
 
     // 2. 유효성 검사
     if (!styleInput) {
@@ -131,12 +137,18 @@ async function generateSimpleStyleMusic() {
       return;
     }
 
-    console.log('🎨 스타일 음악 생성 시작:', { styleInput, count, language, gender, options });
+    console.log('🎨 스타일 음악 생성 시작:', { styleInput, themeInput, count, language, gender, options });
 
     // 3. UI 업데이트 - 생성 중 표시
     document.getElementById('simpleStyleGenerating').style.display = 'block';
     document.getElementById('simpleStyleResults').style.display = 'none';
-    document.getElementById('simpleStyleStatus').textContent = 'AI가 가사와 제목을 생성하고 있습니다...';
+    
+    // ✨ 테마가 있으면 메시지 변경
+    if (themeInput) {
+      document.getElementById('simpleStyleStatus').textContent = `"${themeInput}" 테마로 다양한 이야기를 생성하고 있습니다...`;
+    } else {
+      document.getElementById('simpleStyleStatus').textContent = 'AI가 가사와 제목을 생성하고 있습니다...';
+    }
 
     // 4. 보컬 성별 힌트 추가
     let finalStyle = styleInput;
@@ -159,7 +171,7 @@ async function generateSimpleStyleMusic() {
     currentGeneratedStyle = styleInput;
     currentGeneratedLanguage = language;
 
-    // 6. 서버에 간단 생성 요청 (✨ options 추가!)
+    // 6. 서버에 간단 생성 요청 (✨ theme + options 추가!)
     const response = await fetch('/api/style/generate-simple', {
       method: 'POST',
       headers: {
@@ -167,6 +179,7 @@ async function generateSimpleStyleMusic() {
       },
       body: JSON.stringify({
         style: finalStyle,
+        theme: themeInput,  // ✨ 테마 추가!
         language: language,
         gender: gender,
         count: count,

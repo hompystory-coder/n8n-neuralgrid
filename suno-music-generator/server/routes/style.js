@@ -1013,7 +1013,7 @@ router.post('/generate-music', async (req, res) => {
  */
 router.post('/generate-simple', async (req, res) => {
   try {
-    const { style, language, gender, count, options } = req.body;  // ✨ options 추가!
+    const { style, theme, language, gender, count, options } = req.body;  // ✨ theme 추가!
 
     // 입력 검증
     if (!style || !style.trim()) {
@@ -1031,8 +1031,12 @@ router.post('/generate-simple', async (req, res) => {
       });
     }
 
-    console.log('🎨 스타일 기반 음악 생성:', { style, language, gender, count: musicCount });
-    console.log('📝 AI가 2026-05-01 기준 트렌드를 분석하고 고품질 가사를 생성합니다...');
+    console.log('🎨 스타일 기반 음악 생성:', { style, theme, language, gender, count: musicCount });
+    if (theme) {
+      console.log(`🎭 테마 입력: "${theme}" - 테마 기반 다양한 이야기 생성 모드`);
+    } else {
+      console.log('📝 AI가 2026-05-01 기준 트렌드를 분석하고 고품질 가사를 생성합니다...');
+    }
     
     // ✨ 옵션 로깅
     if (options) {
@@ -1045,6 +1049,7 @@ router.post('/generate-simple', async (req, res) => {
     // Suno API 호출 준비
     const sunoClient = require('../services/sunoClient');
     const { generateLyrics, generateTitle, collectRealIssues } = require('../services/lyricsGenerator');
+    const { generateStoriesFromTheme } = require('../services/themeStoryGenerator');  // ✨ NEW!
 
     // 웹훅 URL 생성 (환경 변수 우선 사용)
     const callbackBaseUrl = process.env.PUBLIC_URL || 
@@ -1056,13 +1061,33 @@ router.post('/generate-simple', async (req, res) => {
     
     console.log(`🌐 Callback URL: ${callbackBaseUrl}/api/webhook/suno`);
 
-    // 🎯 1단계: 실제 이슈 수집 (요청한 곡 수만큼만 수집)
-    console.log(`\n🌐 1단계: ${musicCount}곡을 위한 ${musicCount}개 이슈 수집 중...`);
-    const issuesData = await collectRealIssues(style, language, '2026-05-03', musicCount);
+    // 🎯 1단계: 이슈 수집 (테마 있으면 테마 기반, 없으면 트렌드 기반)
+    let issuesData;
+    
+    if (theme && theme.trim()) {
+      // ✨ 테마 기반 이야기 생성
+      console.log(`\n🎨 [테마 모드] "${theme}" 테마로 ${musicCount}개 이야기 생성 중...`);
+      issuesData = await generateStoriesFromTheme(theme, language, musicCount);
+      
+      if (!issuesData || !issuesData.issues || issuesData.issues.length === 0) {
+        console.warn(`⚠️ 테마 이야기 생성 실패, 트렌드 모드로 전환`);
+        issuesData = await collectRealIssues(style, language, '2026-05-03', musicCount);
+      } else {
+        console.log('✅ 테마 기반 이야기 생성 완료!');
+        console.log(`   🎭 테마: "${theme}"`);
+        console.log(`   📰 생성: ${issuesData.issues.length}개 이야기`);
+        console.log(`   📋 예시: ${issuesData.issues.slice(0, Math.min(3, issuesData.issues.length)).map(i => i.title).join(', ')}${issuesData.issues.length > 3 ? '...' : ''}`);
+      }
+    } else {
+      // 기존 트렌드 기반
+      console.log(`\n🌐 [트렌드 모드] ${musicCount}곡을 위한 ${musicCount}개 이슈 수집 중...`);
+      issuesData = await collectRealIssues(style, language, '2026-05-03', musicCount);
+      console.log('✅ 실제 이슈 수집 완료!');
+      console.log(`   📰 요청: ${musicCount}곡 → 수집: ${issuesData.issues.length}개 이슈`);
+      console.log(`   📋 이슈 예시: ${issuesData.issues.slice(0, Math.min(3, issuesData.issues.length)).map(i => i.title).join(', ')}${issuesData.issues.length > 3 ? '...' : ''}`);
+    }
+    
     const issues = issuesData.issues || [];
-    console.log('✅ 실제 이슈 수집 완료!');
-    console.log(`   📰 요청: ${musicCount}곡 → 수집: ${issues.length}개 이슈`);
-    console.log(`   📋 이슈 예시: ${issues.slice(0, Math.min(3, issues.length)).map(i => i.title).join(', ')}${issues.length > 3 ? '...' : ''}`);
     console.log(`   🎯 각 곡은 다른 이슈를 주제로 가사를 생성합니다!`);
 
     // 🎯 핵심: 각 곡마다 AI가 다른 실제 이슈 기반 가사 생성

@@ -1499,6 +1499,39 @@
                                 </p>
                             </div>
                         </div>
+                        
+                        <!-- ✨ NEW: 1-1. 테마/소재 (선택사항) -->
+                        <div style="margin-bottom: 32px;">
+                            <label style="display: block; margin-bottom: 12px; color: #ec4899; font-size: 1.1em; font-weight: bold;">
+                                🎨 1-1. 테마/소재 <span style="font-size: 0.8em; color: #888; font-weight: normal;">(선택사항 - 가사 내용 통일)</span>
+                            </label>
+                            <div style="margin-bottom: 12px;">
+                                <input type="text" id="themeInput" 
+                                       placeholder="예: 캠핑, 사랑, 우정, 여행, 계절, 추억, 희망..."
+                                       maxlength="50"
+                                       style="width: 100%; padding: 14px; border-radius: 8px; background: rgba(236,72,153,0.1); border: 2px solid rgba(236,72,153,0.3); color: white; font-size: 1em; font-family: inherit;">
+                            </div>
+                            
+                            <!-- 빠른 선택 버튼 -->
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+                                <button type="button" onclick="setTheme('캠핑')" style="padding: 8px 16px; background: rgba(236,72,153,0.2); border: 1px solid rgba(236,72,153,0.4); border-radius: 20px; color: #ec4899; font-size: 0.9em; cursor: pointer; transition: all 0.3s;">🏕️ 캠핑</button>
+                                <button type="button" onclick="setTheme('사랑')" style="padding: 8px 16px; background: rgba(236,72,153,0.2); border: 1px solid rgba(236,72,153,0.4); border-radius: 20px; color: #ec4899; font-size: 0.9em; cursor: pointer; transition: all 0.3s;">💕 사랑</button>
+                                <button type="button" onclick="setTheme('우정')" style="padding: 8px 16px; background: rgba(236,72,153,0.2); border: 1px solid rgba(236,72,153,0.4); border-radius: 20px; color: #ec4899; font-size: 0.9em; cursor: pointer; transition: all 0.3s;">👫 우정</button>
+                                <button type="button" onclick="setTheme('여행')" style="padding: 8px 16px; background: rgba(236,72,153,0.2); border: 1px solid rgba(236,72,153,0.4); border-radius: 20px; color: #ec4899; font-size: 0.9em; cursor: pointer; transition: all 0.3s;">✈️ 여행</button>
+                                <button type="button" onclick="setTheme('추억')" style="padding: 8px 16px; background: rgba(236,72,153,0.2); border: 1px solid rgba(236,72,153,0.4); border-radius: 20px; color: #ec4899; font-size: 0.9em; cursor: pointer; transition: all 0.3s;">📸 추억</button>
+                                <button type="button" onclick="setTheme('봄')" style="padding: 8px 16px; background: rgba(236,72,153,0.2); border: 1px solid rgba(236,72,153,0.4); border-radius: 20px; color: #ec4899; font-size: 0.9em; cursor: pointer; transition: all 0.3s;">🌸 봄</button>
+                                <button type="button" onclick="setTheme('희망')" style="padding: 8px 16px; background: rgba(236,72,153,0.2); border: 1px solid rgba(236,72,153,0.4); border-radius: 20px; color: #ec4899; font-size: 0.9em; cursor: pointer; transition: all 0.3s;">✨ 희망</button>
+                                <button type="button" onclick="setTheme('도전')" style="padding: 8px 16px; background: rgba(236,72,153,0.2); border: 1px solid rgba(236,72,153,0.4); border-radius: 20px; color: #ec4899; font-size: 0.9em; cursor: pointer; transition: all 0.3s;">💪 도전</button>
+                            </div>
+                            
+                            <div style="margin-top: 12px; padding: 12px; background: rgba(236,72,153,0.05); border-radius: 8px; border-left: 3px solid #ec4899;">
+                                <p style="margin: 0; font-size: 0.85em; color: rgba(255,255,255,0.7); line-height: 1.5;">
+                                    💡 <strong style="color: #ec4899;">테마를 입력하면?</strong><br>
+                                    AI가 해당 테마에 맞는 <strong>다양한 이야기</strong>를 자동 생성합니다!<br>
+                                    예: "캠핑" 입력 → 산속 캠핑, 해변 캠핑, 계곡 캠핑, 차박, 글램핑 등 15가지 다른 이야기
+                                </p>
+                            </div>
+                        </div>
 
                         <!-- 2. 생성 수량 -->
                         <div style="margin-bottom: 32px;">
@@ -2244,6 +2277,21 @@
                 }
             });
         });
+        
+        // ✨ 테마 빠른 선택 함수
+        function setTheme(theme) {
+            const themeInput = document.getElementById('themeInput');
+            if (themeInput) {
+                themeInput.value = theme;
+                themeInput.focus();
+                
+                // 버튼 하이라이트 효과
+                event.target.style.background = 'rgba(236,72,153,0.4)';
+                setTimeout(() => {
+                    event.target.style.background = 'rgba(236,72,153,0.2)';
+                }, 200);
+            }
+        }
         
         // 🔥 각 메뉴별로 독립적인 결과 저장
         let lyricsResults = {
