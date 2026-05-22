@@ -7,7 +7,14 @@
 
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'AIzaSyCS3nl6jkeSaWFKByCbCUJZSOjSXVQOnp4';
+// 환경 변수에서 Gemini API 키 가져오기 (유효한 키 사용)
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+if (!GEMINI_API_KEY) {
+  console.error('❌ GEMINI_API_KEY가 설정되지 않았습니다!');
+  throw new Error('GEMINI_API_KEY is required for theme-based story generation');
+}
+
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
 /**
@@ -143,6 +150,17 @@ ${count}개의 다양한 이야기를 생성하세요.
 
   } catch (error) {
     console.error('❌ 테마 이야기 생성 실패:', error.message);
+    
+    // API 키 문제 감지
+    if (error.message && error.message.includes('403') && error.message.includes('leaked')) {
+      console.error('🔐 Gemini API 키가 유출되어 차단되었습니다!');
+      console.error('💡 해결방법: https://aistudio.google.com/app/apikey 에서 새 API 키를 발급받아');
+      console.error('   .env 파일의 GEMINI_API_KEY를 업데이트하세요.');
+    } else if (error.message && error.message.includes('API key')) {
+      console.error('🔑 Gemini API 키 관련 오류입니다.');
+      console.error('💡 GEMINI_API_KEY 환경 변수를 확인하세요.');
+    }
+    
     console.error('   Stack:', error.stack);
     return null;
   }
