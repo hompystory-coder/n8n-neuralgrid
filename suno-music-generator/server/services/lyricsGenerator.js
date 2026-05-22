@@ -4338,8 +4338,16 @@ async function generateTitle(lyrics, style, language, index = 0, issue = null) {
     // 🎵 1단계: 후렴구에서 핵심 프레이즈 추출 시도
     const chorusPhrase = extractChorusPhrase(lyrics, language);
     if (chorusPhrase) {
-      console.log(`✅ 후렴구 프레이즈를 제목으로 사용: "${chorusPhrase}"`);
-      return chorusPhrase;
+      // ✅ 제목 길이 검증 (한국어 최소 6글자, 영어 최소 8글자)
+      const isKorean = language === 'korean';
+      const minTitleLength = isKorean ? 6 : 8;
+      
+      if (chorusPhrase.length >= minTitleLength) {
+        console.log(`✅ 후렴구 프레이즈를 제목으로 사용: "${chorusPhrase}" (${chorusPhrase.length}글자)`);
+        return chorusPhrase;
+      } else {
+        console.log(`⚠️ 후렴구 프레이즈가 너무 짧음: "${chorusPhrase}" (${chorusPhrase.length}글자 < ${minTitleLength}글자) - Gemini API로 재생성`);
+      }
     }
 
     // 2단계: Gemini API로 시적 제목 생성
@@ -4542,7 +4550,23 @@ Example: The Season of You`;
       .replace(/^Title:\s*/i, '')
       .trim();
     
-    console.log(`✅ Gemini 제목 생성 완료: "${title}"`);
+    // ✅ 제목 길이 검증
+    const isKorean = language === 'korean';
+    const minTitleLength = isKorean ? 6 : 8;
+    
+    if (title.length < minTitleLength) {
+      console.warn(`⚠️ Gemini 제목이 너무 짧음: "${title}" (${title.length}글자 < ${minTitleLength}글자) - 폴백 사용`);
+      
+      // 이슈 기반 폴백
+      if (issue && issue.title) {
+        return generateIssueFallbackTitle(issue, language, index);
+      }
+      
+      // 완전 폴백
+      return generateFallbackTitle(language, index, style);
+    }
+    
+    console.log(`✅ Gemini 제목 생성 완료: "${title}" (${title.length}글자)`);
     
     return title; 
   } catch (error) {

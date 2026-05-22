@@ -1965,17 +1965,6 @@ ${metadata.youtubeTitle}
   <p style="margin: 16px 0 8px 0;"><strong>설명:</strong></p>
   <div style="background: rgba(0,0,0,0.4); padding: 12px; border-radius: 8px; margin: 8px 0; font-family: monospace; white-space: pre-wrap;">
 ${metadata.description}
-
-━━━━━━━━━━━━━━━━━━━━━━
-📋 Tracklist:
-━━━━━━━━━━━━━━━━━━━━━━
-
-${timestamps}
-
-━━━━━━━━━━━━━━━━━━━━━━
-⏱️ Total Duration: ${totalMinutes}분 (${sortedSongs.length} tracks)
-🎵 Style: ${style}
-━━━━━━━━━━━━━━━━━━━━━━
   </div>
   <div style="margin-top: 8px; padding: 8px; background: rgba(59,130,246,0.2); border-radius: 6px; font-size: 0.85em; color: rgba(255,255,255,0.7);">
     <span style="color: #3b82f6;">📊 SEO 최적화 설명 (추천 상황, 대상 청중, 분위기 포함)</span>
