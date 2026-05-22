@@ -920,25 +920,31 @@ ${tracklist}
 **OOOffi 채널 스타일 분석:**
 OOOffi는 19.2K 구독자를 보유한 인기 플레이리스트 채널입니다.
 
-**제목 패턴:**
-1. 감정적 훅 (듣는 사람의 기분/상황 표현)
-2. 이모지 1-2개만 사용 (과하지 않게)
-3. 구체적 상황 묘사
-4. 음악 장르 태그
+**🔥 강력한 후킹 제목 패턴:**
+1. **강렬한 감정적 훅** - 즉시 클릭하고 싶게 만드는 문장
+2. **이모지 2-3개 전략적 사용** (시선 끌기)
+3. **구체적이고 매력적인 상황 묘사**
+4. **트렌디한 키워드 + 장르 태그**
+5. **CTR 최적화 키워드 포함**
 
-**실제 OOOffi 제목 예시:**
-- "Pop Songs for a Day Where Everything Goes Right🩵 Good Vibe Cafe Music · Work Mix🎧"
-- "Feel Good Instantly 🌸 Uplifting New York Vibes 🗽 Cafe Music · Work Music"
-- "Wow this song is so good...🥹 A magical spring playlist you'll fall for🩵 lofi cafe music"
-- "Pleasant Spring Pop Songs for This Weather🌿Trending Acoustic Pop Playlist☀️"
-- "Songs that make you want to leave right now 🌊☀️Upbeat Drive Pop ✈️ acoustic pop cafe music"
+**실제 OOOffi 제목 예시 (후킹 분석):**
+- "Pop Songs for a Day Where Everything Goes Right🩵" ← 후킹: "모든 게 잘 풀리는 날"
+- "Feel Good Instantly 🌸" ← 후킹: "즉시 기분 좋아지는"
+- "Wow this song is so good...🥹" ← 후킹: "와 이 노래 진짜..."
+- "Songs that make you want to leave right now 🌊☀️" ← 후킹: "지금 당장 떠나고 싶게 만드는"
+- "You'll feel the healing just by listening🌿" ← 후킹: "듣기만 해도 힐링되는"
+
+**💡 후킹 키워드 예시:**
+한국어: "지금 바로", "단번에", "진짜 미쳤다", "인생 최고", "들으면 행복해지는", "중독성 있는"
+영어: "Instantly", "Right Now", "Can't Stop Listening", "Obsessed With", "Life-Changing"
 
 **특징:**
-- 감정을 자극하는 훅 문장
-- 듣는 순간의 느낌을 구체적으로 표현
-- 이모지는 1-2개만 (🌸☕️🩵🗽 등)
-- 자연스러운 영어 표현
-- 장르 태그는 끝에 간결하게`;
+- 감정을 강력하게 자극하는 훅 문장
+- 듣는 순간의 느낌을 과장되게 표현
+- 이모지는 2-3개 (🌸☕️🩵🗽✨ 등)
+- 자연스럽고 트렌디한 표현
+- 장르 태그는 끝에 간결하게
+- 클릭률(CTR)을 극대화하는 단어 선택`;
 
       const userPrompt = `아래 플레이리스트에 맞는 YouTube 제목을 생성하세요:
 
@@ -951,17 +957,26 @@ OOOffi는 19.2K 구독자를 보유한 인기 플레이리스트 채널입니다
 - 키워드: ${overallMood.keywords.join(', ')}
 
 **요구사항:**
-1. OOOffi 스타일로 **한국어 제목 1개** 생성
-2. OOOffi 스타일로 **영어 제목 1개** 생성
-3. 이모지는 각 제목마다 1-2개만 사용
-4. 감정적 훅 + 구체적 상황 + 장르 태그 구조
-5. 자연스럽고 매력적인 표현
+1. OOOffi 스타일로 **한국어 제목 1개** 생성 - 강력한 후킹 필수!
+2. OOOffi 스타일로 **영어 제목 1개** 생성 - 강력한 후킹 필수!
+3. 이모지는 각 제목마다 2-3개 전략적 배치
+4. **강렬한 감정적 훅** + 구체적 상황 + 장르 태그 구조
+5. CTR 극대화 키워드 포함 ("지금 바로", "instantly", "can't stop" 등)
+6. 자연스럽고 매력적이며 **클릭하고 싶게 만드는** 표현
 
 **출력 형식 (JSON):**
 \`\`\`json
 {
-  "korean": "한국어 제목 (이모지 1-2개 포함)",
-  "english": "영어 제목 (이모지 1-2개 포함)"
+  "korean": "강력한 후킹 + 구체적 상황 + 장르 🎵✨💕 (이모지 2-3개)",
+  "english": "Strong Hook + Specific Situation + Genre 🎵✨💕 (2-3 emojis)"
+}
+\`\`\`
+
+**예시:**
+\`\`\`json
+{
+  "korean": "들으면 기분 100% 좋아지는 pop 플레이리스트 🌸☀️🩵 work · cafe music · 4곡",
+  "english": "Songs That Instantly Boost Your Mood 🌸☀️🩵 Pop Playlist · Work · Cafe Vibes · 4 Tracks"
 }
 \`\`\`
 
@@ -1036,39 +1051,67 @@ OOOffi는 19.2K 구독자를 보유한 인기 플레이리스트 채널입니다
   }
 
   /**
-   * 📝 플레이리스트 설명 생성
+   * 📝 플레이리스트 설명 생성 (개선된 버전 - 중복 제거 + 풍부한 내용)
    */
   _generatePlaylistDescription(tracks, overallMood, year) {
     const { mood, genre, situations, energy } = overallMood;
 
-    // 감정적 인트로 (2-3줄)
+    // 🎯 강력한 감정적 인트로 (3-4줄, 더 구체적)
     const intros = {
-      'chill': `🌸 편안하고 여유로운 시간을 위한 ${genre} 플레이리스트입니다.\n카페에서 커피 한 잔과 함께 즐기세요.`,
-      'happy': `☀️ 기분 좋은 하루를 만들어줄 ${genre} 모음입니다.\n긍정적인 에너지를 충전하세요!`,
-      'romantic': `💛 설레는 순간을 더 특별하게 만들어줄 ${genre} 플레이리스트입니다.\n소중한 사람과 함께 들어보세요.`,
-      'energetic': `⚡ 활기찬 하루를 시작할 ${genre} 모음입니다.\n에너지 넘치는 음악과 함께하세요!`,
-      'calm': `🍃 평온한 마음을 위한 ${genre} 플레이리스트입니다.\n조용히 휴식하며 들어보세요.`
+      'chill': `🌸 편안하고 여유로운 시간을 위한 ${genre} 플레이리스트입니다.
+
+카페에서 커피 한 잔과 함께, 혹은 집에서 책을 읽으며 듣기 좋은 음악들로 구성했습니다.
+${tracks.length}곡의 따뜻하고 부드러운 선율이 당신의 하루에 평온함을 더해줄 거예요. ☕️`,
+      'happy': `☀️ 기분 100% 좋아지는 ${genre} 모음입니다!
+
+듣는 순간 미소가 지어지고, 긍정적인 에너지가 가득 채워지는 ${tracks.length}곡.
+지금 바로 재생해서 행복한 바이브를 느껴보세요! 🎵✨`,
+      'romantic': `💛 설레는 순간을 더 특별하게 만들어줄 ${genre} 플레이리스트입니다.
+
+소중한 사람과 함께, 혹은 혼자 감성에 젖고 싶을 때 완벽한 ${tracks.length}곡.
+로맨틱한 분위기와 따뜻한 멜로디가 당신의 마음을 사로잡을 거예요. 💕`,
+      'energetic': `⚡ 활기찬 하루를 시작할 ${genre} 모음입니다!
+
+운동할 때, 일할 때, 공부할 때 에너지가 필요한 모든 순간에 완벽한 ${tracks.length}곡.
+업템포 비트와 역동적인 사운드로 당신의 잠재력을 깨워보세요! 🔥`,
+      'calm': `🍃 평온한 마음을 위한 ${genre} 플레이리스트입니다.
+
+명상, 요가, 독서, 취침 전 등 고요한 시간이 필요할 때 듣기 좋은 ${tracks.length}곡.
+잔잔한 멜로디와 힐링 사운드로 마음의 평화를 찾아보세요. 🌙`
     };
-    const intro = intros[mood] || `🎵 ${tracks.length}곡의 ${genre} 플레이리스트입니다.`;
+    const intro = intros[mood] || `🎵 ${tracks.length}곡의 엄선된 ${genre} 플레이리스트입니다.\n\n다양한 분위기와 상황에 어울리는 곡들을 모았습니다. 지금 바로 재생해보세요! ✨`;
 
     // Tracklist 생성
     const tracklist = this._generateDetailedTracklist(tracks);
 
-    // Perfect for 섹션
-    const perfectFor = situations.map(s => `✓ ${s}`).join('\n');
+    // Perfect for 섹션 (더 풍부하게)
+    const perfectFor = situations.slice(0, 5).map((s, idx) => `${idx + 1}. ${s}`).join('\n');
 
-    // 설명란 조립
+    // Total duration 계산
+    const totalSeconds = tracks.reduce((sum, t) => sum + (t.duration || 180), 0);
+    const totalMinutes = Math.floor(totalSeconds / 60);
+
+    // 설명란 조립 (Tracklist는 한 번만!)
     return `${intro}
 
-🎵 Tracklist:
+━━━━━━━━━━━━━━━━━━━━━━
+📋 Tracklist:
+━━━━━━━━━━━━━━━━━━━━━━
+
 ${tracklist}
+
+━━━━━━━━━━━━━━━━━━━━━━
+⏱️ Total Duration: ${totalMinutes}분 (${tracks.length} tracks)
+🎵 Style: ${this._capitalizeGenre(genre)}
+━━━━━━━━━━━━━━━━━━━━━━
 
 📌 Perfect for:
 ${perfectFor}
 
-💙 Subscribe for more playlists!
+💙 구독하고 매주 새로운 플레이리스트를 만나보세요!
+🔔 알림 설정하면 최신 음악을 가장 먼저 들을 수 있어요!
 
-#${genre.replace(/\s+/g, '').toLowerCase()} #playlist #music${year} #cafemusic #chillvibes`;
+#${genre.replace(/\s+/g, '').toLowerCase()} #playlist #music${year} #cafemusic #chillvibes #kpop #acousticpop #studymusic #workmusic #relaxingmusic`;
   }
 
   /**
@@ -1092,21 +1135,102 @@ ${perfectFor}
   }
 
   /**
-   * 🏷️ 플레이리스트 태그 생성
+   * 🏷️ 플레이리스트 태그 생성 (풍부한 후킹 태그 25-30개)
    */
   _generatePlaylistTags(overallMood, tracks) {
-    const { mood, genre, situations } = overallMood;
+    const { mood, genre, situations, energy } = overallMood;
     
-    const tags = [
-      genre.toLowerCase().replace(/\s+/g, ''),
-      'playlist',
-      'music',
-      mood + 'vibes',
-      ...situations.map(s => s.replace(/\s+/g, ''))
-    ];
+    const tags = new Set();
 
-    // 중복 제거 & 최대 15개
-    return [...new Set(tags)].slice(0, 15);
+    // 1. 핵심 장르 태그 (영어 + 한글)
+    tags.add(genre.toLowerCase().replace(/\s+/g, ''));
+    tags.add('playlist');
+    tags.add('music');
+    
+    // 한글 장르 매핑
+    const koreanGenres = {
+      'pop': '팝',
+      'k-pop': '케이팝',
+      'hip-hop': '힙합',
+      'r&b': '알앤비',
+      'jazz': '재즈',
+      'acoustic': '어쿠스틱',
+      'ballad': '발라드',
+      'rock': '록',
+      'indie': '인디'
+    };
+    if (koreanGenres[genre.toLowerCase()]) {
+      tags.add(koreanGenres[genre.toLowerCase()]);
+    }
+
+    // 2. 무드 기반 후킹 태그 (CTR 최적화)
+    const moodHookingTags = {
+      'chill': ['chillvibes', 'relaxingmusic', 'calmmusic', 'soothingmusic', '힐링음악', '카페음악'],
+      'happy': ['feelgood', 'happyvibes', 'upbeatmusic', 'positiveenergy', '기분좋은음악', '행복한음악'],
+      'romantic': ['romanticmusic', 'loveplaylist', 'datemusic', '로맨틱음악', '사랑노래'],
+      'energetic': ['energyboost', 'workoutmusic', 'uptempomusic', 'dynamicbeats', '운동음악', '에너지음악'],
+      'calm': ['peacefulmusic', 'meditationmusic', 'sleepmusic', '명상음악', '수면음악']
+    };
+    (moodHookingTags[mood] || []).forEach(tag => tags.add(tag));
+
+    // 3. 상황별 후킹 태그 (용도 강조)
+    const situationHookingTags = {
+      'study': ['studymusic', 'focusmusic', 'concentrationmusic', '공부음악', '집중음악'],
+      'work': ['workmusic', 'productivitymusic', 'officemusic', '작업음악', '일할때듣는음악'],
+      'cafe': ['cafemusic', 'coffeemusic', 'coffeeshopvibes', '카페음악', '커피음악'],
+      'exercise': ['workoutmusic', 'gymmusic', 'runningmusic', '운동음악', '헬스음악'],
+      'sleep': ['sleepmusic', 'bedtimemusic', 'nightmusic', '수면음악', '잠잘때듣는음악']
+    };
+    situations.forEach(sit => {
+      tags.add(sit.replace(/\s+/g, ''));
+      const hookTags = situationHookingTags[sit.toLowerCase()] || [];
+      hookTags.forEach(tag => tags.add(tag));
+    });
+
+    // 4. 에너지 레벨 태그
+    if (energy === 'energetic') {
+      ['upbeat', 'high energy', 'lively', 'dynamic', 'active'].forEach(tag => tags.add(tag.replace(/\s+/g, '')));
+    } else if (energy === 'calm') {
+      ['lowkey', 'peaceful', 'tranquil', 'gentle', 'soft'].forEach(tag => tags.add(tag.replace(/\s+/g, '')));
+    }
+
+    // 5. 트렌드 키워드 (2025-2026)
+    const trendingTags = [
+      'music2026',
+      'playlist2026',
+      'trending',
+      'viral',
+      'kpopplaylist',
+      'acousticpop',
+      'lofibeats',
+      'chillhop',
+      'moodbooster',
+      'vibecheck'
+    ];
+    trendingTags.slice(0, 8).forEach(tag => tags.add(tag));
+
+    // 6. 시간대 태그
+    const timeTags = ['morningmusic', 'afternoonvibes', 'eveningmusic', 'nightplaylist', '아침음악', '밤음악'];
+    timeTags.slice(0, 3).forEach(tag => tags.add(tag));
+
+    // 7. 감정 표현 태그 (후킹)
+    const emotionTags = ['emotionalvibes', 'moodmusic', 'feelingood', 'heartwarming', '감성음악', '분위기음악'];
+    emotionTags.slice(0, 4).forEach(tag => tags.add(tag));
+
+    // 8. 인기 검색어 태그
+    const popularSearchTags = [
+      'backgroundmusic',
+      'instrumentalmusic',
+      'playlistcompilation',
+      'musicmix',
+      'bestof' + new Date().getFullYear(),
+      '플레이리스트',
+      '배경음악'
+    ];
+    popularSearchTags.forEach(tag => tags.add(tag));
+
+    // 중복 제거 & 최대 30개 (YouTube 권장 범위 내)
+    return Array.from(tags).slice(0, 30);
   }
 }
 
