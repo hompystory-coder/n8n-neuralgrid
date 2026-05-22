@@ -34,3 +34,7 @@ server/temp/uploads/*.png
 *.md
 *.sh
 *.py
+
+# Backup files with API keys
+.env.backup*
+*.env.backup
