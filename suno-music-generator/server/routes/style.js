@@ -1013,7 +1013,7 @@ router.post('/generate-music', async (req, res) => {
  */
 router.post('/generate-simple', async (req, res) => {
   try {
-    const { style, theme, language, gender, count, options } = req.body;  // ✨ theme 추가!
+    let { style, theme, language, gender, count, options } = req.body;  // ✨ theme 추가!
 
     // 입력 검증
     if (!style || !style.trim()) {
@@ -1021,6 +1021,34 @@ router.post('/generate-simple', async (req, res) => {
         success: false, 
         error: '스타일을 입력해주세요.' 
       });
+    }
+
+    // 🔧 스타일 자동 축약 (MAX_TOKENS 방지)
+    const originalStyle = style;
+    const MAX_STYLE_LENGTH = 120;  // 120자 제한
+    
+    if (style.length > MAX_STYLE_LENGTH) {
+      console.log(`⚠️ 스타일이 너무 깁니다! (${style.length}자 > ${MAX_STYLE_LENGTH}자)`);
+      console.log(`   원본: ${style.substring(0, 80)}...`);
+      
+      // 자동 축약: 불필요한 단어 제거
+      style = style
+        .replace(/create an?|features?|with|style|meets|influences?|track|aesthetic|at\s+/gi, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+      
+      // 여전히 길면 앞부분만 자르기
+      if (style.length > MAX_STYLE_LENGTH) {
+        style = style.substring(0, MAX_STYLE_LENGTH).trim();
+        // 마지막 단어가 잘리지 않도록
+        const lastComma = style.lastIndexOf(',');
+        if (lastComma > MAX_STYLE_LENGTH - 20) {
+          style = style.substring(0, lastComma).trim();
+        }
+      }
+      
+      console.log(`   ✂️ 자동 축약 완료: ${style.length}자`);
+      console.log(`   축약: ${style}`);
     }
 
     const musicCount = parseInt(count) || 2;
