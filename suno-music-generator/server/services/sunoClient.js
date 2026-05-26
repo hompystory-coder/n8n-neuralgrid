@@ -1,4 +1,5 @@
 const axios = require('axios');
+const https = require('https');
 
 /**
  * Suno API Client (https://docs.sunoapi.org/)
@@ -20,13 +21,19 @@ class SunoAPIClient {
       console.log(`✅ SUNO_API_KEY loaded: ${this.apiKey.substring(0, 10)}...`);
     }
     
+    // SSL 인증서 검증 우회 (Suno API SSL 이슈 해결)
+    const httpsAgent = new https.Agent({  
+      rejectUnauthorized: false
+    });
+    
     this.client = axios.create({
       baseURL: this.baseURL,
       headers: {
         'Authorization': `Bearer ${this.apiKey}`,
         'Content-Type': 'application/json'
       },
-      timeout: 30000
+      timeout: 30000,
+      httpsAgent: httpsAgent  // SSL 검증 우회
     });
 
     console.log(`✅ Suno API Client initialized: ${this.baseURL}`);

@@ -1,0 +1,13 @@
+{
+  "style": "lo-fi hip hop beats, emotional R&B pop, groovy bassline, no drums, drumless production, bright bouncy melody, airy breathy vocals, soft whisper singing, chill ambient atmosphere, smooth melodic flow",
+  "customMode": true,
+  "theme": "그루브 도파민 행복해지는 팝",
+  "language": "korean",
+  "useTheme": true,
+  "count": 1,
+  "options": {
+    "emotional": true,
+    "groovy": true,
+    "mellow": true
+  }
+}

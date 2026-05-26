@@ -1,0 +1,13 @@
+{
+  "style": "emotional hip hop, R&B pop, groovy beats, bright bouncy vibe, airy breathy vocals, soft whisper singing, lo-fi aesthetic, chill mood",
+  "customMode": true,
+  "theme": "그루브 도파민 행복해지는 팝",
+  "language": "korean",
+  "useTheme": true,
+  "count": 1,
+  "options": {
+    "emotional": true,
+    "romantic": true,
+    "groovy": true
+  }
+}
