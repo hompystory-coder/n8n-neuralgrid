@@ -599,7 +599,7 @@ async function generateLyricsFromIssue(issue, style, language, gender, index, pr
 1. **필수 구조**: [Intro] → [Verse 1] → [Pre-Chorus] → [Chorus] → [Verse 2] → [Pre-Chorus] → [Chorus] → [Bridge] → [Chorus] → [Outro]
 2. **각 섹션 줄 수**: Intro(4줄), Verse(8줄씩), Pre-Chorus(4줄씩), Chorus(8줄씩), Bridge(6줄), Outro(4줄)
 3. **총 길이**: ${Math.max(minChars * 2, 800)}-${Math.max(maxChars * 2, 1200)}${unit} (최소 800자 필수! 긴 가사 = 긴 곡)
-4. **한 줄 길이**: 12-20자
+4. **한 줄 길이**: 한국어 15-25자, 영어 8-15단어
 
 ⏱️ **목표 곡 길이**: 3-4분 (180-240초) - 가사가 길어야 곡도 길어집니다!
 🚫 **금지**: Verse 3, Verse 4, Final Chorus 같은 추가 섹션 금지 (Pre-Chorus는 허용)
@@ -633,37 +633,37 @@ async function generateLyricsFromIssue(issue, style, language, gender, index, pr
 📝 ${Math.max(minChars * 2, 800)}-${Math.max(maxChars * 2, 1200)}자 가사를 다음 구조로 **완전히 끝까지** 작성하세요:
 
 [Intro]
-(4줄, 각 12-20자)
+(4줄, 한국어 15-25자 / 영어 8-15단어)
 ⚠️ **필수**: "${selectedIntroStyle.type}" 스타일로 작성!
 → ${selectedIntroStyle.hint}
 → 참고: "${selectedIntroStyle.example}" (이 예시를 그대로 쓰지 말고 이슈에 맞게 변형!)
 
 [Verse 1]
-(8줄, 각 12-20자 - 이야기 시작, 상황 묘사)
+(8줄, 한국어 15-25자 / 영어 8-15단어 - 이야기 시작, 상황 묘사)
 
 [Pre-Chorus]
-(4줄, 각 12-20자 - 감정 고조, 코러스 준비)
+(4줄, 한국어 15-25자 / 영어 8-15단어 - 감정 고조, 코러스 준비)
 
 [Chorus]  
-(8줄, 각 12-20자 - 메인 메시지, 가장 강렬하게, 반복 가능한 후렴구)
+(8줄, 한국어 15-25자 / 영어 8-15단어 - 메인 메시지, 가장 강렬하게, 반복 가능한 후렴구)
 
 [Verse 2]
-(8줄, 각 12-20자 - 이야기 전개, 새로운 각도)
+(8줄, 한국어 15-25자 / 영어 8-15단어 - 이야기 전개, 새로운 각도)
 
 [Pre-Chorus]
-(4줄, 각 12-20자 - 다시 감정 고조)
+(4줄, 한국어 15-25자 / 영어 8-15단어 - 다시 감정 고조)
 
 [Chorus]
-(8줄, 각 12-20자 - 후렴 반복, 조금 변주 가능)
+(8줄, 한국어 15-25자 / 영어 8-15단어 - 후렴 반복, 조금 변주 가능)
 
 [Bridge]
-(6줄, 각 12-20자 - 전환, 클라이맥스 준비)
+(6줄, 한국어 15-25자 / 영어 8-15단어 - 전환, 클라이맥스 준비)
 
 [Chorus]
-(8줄, 각 12-20자 - 마지막 후렴, 가장 강렬하게)
+(8줄, 한국어 15-25자 / 영어 8-15단어 - 마지막 후렴, 가장 강렬하게)
 
 [Outro]
-(4줄, 각 12-20자 - 여운, 마무리)
+(4줄, 한국어 15-25자 / 영어 8-15단어 - 여운, 마무리)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ⚠️ **필수**: 

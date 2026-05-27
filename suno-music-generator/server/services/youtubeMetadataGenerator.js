@@ -924,18 +924,29 @@ ${tracklist}
 - 클릭하고 싶게 만드는 마법 같은 문장!
 
 **후킹 패턴:**
-1. 즉각적 감정 자극 ("지금 바로", "듣자마자", "instantly")
-2. 구체적 변화 약속 ("기분 100% 좋아지는", "can't stop listening")
+1. 즉각적 감정 자극 ("지금 바로", "듣자마자", "1초만에", "instantly")
+2. 구체적 변화 약속 ("기분 100% 좋아지는", "심장 뛰는", "can't stop listening")
 3. 이모지 2-3개로 시각적 임팩트
+4. 손해/후회 프레임 ("모르면 손해", "안 들으면 후회")
+5. 중독성 강조 ("중독성 100%", "무한반복 주의")
 
-**완벽한 예시:**
-한국어: "듣자마자 기분이 확 풀리는 팝 🌸☀️💕"
-영어: "Pop Songs That Instantly Lift Your Mood 🌸☀️💕"
+**한국어 강력한 후킹 예시:**
+✅ "듣자마자 심장 뛰는 팝 모음 💓 이 노래들 모르면 손해!"
+✅ "새벽 4시에 듣기 딱 좋은 감성 팝 🌙 중독성 100%"
+✅ "지금 이 순간 딱 필요한 팝송 ✨ 기분 180도 바뀜 주의"
+✅ "1초만에 기분 풀리는 행복 팝 ☀️ 무한반복 각"
+
+**영어 강력한 후킹 예시:**
+✅ "Pop Songs That Make Your Heart Race 💓 Don't Miss These!"
+✅ "Perfect Late Night Pop 🌙 100% Addictive"
+✅ "Pop You Need Right Now ✨ Instant Mood Changer"
+✅ "Happy Pop That Lifts You Up ☀️ On Repeat Forever"
 
 **금지사항:**
 ❌ 곡 수 언급 ("4곡", "15 tracks")
 ❌ 상황 나열 ("work · cafe · study")
 ❌ 플레이리스트 단어 (후킹에 집중!)
+❌ "에너지 팝" 같은 일반적인 표현
 
 **출력 형식:**
 \`\`\`json
