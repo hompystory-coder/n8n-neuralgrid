@@ -918,60 +918,94 @@ ${tracklist}
 
       const systemPrompt = `당신은 YouTube 음악 플레이리스트 제목 전문가입니다.
 
-**핵심 원칙: 후킹이 전부다!**
-- 곡 수, 정보 = 절대 금지! ❌
-- 강력한 감정 + 이모지 = 필수! ✅
-- 클릭하고 싶게 만드는 마법 같은 문장!
+**🚨 필수 규칙:**
+1. **"𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 |" 접두사는 무조건 붙여야 함!** ✅
+2. 스타일 코드 분석하여 분위기를 제목에 반영 (lo-fi → 평온한, upbeat → 에너지 넘치는)
+3. BPM 정보 활용 (110 BPM → 편안한 템포, 140 BPM → 빠른 템포)
+4. 다양한 후킹 사용 (매번 다르게!)
 
-**후킹 패턴:**
-1. 즉각적 감정 자극 ("지금 바로", "듣자마자", "1초만에", "instantly")
-2. 구체적 변화 약속 ("기분 100% 좋아지는", "심장 뛰는", "can't stop listening")
-3. 이모지 2-3개로 시각적 임팩트
-4. 손해/후회 프레임 ("모르면 손해", "안 들으면 후회")
-5. 중독성 강조 ("중독성 100%", "무한반복 주의")
+**스타일 → 후킹 매핑 예시:**
+- lo-fi hip hop, 85 BPM → "듣는 순간 마음이 평온해지는", "차분한 감성에 빠지는"
+- upbeat pop, 140 BPM → "듣자마자 에너지 폭발", "1초만에 기분 최고조"
+- chill R&B, 95 BPM → "깊은 밤 감성 충전", "여유로운 분위기에 취하는"
+- energetic EDM, 128 BPM → "심장 뛰는 리듬", "멈출 수 없는 그루브"
 
-**한국어 강력한 후킹 예시:**
-✅ "듣자마자 심장 뛰는 팝 모음 💓 이 노래들 모르면 손해!"
-✅ "새벽 4시에 듣기 딱 좋은 감성 팝 🌙 중독성 100%"
-✅ "지금 이 순간 딱 필요한 팝송 ✨ 기분 180도 바뀜 주의"
-✅ "1초만에 기분 풀리는 행복 팝 ☀️ 무한반복 각"
+**다양한 후킹 패턴 (20가지):**
+1. "듣는 순간 ~해지는" / "The moment you hear"
+2. "듣자마자 ~폭발" / "Instantly ~"
+3. "1초만에 ~" / "In one second ~"
+4. "깊은 밤 ~" / "Late night ~"
+5. "마음이 ~해지는" / "Your heart will ~"
+6. "기분이 ~되는" / "Mood becomes ~"
+7. "~에 취하는" / "Get lost in ~"
+8. "~에 빠지는" / "Fall into ~"
+9. "멈출 수 없는 ~" / "Can't stop ~"
+10. "중독되는 ~" / "Addictive ~"
+11. "~가 넘치는" / "Overflowing with ~"
+12. "~감성 충전" / "~ vibes recharge"
+13. "~분위기 물씬" / "Full of ~ atmosphere"
+14. "여유로운 ~" / "Relaxing ~"
+15. "차분한 ~" / "Calm ~"
+16. "평온한 ~" / "Peaceful ~"
+17. "에너지 ~" / "Energy ~"
+18. "감성 ~" / "Emotional ~"
+19. "힐링 ~" / "Healing ~"
+20. "몰입하는 ~" / "Immersive ~"
 
-**영어 강력한 후킹 예시:**
-✅ "Pop Songs That Make Your Heart Race 💓 Don't Miss These!"
-✅ "Perfect Late Night Pop 🌙 100% Addictive"
-✅ "Pop You Need Right Now ✨ Instant Mood Changer"
-✅ "Happy Pop That Lifts You Up ☀️ On Repeat Forever"
+**한국어 예시 (𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 필수!):**
+✅ "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | 듣는 순간 마음이 평온해지는 로파이 팝 🌙✨ 110 BPM"
+✅ "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | 듣자마자 에너지 폭발! 💥 무기력 싹 사라지는 활력 팝 🎶"
+✅ "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | 깊은 밤 감성 충전되는 R&B 🌃💫 95 BPM"
+✅ "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | 차분한 감성에 빠지는 어쿠스틱 팝 🍃☕ 85 BPM"
+
+**영어 예시 (𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 필수!):**
+✅ "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | The Moment You Hear Peace Lo-fi Pop 🌙✨ 110 BPM"
+✅ "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | Instantly Energized! 💥 Uplifting Pop Vibes 🎶"
+✅ "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | Late Night Emotional R&B Recharge 🌃💫 95 BPM"
+✅ "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | Fall Into Calm Acoustic Pop 🍃☕ 85 BPM"
 
 **금지사항:**
+❌ "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭" 접두사 생략
 ❌ 곡 수 언급 ("4곡", "15 tracks")
-❌ 상황 나열 ("work · cafe · study")
-❌ 플레이리스트 단어 (후킹에 집중!)
-❌ "에너지 팝" 같은 일반적인 표현
+❌ "에너지 팝" 같은 일반적 표현 (스타일 분석 반영 필수!)
 
 **출력 형식:**
 \`\`\`json
 {
-  "korean": "강력한 후킹 문장 + 장르 🎵✨💕",
-  "english": "Strong Hooking Phrase + Genre 🎵✨💕"
+  "korean": "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | [스타일 기반 후킹] + 장르 🎵 [BPM]",
+  "english": "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | [Style-based Hook] + Genre 🎵 [BPM]"
 }
 \`\`\``;
 
       const userPrompt = `아래 플레이리스트에 맞는 YouTube 제목을 생성하세요:
 
-**플레이리스트 정보:**
+**🎵 스타일 코드 분석 (중요!):**
+- 원본 스타일: ${playlistData.style || 'pop'}
+- BPM: ${overallMood.bpm || 120}
 - 분위기: ${overallMood.mood}
 - 에너지: ${overallMood.energy}
 - 장르: ${overallMood.genre}
-- 상황: ${overallMood.situations.join(', ')}
+
+**🎯 추론된 감정/상황:**
+- 듣기 좋은 상황: ${overallMood.situations.join(', ')}
 - 키워드: ${overallMood.keywords.join(', ')}
 
-**요구사항:**
-1. 강력한 후킹만! (곡 수, 상황 나열 절대 금지!)
-2. 감정을 즉시 자극하는 문장
-3. 이모지 2-3개
-4. CTR 극대화 키워드 ("지금 바로", "instantly", "듣자마자" 등)
+**📝 요구사항:**
+1. **"𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 |" 접두사 필수!** (없으면 안 됨!)
+2. 스타일 코드 분석하여 후킹 선택:
+   - lo-fi / chill / calm → "듣는 순간 마음이 평온해지는", "차분한 감성에 빠지는"
+   - upbeat / energetic / fast → "듣자마자 에너지 폭발", "1초만에 기분 최고조"
+   - romantic / emotional → "깊은 밤 감성 충전", "마음이 따뜻해지는"
+3. BPM 언급 (85-100 → 편안한, 110-130 → 적당한, 130+ → 빠른)
+4. 이모지 2-3개
+5. 곡 수 절대 금지!
 
-⚠️ JSON만 출력하세요!`;
+**⚠️ 중요: 스타일에 따라 후킹을 다르게!**
+- 예: lo-fi hip hop, 85 BPM → "듣는 순간 마음이 평온해지는"
+- 예: upbeat pop, 140 BPM → "듣자마자 에너지 폭발!"
+- 예: chill R&B, 95 BPM → "여유로운 감성에 취하는"
+
+⚠️ JSON만 출력하세요! (다른 설명 금지)`;
 
       const responseText = await generateWithLLM(systemPrompt, userPrompt, 0.8, 2000);  // 1000 → 2000 (MAX_TOKENS 방지)
       const trimmedText = responseText.trim();
@@ -1016,10 +1050,10 @@ ${tracklist}
   }
 
   /**
-   * 📦 폴백 제목 생성 (LLM 실패 시) - 후킹에 집중!
+   * 📦 폴백 제목 생성 (LLM 실패 시) - 𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 접두사 필수!
    */
   _generateFallbackTitles(overallMood, tracks) {
-    const { mood, genre, situations, energy } = overallMood;
+    const { mood, genre, situations, energy, bpm } = overallMood;
 
     // 이모지 선택
     const moodEmojis = {
@@ -1031,39 +1065,47 @@ ${tracklist}
     };
     const emoji = moodEmojis[mood] || '🎵✨';
 
-    // 강력한 후킹 문구 (곡 수 절대 금지!)
+    // 스타일 기반 강력한 후킹 문구 (다양성 증가!)
     const hooks = {
-      'chill': {
-        korean: '듣자마자 마음이 편안해지는',
-        english: 'Instantly Calms Your Mind'
-      },
-      'happy': {
-        korean: '기분이 확 풀리는',
-        english: 'Instantly Lifts Your Mood'
-      },
-      'romantic': {
-        korean: '설레는 순간을 더 특별하게',
-        english: 'Makes Every Moment Special'
-      },
-      'energetic': {
-        korean: '에너지가 폭발하는',
-        english: 'Energy Boost Guaranteed'
-      },
-      'calm': {
-        korean: '영혼이 힐링되는',
-        english: 'Soul-Healing Vibes'
-      }
+      'chill': [
+        { korean: '듣는 순간 마음이 평온해지는', english: 'The Moment You Hear Peace' },
+        { korean: '차분한 감성에 빠지는', english: 'Fall Into Calm Vibes' },
+        { korean: '여유로운 감성에 취하는', english: 'Get Lost in Relaxing Mood' }
+      ],
+      'happy': [
+        { korean: '듣자마자 기분이 확 풀리는', english: 'Instantly Lifts Your Mood' },
+        { korean: '1초만에 기분 최고조', english: 'In One Second Mood Boost' },
+        { korean: '기분 100% 좋아지는', english: '100% Mood Improver' }
+      ],
+      'romantic': [
+        { korean: '깊은 밤 감성 충전되는', english: 'Late Night Emotional Recharge' },
+        { korean: '마음이 따뜻해지는', english: 'Warms Your Heart' },
+        { korean: '설레는 순간을 더 특별하게', english: 'Makes Every Moment Special' }
+      ],
+      'energetic': [
+        { korean: '듣자마자 에너지 폭발!', english: 'Instantly Energized!' },
+        { korean: '멈출 수 없는 그루브', english: 'Can\'t Stop the Groove' },
+        { korean: '무기력 싹 사라지는 활력', english: 'Energy Boost Guaranteed' }
+      ],
+      'calm': [
+        { korean: '마음이 평온해지는 힐링', english: 'Soul-Healing Vibes' },
+        { korean: '깊은 평화에 잠기는', english: 'Dive Into Deep Peace' },
+        { korean: '차분한 분위기에 몰입하는', english: 'Immerse in Calm Atmosphere' }
+      ]
     };
-    const hook = hooks[mood] || {
-      korean: '지금 바로 듣고 싶어지는',
-      english: 'Can\'t Stop Listening'
-    };
+    
+    // 랜덤 후킹 선택 (다양성!)
+    const moodHooks = hooks[mood] || hooks['chill'];
+    const hook = moodHooks[Math.floor(Math.random() * moodHooks.length)];
 
-    // 한국어 제목 (후킹 + 장르 + 이모지만!)
-    const korean = `${hook.korean} ${genre} ${emoji}`;
+    // BPM 정보 추가
+    const bpmText = bpm ? ` ${bpm} BPM` : '';
 
-    // 영어 제목 (후킹 + 장르 + 이모지만!)
-    const english = `${hook.english} ${this._capitalize(genre)} ${emoji}`;
+    // 한국어 제목 (𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 접두사 + 후킹 + 장르 + 이모지 + BPM)
+    const korean = `𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | ${hook.korean} ${genre} ${emoji}${bpmText}`;
+
+    // 영어 제목 (𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 접두사 + 후킹 + 장르 + 이모지 + BPM)
+    const english = `𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | ${hook.english} ${this._capitalize(genre)} ${emoji}${bpmText}`;
 
     return { korean, english };
   }
