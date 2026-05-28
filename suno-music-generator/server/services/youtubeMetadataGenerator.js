@@ -799,7 +799,7 @@ ${tracklist}
     console.log(`   📊 분석된 분위기: ${JSON.stringify(overallMood)}`);
 
     // 2. LLM으로 OOOffi 스타일 제목 생성 (한국어 + 영어)
-    const titles = await this._generateOOOffiStyleTitles(overallMood, tracks);
+    const titles = await this._generateOOOffiStyleTitles(overallMood, tracks, style);
     console.log(`   ✅ 제목 생성 완료`);
     console.log(`      한국어: ${titles.korean}`);
     console.log(`      영어: ${titles.english}`);
@@ -910,7 +910,7 @@ ${tracklist}
   /**
    * 🎨 OOOffi 스타일 제목 생성 (LLM)
    */
-  async _generateOOOffiStyleTitles(overallMood, tracks) {
+  async _generateOOOffiStyleTitles(overallMood, tracks, style = 'pop') {
     try {
       // LLM API 설정 확인
       const { generateWithLLM } = require('./lyricsGenerator');
@@ -919,7 +919,7 @@ ${tracklist}
       const systemPrompt = `당신은 YouTube 음악 플레이리스트 제목 전문가입니다.
 
 **🚨 필수 규칙:**
-1. **"𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 |" 접두사는 무조건 붙여야 함!** ✅
+1. **"Playlist |" 접두사는 무조건 붙여야 함!** ✅
 2. 스타일 코드 분석하여 분위기를 제목에 반영 (lo-fi → 평온한, upbeat → 에너지 넘치는)
 3. BPM 정보 활용 (110 BPM → 편안한 템포, 140 BPM → 빠른 템포)
 4. 다양한 후킹 사용 (매번 다르게!)
@@ -939,7 +939,7 @@ ${tracklist}
 6. "기분이 ~되는" / "Mood becomes ~"
 7. "~에 취하는" / "Get lost in ~"
 8. "~에 빠지는" / "Fall into ~"
-9. "멈출 수 없는 ~" / "Can't stop ~"
+9. "멈추지 않는 ~" / "Can't stop ~"
 10. "중독되는 ~" / "Addictive ~"
 11. "~가 넘치는" / "Overflowing with ~"
 12. "~감성 충전" / "~ vibes recharge"
@@ -952,35 +952,35 @@ ${tracklist}
 19. "힐링 ~" / "Healing ~"
 20. "몰입하는 ~" / "Immersive ~"
 
-**한국어 예시 (𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 필수!):**
-✅ "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | 듣는 순간 마음이 평온해지는 로파이 팝 🌙✨ 110 BPM"
-✅ "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | 듣자마자 에너지 폭발! 💥 무기력 싹 사라지는 활력 팝 🎶"
-✅ "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | 깊은 밤 감성 충전되는 R&B 🌃💫 95 BPM"
-✅ "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | 차분한 감성에 빠지는 어쿠스틱 팝 🍃☕ 85 BPM"
+**한국어 예시 (Playlist 필수!):**
+✅ "Playlist | 듣는 순간 마음이 평온해지는 로파이 팝 🌙✨ 110 BPM"
+✅ "Playlist | 듣자마자 에너지 폭발! 💥 무기력 싹 사라지는 활력 팝 🎶"
+✅ "Playlist | 깊은 밤 감성 충전되는 R&B 🌃💫 95 BPM"
+✅ "Playlist | 차분한 감성에 빠지는 어쿠스틱 팝 🍃☕ 85 BPM"
 
-**영어 예시 (𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 필수!):**
-✅ "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | The Moment You Hear Peace Lo-fi Pop 🌙✨ 110 BPM"
-✅ "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | Instantly Energized! 💥 Uplifting Pop Vibes 🎶"
-✅ "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | Late Night Emotional R&B Recharge 🌃💫 95 BPM"
-✅ "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | Fall Into Calm Acoustic Pop 🍃☕ 85 BPM"
+**영어 예시 (Playlist 필수!):**
+✅ "Playlist | The Moment You Hear Peace Lo-fi Pop 🌙✨ 110 BPM"
+✅ "Playlist | Instantly Energized! 💥 Uplifting Pop Vibes 🎶"
+✅ "Playlist | Late Night Emotional R&B Recharge 🌃💫 95 BPM"
+✅ "Playlist | Fall Into Calm Acoustic Pop 🍃☕ 85 BPM"
 
 **금지사항:**
-❌ "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭" 접두사 생략
+❌ "Playlist" 접두사 생략
 ❌ 곡 수 언급 ("4곡", "15 tracks")
 ❌ "에너지 팝" 같은 일반적 표현 (스타일 분석 반영 필수!)
 
 **출력 형식:**
 \`\`\`json
 {
-  "korean": "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | [스타일 기반 후킹] + 장르 🎵 [BPM]",
-  "english": "𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | [Style-based Hook] + Genre 🎵 [BPM]"
+  "korean": "Playlist | [스타일 기반 후킹] + 장르 🎵 [BPM]",
+  "english": "Playlist | [Style-based Hook] + Genre 🎵 [BPM]"
 }
 \`\`\``;
 
       const userPrompt = `아래 플레이리스트에 맞는 YouTube 제목을 생성하세요:
 
 **🎵 스타일 코드 분석 (중요!):**
-- 원본 스타일: ${playlistData.style || 'pop'}
+- 원본 스타일: ${style}
 - BPM: ${overallMood.bpm || 120}
 - 분위기: ${overallMood.mood}
 - 에너지: ${overallMood.energy}
@@ -991,7 +991,7 @@ ${tracklist}
 - 키워드: ${overallMood.keywords.join(', ')}
 
 **📝 요구사항:**
-1. **"𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 |" 접두사 필수!** (없으면 안 됨!)
+1. **"Playlist |" 접두사 필수!** (없으면 안 됨!)
 2. 스타일 코드 분석하여 후킹 선택:
    - lo-fi / chill / calm → "듣는 순간 마음이 평온해지는", "차분한 감성에 빠지는"
    - upbeat / energetic / fast → "듣자마자 에너지 폭발", "1초만에 기분 최고조"
@@ -1102,10 +1102,10 @@ ${tracklist}
     const bpmText = bpm ? ` ${bpm} BPM` : '';
 
     // 한국어 제목 (𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 접두사 + 후킹 + 장르 + 이모지 + BPM)
-    const korean = `𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | ${hook.korean} ${genre} ${emoji}${bpmText}`;
+    const korean = `Playlist | ${hook.korean} ${genre} ${emoji}${bpmText}`;
 
     // 영어 제목 (𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 접두사 + 후킹 + 장르 + 이모지 + BPM)
-    const english = `𝐏𝐥𝐚𝐲𝐥𝐢𝐬𝐭 | ${hook.english} ${this._capitalize(genre)} ${emoji}${bpmText}`;
+    const english = `Playlist | ${hook.english} ${this._capitalize(genre)} ${emoji}${bpmText}`;
 
     return { korean, english };
   }
@@ -1305,8 +1305,8 @@ ${perfectFor}
       tags.add('jazzvibes');
     }
 
-    // 태그 배열로 변환 및 정리
-    return Array.from(tags).slice(0, 30); // 최대 30개
+    // 태그 배열로 변환 및 정리 (모두 소문자로 통일!)
+    return Array.from(tags).map(tag => tag.toLowerCase()).slice(0, 30); // 최대 30개
   }
 }
 
