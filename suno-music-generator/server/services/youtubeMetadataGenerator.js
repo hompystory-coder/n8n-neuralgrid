@@ -1195,10 +1195,10 @@ ${perfectFor}
   }
 
   /**
-   * 🏷️ 플레이리스트 태그 생성 (풍부한 후킹 태그 25-30개)
+   * 🏷️ 플레이리스트 태그 생성 (스타일 분석 기반 - 25-30개)
    */
   _generatePlaylistTags(overallMood, tracks) {
-    const { mood, genre, situations, energy } = overallMood;
+    const { mood, genre, situations, energy, bpm } = overallMood;
     
     const tags = new Set();
 
@@ -1212,6 +1212,101 @@ ${perfectFor}
       'pop': '팝',
       'k-pop': '케이팝',
       'hip-hop': '힙합',
+      'lo-fi': '로파이',
+      'r&b': '알앤비',
+      'jazz': '재즈',
+      'rock': '록',
+      'electronic': '일렉트로닉',
+      'indie': '인디',
+      'ballad': '발라드'
+    };
+    if (koreanGenres[genre.toLowerCase()]) {
+      tags.add(koreanGenres[genre.toLowerCase()]);
+    }
+
+    // 2. ✅ 스타일 기반 태그 (BPM, 무드 반영!)
+    if (bpm) {
+      if (bpm < 100) {
+        tags.add('slowtempo');
+        tags.add('relaxing');
+        tags.add('calm');
+        tags.add('peaceful');
+        tags.add('느린템포');
+        tags.add('편안한');
+      } else if (bpm >= 100 && bpm < 130) {
+        tags.add('moderatetempo');
+        tags.add('comfortable');
+        tags.add('easylistening');
+        tags.add('적당한템포');
+        tags.add('듣기편한');
+      } else {
+        tags.add('upbeat');
+        tags.add('energetic');
+        tags.add('uptempo');
+        tags.add('빠른템포');
+        tags.add('에너제틱');
+      }
+    }
+
+    // 3. ✅ 무드 기반 태그 (다양하게!)
+    const moodTags = {
+      'chill': ['chill', 'relax', 'calm', 'peaceful', 'tranquil', 'soothing', '힐링', '편안한', '차분한'],
+      'happy': ['happy', 'joyful', 'cheerful', 'positive', 'uplifting', '행복한', '기분좋은', '즐거운'],
+      'energetic': ['energetic', 'upbeat', 'lively', 'active', 'vibrant', 'dynamic', '활기찬', '에너지', '역동적'],
+      'romantic': ['romantic', 'love', 'sweet', 'tender', 'intimate', '로맨틱', '사랑', '달콤한'],
+      'calm': ['calm', 'serene', 'peaceful', 'meditation', 'zen', '명상', '평온한', '고요한'],
+      'dreamy': ['dreamy', 'ambient', 'ethereal', 'floating', 'cosmic', '몽환적', '꿈같은']
+    };
+    if (moodTags[mood]) {
+      moodTags[mood].forEach(tag => tags.add(tag));
+    }
+
+    // 4. ✅ 상황 태그 (영어 + 한글)
+    situations.forEach(sit => {
+      tags.add(sit.replace(/\s+/g, '').toLowerCase());
+      
+      // 한글 매핑
+      const situationMap = {
+        'work': '작업음악',
+        'study': '공부음악',
+        'exercise': '운동음악',
+        'sleep': '수면음악',
+        'cafe': '카페음악',
+        'morning': '아침음악',
+        'night': '밤음악'
+      };
+      const sitKey = sit.toLowerCase();
+      if (situationMap[sitKey]) {
+        tags.add(situationMap[sitKey]);
+      }
+    });
+
+    // 5. ✅ 트렌드 태그
+    const year = new Date().getFullYear();
+    tags.add(`music${year}`);
+    tags.add(`playlist${year}`);
+    tags.add('trending');
+    tags.add('viral');
+
+    // 6. 장르별 추가 태그
+    if (genre.includes('lo-fi') || genre.includes('lofi')) {
+      tags.add('lofibeats');
+      tags.add('chillhop');
+      tags.add('studymusic');
+      tags.add('backgroundmusic');
+    }
+    if (genre.includes('pop')) {
+      tags.add('kpopplaylist');
+      tags.add('acousticpop');
+      tags.add('indiepo');
+    }
+    if (genre.includes('jazz')) {
+      tags.add('smoothjazz');
+      tags.add('jazzvibes');
+    }
+
+    // 태그 배열로 변환 및 정리
+    return Array.from(tags).slice(0, 30); // 최대 30개
       'r&b': '알앤비',
       'jazz': '재즈',
       'acoustic': '어쿠스틱',
